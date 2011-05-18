@@ -1,5 +1,5 @@
 <?php
-namespace nutshell\plugin\FormParser
+namespace nutshell\plugin\formParser
 {
 	use nutshell\core\Plugin;
 	use nutshell\Factory;

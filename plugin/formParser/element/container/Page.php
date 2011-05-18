@@ -1,7 +1,7 @@
 <?php
-namespace nutshell\plugin\FormParser\element\container
+namespace nutshell\plugin\formParser\element\container
 {
-	use nutshell\plugin\FormParser\Element;
+	use nutshell\plugin\formParser\Element;
 	
 	class Page extends Element
 	{

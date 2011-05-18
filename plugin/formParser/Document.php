@@ -1,5 +1,5 @@
 <?php
-namespace nutshell\plugin\FormParser
+namespace nutshell\plugin\formParser
 {
 	class Document
 	{
