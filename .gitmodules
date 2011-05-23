@@ -1,6 +1,3 @@
-[submodule "private/nutshell"]
-	path = private/nutshell
-	url = git@gitorious:nutshell/nutshell.git
 [submodule "wiki"]
 	path = wiki
 	url = git@gitorious:nutshell/nutshell-gitorious-wiki.git
