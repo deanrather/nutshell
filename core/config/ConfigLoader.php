@@ -27,6 +27,13 @@ namespace nutshell\core\config
 		 * @var String
 		 */
 		const CONFIG_FOLDER = 'config';
+		
+		/**
+		 * Config file extension
+		 * 
+		 * @var String
+		 */
+		const CONFIG_FILE_EXTENSION = 'json';
 
 		/**
 		 * Cache for the core config path
@@ -50,9 +57,7 @@ namespace nutshell\core\config
 			//computing the file path of the require environment
 			$configFile = self::getCoreConfigPath() . \DIRECTORY_SEPARATOR . sprintf('%s.json', $environment);
 			
-			return self::loadFile($configFile, function($environment) {
-				return ConfigLoader::loadCoreConfig($environment);
-			});
+			return self::loadConfigFile($configFile);
 		}
 		
 		/**
@@ -66,9 +71,9 @@ namespace nutshell\core\config
 				$environment = self::DEFAULT_ENVIRONMENT;
 			}	
 			
-			return self::loadFile($configFile, function($environment) use ($pluginName) {
-				return ConfigLoader::loadPluginConfig($pluginName, $environment);
-			});
+			$configFile = '';
+			
+			return self::loadConfigFile($configFile);
 		}
 		
 		/**
@@ -78,7 +83,18 @@ namespace nutshell\core\config
 		 * @throws Exception if the file could not be found/read
 		 * @return nutshell\config\Config an instance of the config
 		 */
-		protected static function loadFile($file, $extendHandler) {
+		public static function loadConfigFile($file, $extendHandler = null) {
+			if($extendHandler === null) {
+				$extendHandler = function($environment) use ($file)
+				{
+					return ConfigLoader::loadConfigFile(
+						dirname($file) 
+						. \DIRECTORY_SEPARATOR 
+						. $environment 
+						. '.' . ConfigLoader::CONFIG_FILE_EXTENSION
+					);
+				};
+			}
 			if(is_file($file)) 
 			{
 				if(is_readable($file)) 

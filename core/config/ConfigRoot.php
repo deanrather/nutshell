@@ -17,14 +17,15 @@ namespace nutshell\core\config
 		/**
 		 * Generic method to transform a random block of data into a config object or value. 
 		 * 
-		 * @param unknown_type $obj
+		 * @param Object $obj
 		 * @param function $extendHandler
 		 */
 		public static function parse($obj, $extendHandler)
 		{
 			$configRoot = parent::parse($obj);
 			$config = null;
-			if(isset($configRoot->extends)) {
+			
+			if($configRoot->extends !== null) {
 				$parentConfig = $extendHandler($configRoot->extends);
 				$config = $parentConfig->extendWith($configRoot->config);
 			} else {

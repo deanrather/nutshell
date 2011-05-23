@@ -12,7 +12,10 @@
 		{
 			"FormParser":
 			{
-				
+				"numeric" : 1,
+				"text" : "Ho ho ho",
+				"boolean" : true,
+				"array" : [1,2,3,4, "test", true]
 			}
 		}
 	}

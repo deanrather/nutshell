@@ -29,7 +29,7 @@ namespace nutshell\core\config
 		/**
 		 * Loads the supplied object into the current config instance
 		 * 
-		 * @param unknown_type $obj
+		 * @param mixed $obj
 		 * @throws Exception if the argument is not of a supported type
 		 */
 		protected function load($obj) {
@@ -52,7 +52,7 @@ namespace nutshell\core\config
 		/**
 		 * Generic method to transform a random block of data into a config object or value. 
 		 * 
-		 * @param unknown_type $obj
+		 * @param mixed $obj
 		 * @param boolean $isRoot
 		 */
 		public static function parse($obj)
@@ -70,7 +70,7 @@ namespace nutshell\core\config
 		/**
 		 * 
 		 * 
-		 * @param unknown_type $config
+		 * @param nutshell\config\Config $config
 		 */
 		public function extendWith($config)
 		{
@@ -80,7 +80,7 @@ namespace nutshell\core\config
 		/**
 		 * Magic getter
 		 * 
-		 * @param unknown_type $key
+		 * @param String $key
 		 */
 		public function __get($key) 
 		{
@@ -94,12 +94,126 @@ namespace nutshell\core\config
 		/**
 		 * Magic setter
 		 * 
-		 * @param unknown_type $key
-		 * @param unknown_type $value
+		 * @param String $key
+		 * @param mixed $value
 		 */
 		public function __set($key, $value) 
 		{
 			$this->data[$key] = $value;
+		}
+		
+		/**
+		 * Render primitive types
+		 * 
+		 * @param mixed $data
+		 */
+		protected function primitiveRendering($data) 
+		{
+			return json_encode($data);
+		}
+		
+		/**
+		 * __toString handler
+		 * 
+		 * @return string a representation of the instance
+		 * 
+		 */
+		public function __toString() 
+		{
+			$out = "{";
+			$separator = '';
+			
+			foreach($this->data as $key => $value) {
+				$out .= sprintf('%s"%s":%s',
+					$separator,
+					$key, 
+					$value instanceof Config ? $value->__toString() : $this->primitiveRendering($value)
+				);
+				
+				//set the separator
+				$separator = ',';
+			}
+			$out .= "}";
+			return $out;
+		}
+		
+		public function prettyPrint()
+		{
+			$json = $this->__toString();
+			$tab = "  ";
+			$new_json = "";
+			$indent_level = 0;
+			$in_string = false;
+		
+			$json_obj = json_decode($json);
+		
+			if($json_obj === false)
+				return false;
+		
+			$json = json_encode($json_obj);
+			$len = strlen($json);
+		
+			for($c = 0; $c < $len; $c++)
+			{
+				$char = $json[$c];
+				switch($char)
+				{
+					case '{':
+					case '[':
+						if(!$in_string)
+						{
+							$new_json .= $char . "\n" . str_repeat($tab, $indent_level+1);
+							$indent_level++;
+						}
+						else
+						{
+							$new_json .= $char;
+						}
+						break;
+					case '}':
+					case ']':
+						if(!$in_string)
+						{
+							$indent_level--;
+							$new_json .= "\n" . str_repeat($tab, $indent_level) . $char;
+						}
+						else
+						{
+							$new_json .= $char;
+						}
+						break;
+					case ',':
+						if(!$in_string)
+						{
+							$new_json .= ",\n" . str_repeat($tab, $indent_level);
+						}
+						else
+						{
+							$new_json .= $char;
+						}
+						break;
+					case ':':
+						if(!$in_string)
+						{
+							$new_json .= ": ";
+						}
+						else
+						{
+							$new_json .= $char;
+						}
+						break;
+					case '"':
+						if($c > 0 && $json[$c-1] != '\\')
+						{
+							$in_string = !$in_string;
+						}
+					default:
+						$new_json .= $char;
+						break;                   
+				}
+			}
+		
+			return $new_json;
 		}
 	}
 }
