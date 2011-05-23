@@ -1,6 +1,11 @@
 {
 	"config":
 	{
+		"cheese" : 
+		{
+			"a" : [1,2],
+			"c" : "test"
+		},
 		"core":
 		{
 			"dir":

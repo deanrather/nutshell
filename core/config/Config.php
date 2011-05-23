@@ -11,7 +11,7 @@ namespace nutshell\core\config
 	 * @author guillaume
 	 *
 	 */
-	class Config
+	class Config implements \Iterator
 	{
 		const PARSEABLE_CLASS = 'stdClass';
 		
@@ -74,7 +74,40 @@ namespace nutshell\core\config
 		 */
 		public function extendWith($config)
 		{
+			foreach($config as $property => $value) {
+				
+				if(!$this->hasKey($property)) {
+					//add the whole subtree to the current instance
+					$this->data[$property] = $config->{$property};
+				} else {
+					//the property exists in both the original and extended node
+					
+					//if they are both config objects, propagate
+					if($this->{$property} instanceof Config && $config->{$property} instanceof Config) 
+					{
+						$this->{$property}->extendWith($config->{$property});
+					}
+					elseif (!($this->{$property} instanceof Config) && !($config->{$property} instanceof Config))
+					{
+						$this->{$property} = $config->{$property};
+					}
+					else
+					{
+						throw new Exception(sprintf('Could not extend config object: trying to extend/overwrite a Config node'));
+					} 
+				}
+			}
+						
 			return $this;
+		}
+		
+		/**
+		 * 
+		 * @param unknown_type $key
+		 */
+		public function hasKey($key) 
+		{
+			return array_key_exists($key, $this->data);		
 		}
 		
 		/**
@@ -215,5 +248,47 @@ namespace nutshell\core\config
 		
 			return $new_json;
 		}
+		
+		/*** [START Implementation of Iterator] ***/
+	
+		private $it_current_key = null;
+		
+		private $it_keys = array();
+		
+		private $it_position = 0;
+		
+		public function current()
+		{
+			return $this->data[$this->it_current_key];
+		}
+		
+		public function key()
+		{
+			return $this->it_current_key;
+		}
+		
+		public function next()
+		{
+			$this->it_position++;
+			$this->it_current_key = 
+				array_key_exists($this->it_position, $this->it_keys) 
+				? $this->it_keys[$this->it_position] : null;
+			return $this;
+		}
+		
+		public function rewind()
+		{
+			$this->it_keys = array_keys($this->data);
+			$this->it_position = 0;
+			$this->it_current_key = count($this->it_keys) ? $this->it_keys[$this->it_position] : null;
+			return $this;
+		}
+		
+		public function valid()
+		{
+			return !is_null($this->it_current_key);
+		}
+		
+		/*** [END Implementation of Iterator] ***/
 	}
 }
