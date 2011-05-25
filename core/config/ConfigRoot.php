@@ -1,9 +1,6 @@
 <?php
 namespace nutshell\core\config
 {
-	require_once __DIR__ . '/../Exception.php';
-	require_once __DIR__ . '/Config.php';
-	
 	use nutshell\core\Exception;
 	
 	/**
