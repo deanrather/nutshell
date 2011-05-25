@@ -32,7 +32,8 @@ namespace nutshell\core\config
 		 * @param mixed $obj
 		 * @throws Exception if the argument is not of a supported type
 		 */
-		protected function load($obj) {
+		protected function load($obj) 
+		{
 			$this->data = array();
 			
 			if(is_object($obj) && get_class($obj) == self::PARSEABLE_CLASS)  
@@ -40,7 +41,8 @@ namespace nutshell\core\config
 				//convert the argument to an array to iterate simply over it
 				$array = (array) $obj;
 				
-				foreach($array as $k => $v) {
+				foreach($array as $k => $v) 
+				{
 					$this->data[$k] = self::parse($v);
 				}
 				
@@ -74,12 +76,16 @@ namespace nutshell\core\config
 		 */
 		public function extendWith($config)
 		{
-			foreach($config as $property => $value) {
+			foreach($config as $property => $value) 
+			{
 				
-				if(!$this->hasKey($property)) {
+				if(!$this->hasKey($property)) 
+				{
 					//add the whole subtree to the current instance
 					$this->data[$property] = $config->{$property};
-				} else {
+				} 
+				else 
+				{
 					//the property exists in both the original and extended node
 					
 					//if they are both config objects, propagate
@@ -156,7 +162,8 @@ namespace nutshell\core\config
 			$out = "{";
 			$separator = '';
 			
-			foreach($this->data as $key => $value) {
+			foreach($this->data as $key => $value) 
+			{
 				$out .= sprintf('%s"%s":%s',
 					$separator,
 					$key, 
