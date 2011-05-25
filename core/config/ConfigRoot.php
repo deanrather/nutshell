@@ -20,15 +20,28 @@ namespace nutshell\core\config
 		 * @param Object $obj
 		 * @param function $extendHandler
 		 */
-		public static function parse($obj, $extendHandler)
+		public static function parse($obj, $extendHandler, &$extended)
 		{
+			if ($extended === null) 
+			{
+				$extended = array();
+			}
+			
 			$configRoot = parent::parse($obj);
 			$config = null;
 			
-			if($configRoot->extends !== null) {
-				$parentConfig = $extendHandler($configRoot->extends);
+			if($configRoot->extends !== null) 
+			{
+				//lookup through the extended files list
+				if(in_array($configRoot->extends, $extended)) 
+				{
+					throw new Exception('Cyclic config file dependency detected!');
+				}
+				$parentConfig = $extendHandler($configRoot->extends, $extended);
 				$config = $parentConfig->extendWith($configRoot->config);
-			} else {
+			} 
+			else 
+			{
 				$config = $configRoot->config;
 			}
 			

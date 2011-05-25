@@ -83,15 +83,17 @@ namespace nutshell\core\config
 		 * @throws Exception if the file could not be found/read
 		 * @return nutshell\config\Config an instance of the config
 		 */
-		public static function loadConfigFile($file, $extendHandler = null) {
+		public static function loadConfigFile($file, $extendHandler = null, &$extended = null) {
 			if($extendHandler === null) {
-				$extendHandler = function($environment) use ($file)
+				$extendHandler = function($environment, &$extended) use ($file)
 				{
 					return ConfigLoader::loadConfigFile(
 						dirname($file) 
 						. \DIRECTORY_SEPARATOR 
 						. $environment 
-						. '.' . ConfigLoader::CONFIG_FILE_EXTENSION
+						. '.' . ConfigLoader::CONFIG_FILE_EXTENSION,
+						null,
+						$extended
 					);
 				};
 			}
@@ -99,7 +101,11 @@ namespace nutshell\core\config
 			{
 				if(is_readable($file)) 
 				{
-					return ConfigRoot::parse(json_decode(file_get_contents($file)), $extendHandler);
+					if ($extended === null) {
+						$extended = array();
+					}
+					$extended[] = basename($file, '.' . self::CONFIG_FILE_EXTENSION);
+					return ConfigRoot::parse(json_decode(file_get_contents($file)), $extendHandler, $extended);
 				} 
 				else
 				{
