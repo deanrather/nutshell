@@ -83,8 +83,10 @@ namespace nutshell\core\config
 		 * @throws Exception if the file could not be found/read
 		 * @return nutshell\config\Config an instance of the config
 		 */
-		public static function loadConfigFile($file, $extendHandler = null, &$extended = null) {
-			if($extendHandler === null) {
+		public static function loadConfigFile($file, $extendHandler = null, &$extended = null) 
+		{
+			if($extendHandler === null) 
+			{
 				$extendHandler = function($environment, &$extended) use ($file)
 				{
 					return ConfigLoader::loadConfigFile(
@@ -101,7 +103,8 @@ namespace nutshell\core\config
 			{
 				if(is_readable($file)) 
 				{
-					if ($extended === null) {
+					if ($extended === null) 
+					{
 						$extended = array();
 					}
 					$extended[] = basename($file, '.' . self::CONFIG_FILE_EXTENSION);
@@ -122,8 +125,10 @@ namespace nutshell\core\config
 		 * Returns the core config path
 		 * 
 		 */
-		protected static function getCoreConfigPath() {
-			if (self::$default_core_config_path === null) {
+		protected static function getCoreConfigPath() 
+		{
+			if (self::$default_core_config_path === null) 
+			{
 				self::$default_core_config_path = realpath(
 					//calculate the nesting level and repeat
 					__DIR__ 
@@ -132,7 +137,8 @@ namespace nutshell\core\config
 					. self::CONFIG_FOLDER
 				);
 				
-				if (self::$default_core_config_path === null) {
+				if (self::$default_core_config_path === null) 
+				{
 					//the path could not be resolved => it doesn't exist
 					throw new Exception('Could not find the config');
 				}
