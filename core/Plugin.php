@@ -1,12 +1,11 @@
 <?php
 namespace nutshell\core
 {
-	class Plugin
+	abstract class Plugin extends Component
 	{
-		public static $required=array();
-		
 		public function __construct()
 		{
+			parent::__construct();
 			if (method_exists($this,'init'))
 			{
 				$args=func_get_args();

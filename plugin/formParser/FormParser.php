@@ -2,7 +2,7 @@
 namespace nutshell\plugin\formParser
 {
 	use nutshell\core\Plugin;
-	use nutshell;
+	use nutshell\behaviour;
 	
 	class FormParser extends Plugin implements Native,Factory
 	{
@@ -14,7 +14,7 @@ namespace nutshell\plugin\formParser
 		public function init($document=null)
 		{
 			include_once(__DIR__.'/Document.php');
-			include_once(__DIR__.'/Element.php');;
+			include_once(__DIR__.'/Element.php');
 			include_once(__DIR__.'/element/container/Page.php');
 			include_once(__DIR__.'/element/container/Group.php');
 			include_once(__DIR__.'/element/field/Text.php');

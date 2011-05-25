@@ -1,5 +1,5 @@
 <?php
-namespace nutshell
+namespace nutshell\behaviour
 {
 	interface Singleton{}
 }
