@@ -2,9 +2,9 @@
 namespace nutshell\plugin\formParser
 {
 	use nutshell\core\Plugin;
-	use nutshell\Factory;
+	use nutshell;
 	
-	class FormParser extends Plugin implements Factory
+	class FormParser extends Plugin implements Native,Factory
 	{
 		private $path	=null;
 		private $raw	=null;

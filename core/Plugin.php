@@ -3,6 +3,8 @@ namespace nutshell\core
 {
 	class Plugin
 	{
+		public static $required=array();
+		
 		public function __construct()
 		{
 			if (method_exists($this,'init'))
