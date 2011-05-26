@@ -10,6 +10,8 @@ namespace nutshell
 	
 	class Nutshell
 	{
+		public $config = null;
+		
 		/**
 		 * Configures all special constants and libraries linking.
 		 */
@@ -20,13 +22,16 @@ namespace nutshell
 			define('NS_HOME',__DIR__._);
 			
 			//Load the core library.
-			$this->loadCoreLibrary();
+			$this->loadCoreComponents();
+			
+			//init core components
+			$this->initCoreComponents();
 		}
 		
 		/**
 		 * Loads all the required core libraries
 		 */
-		private function loadCoreLibrary()
+		private function loadCoreComponents()
 		{
 			require(NS_HOME.'core'._.'Component.php');
 			require(NS_HOME.'core'._.'exception'._.'Exception.php');
@@ -41,6 +46,28 @@ namespace nutshell
 		}
 		
 		/**
+		 * Create instances of the core components
+		 */
+		private function initCoreComponents() 
+		{
+			$this->loadCoreConfig();
+		}
+		
+		/**
+		 * 
+		 * Load the core config based on environment variables. Defaults to production mode.
+		 */
+		private function loadCoreConfig()
+		{
+			if (!defined('NS_ENV'))
+			{
+				define('NS_ENV', 'production');
+			}
+			
+			$this->config = Config::loadCoreConfig(NS_ENV);
+		}
+		
+		/**
 		 * Nutshell framework initialisation.
 		 * Creates an instance and performs the setup.
 		 * Should always be used to start the framework.
@@ -49,6 +76,16 @@ namespace nutshell
 		{
 			$GLOBALS['NUTSHELL'] = new Nutshell();
 			$GLOBALS['NUTSHELL']->setup();
+			return $GLOBALS['NUTSHELL'];
+		}
+		
+		public static function getInstance() 
+		{
+			if(!$GLOBALS['NUTSHELL']) 
+			{
+				throw new Exception('Unexpected situation: no running Nutshell instance!');
+			}
+			return $GLOBALS['NUTSHELL'];
 		}
 	}
 	
@@ -58,7 +95,7 @@ namespace nutshell
 	 */
 	function bootstrap() 
 	{
-		Nutshell::init();
+		return Nutshell::init();
 	}
 }
 
