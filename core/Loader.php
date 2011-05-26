@@ -41,7 +41,7 @@ namespace nutshell\core
 			));
 		}
 		
-		private function doLoad($key,$args=null)
+		private function doLoad($key,Array $args=array())
 		{
 			//Is the {$this->container} object loaded?
 			if (!isset($this->loaded[$this->container][$key]))

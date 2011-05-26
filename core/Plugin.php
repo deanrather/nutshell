@@ -11,15 +11,24 @@ namespace nutshell\core
 	{
 		public static function register() 
 		{
+			$GLOBALS['NUTSHELL_PLUGIN_SINGLETON']=array();
 			static::load(array());
 		}
 		
-		private static $instance=null;
+		protected static $instance=null;
 		
-		public static function getInstance($args=null)
+		/**
+		 * 
+		 * Enter description here ...
+		 * 
+		 * @param Array $args
+		 * @throws Exception
+		 */
+		public static function getInstance(Array $args=array())
 		{
+			$className=get_called_class();
 			//If $instance is set, then it is definately a singleton.
-			if (is_null(self::$instance))
+			if (!isset($GLOBALS['NUTSHELL_PLUGIN_SINGLETON'][$className]))
 			{
 				//Create a new instance.
 				$instance=new static();
@@ -32,8 +41,8 @@ namespace nutshell\core
 				//Is it a singleton?
 				else if ($instance instanceof Singleton)
 				{
-					self::$instance=$instance;
-					call_user_func_array(array(self::$instance,'init'),$args);
+					$GLOBALS['NUTSHELL_PLUGIN_SINGLETON'][$className]=$instance;
+					call_user_func_array(array($instance,'init'),$args);
 				}
 				//Is it abstractable?
 				else if ($instance instanceof Abstractable)
@@ -47,7 +56,7 @@ namespace nutshell\core
 				}
 			}
 			//It must be a singleton. Return the instance.
-			return self::$instance;
+			return $GLOBALS['NUTSHELL_PLUGIN_SINGLETON'][$className];
 		}
 	}
 }
