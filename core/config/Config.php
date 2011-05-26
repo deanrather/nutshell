@@ -358,7 +358,7 @@ namespace nutshell\core\config
 			}	
 			
 			//computing the file path of the require environment
-			$configFile = self::getCoreConfigPath() . \DIRECTORY_SEPARATOR . sprintf('%s.%s', $environment, self::CONFIG_FILE_EXTENSION);
+			$configFile = self::getCoreConfigPath() . _DS_ . sprintf('%s.%s', $environment, self::CONFIG_FILE_EXTENSION);
 			
 			return self::loadConfigFile($configFile);
 		}
@@ -395,7 +395,7 @@ namespace nutshell\core\config
 				{
 					return $scope::loadConfigFile(
 						dirname($file) 
-						. \DIRECTORY_SEPARATOR 
+						. _DS_ 
 						. $environment 
 						. '.' . $scope::CONFIG_FILE_EXTENSION,
 						null,

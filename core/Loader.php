@@ -51,8 +51,8 @@ namespace nutshell\core
 				#Load TODO: Fully load everything.
 				require(NS_HOME.'plugin'._DS_.$this->getCamelCaseName($key)._DS_.$key.'.php');
 				
-				//Construct the cllas name.
-				$className='nutshell\\'.$this->container.'\\'.$this->getCamelCaseName($key).'\\'.$key;
+				//Construct the class name.
+				$className='nutshell\\'.$this->container.'\\'.lcfirst($key).'\\'.$key;
 				#Initiate
 				$this->loaded[$this->container][$key]=$className::getInstance($args);
 			}
@@ -73,13 +73,6 @@ namespace nutshell\core
 		public function __call($key,$args)
 		{
 			return $this->doLoad($key,$args);
-		}
-		
-		
-		
-		private function getCamelCaseName($name)
-		{
-			return substr_replace($name,strtolower(substr($name,0,1)),0,1);
 		}
 	}
 }
