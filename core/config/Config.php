@@ -390,13 +390,14 @@ namespace nutshell\core\config
 		{
 			if($extendHandler === null) 
 			{
-				$extendHandler = function($environment, &$extended) use ($file)
+				$scope=get_called_class();
+				$extendHandler = function($environment, &$extended) use ($scope,$file)
 				{
-					return ConfigLoader::loadConfigFile(
+					return $scope::loadConfigFile(
 						dirname($file) 
 						. \DIRECTORY_SEPARATOR 
 						. $environment 
-						. '.' . self::CONFIG_FILE_EXTENSION,
+						. '.' . $scope::CONFIG_FILE_EXTENSION,
 						null,
 						$extended
 					);

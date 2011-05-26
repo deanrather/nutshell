@@ -15,10 +15,20 @@ namespace nutshell\core
 				$file=NS_HOME.str_replace
 				(
 					array('nutshell\\','\\'),
-					array('',_),
+					array('',_DS_),
 					$namespace
-				)._.$files[$i];
+				)._DS_.$files[$i];
 				require($file);
+			}
+		}
+		
+		public function __get($key)
+		{
+			switch ($key)
+			{
+				case 'config':	return $GlOBALS['NUTSHELL']->config;
+				case 'core':	return $GLOBALS['NUTSHELL'];
+				case 'plugin':	return $GLOBALS['NUTSHELL']->loader('plugin');
 			}
 		}
 	}

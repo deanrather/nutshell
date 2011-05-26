@@ -7,10 +7,13 @@ namespace nutshell
 	use nutshell\core\Plugin;
 	use nutshell\core\exception\Exception;
 	use \DIRECTORY_SEPARATOR;
+	use \DirectoryIterator;
 	
 	class Nutshell
 	{
-		public $config = null;
+		public $config 	=null;
+//		public $helper	=null;
+		private $loader	=null;
 		
 		/**
 		 * Configures all special constants and libraries linking.
@@ -18,14 +21,28 @@ namespace nutshell
 		public function setup()
 		{
 			//Define constants.
-			define('_',DIRECTORY_SEPARATOR);
-			define('NS_HOME',__DIR__._);
+			define('_DS_',DIRECTORY_SEPARATOR);
+			define('NS_HOME',__DIR__._DS_);
 			
-			//Load the core library.
+			//Load the behaviours first.
+			$this->loadBehaviours();
+			
+			//Load the core components.
 			$this->loadCoreComponents();
 			
 			//init core components
 			$this->initCoreComponents();
+		}
+		
+		private function loadBehaviours()
+		{
+			foreach (new DirectoryIterator(NS_HOME.'behaviour'._DS_) as $iteration)
+			{
+				if (!$iteration->isDot())
+				{
+					require($iteration->getPathname());
+				}
+			}
 		}
 		
 		/**
@@ -33,11 +50,11 @@ namespace nutshell
 		 */
 		private function loadCoreComponents()
 		{
-			require(NS_HOME.'core'._.'Component.php');
-			require(NS_HOME.'core'._.'exception'._.'Exception.php');
-			require(NS_HOME.'core'._.'config'._.'Config.php');
-			require(NS_HOME.'core'._.'Loader.php');
-			require(NS_HOME.'core'._.'Plugin.php');
+			require(NS_HOME.'core'._DS_.'Component.php');
+			require(NS_HOME.'core'._DS_.'exception'._DS_.'Exception.php');
+			require(NS_HOME.'core'._DS_.'config'._DS_.'Config.php');
+			require(NS_HOME.'core'._DS_.'Loader.php');
+			require(NS_HOME.'core'._DS_.'Plugin.php');
 			
 			Exception::register();
 			Config::register();
@@ -51,6 +68,8 @@ namespace nutshell
 		private function initCoreComponents() 
 		{
 			$this->loadCoreConfig();
+			
+			$this->loader=new Loader();
 		}
 		
 		/**
@@ -87,6 +106,23 @@ namespace nutshell
 			}
 			return $GLOBALS['NUTSHELL'];
 		}
+		
+		/*** OVERLOADING ***/
+		
+		public function __get($key)
+		{
+			if ($key=='plugin')
+			{
+				$loader=$this->loader;
+				return $loader('plugin');
+			}
+			else
+			{
+				throw new Exception('Attempted to get invalid property "'.$key.'" from core.');
+			}
+		}
+		
+		
 	}
 	
 	/**

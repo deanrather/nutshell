@@ -2,7 +2,8 @@
 namespace nutshell\plugin\formParser
 {
 	use nutshell\core\Plugin;
-	use nutshell\behaviour;
+	use nutshell\behaviour\Native;
+	use nutshell\behaviour\Factory;
 	
 	class FormParser extends Plugin implements Native,Factory
 	{
@@ -44,6 +45,11 @@ namespace nutshell\plugin\formParser
 		public function parse()
 		{
 			
+		}
+		
+		public function render()
+		{
+			return 'render';
 		}
 	}
 }
