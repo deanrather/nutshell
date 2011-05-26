@@ -52,7 +52,7 @@ namespace nutshell\core
 				require(NS_HOME.'plugin'._DS_.$this->getCamelCaseName($key)._DS_.$key.'.php');
 				
 				//Construct the cllas name.
-				$className='nutshell\plugin\\'.$this->getCamelCaseName($key).'\\'.$key;
+				$className='nutshell\\'.$this->container.'\\'.$this->getCamelCaseName($key).'\\'.$key;
 				#Initiate
 				$this->loaded[$this->container][$key]=$className::getInstance($args);
 			}
