@@ -1,7 +1,7 @@
 <?php
 namespace nutshell\core\config
 {
-	use nutshell\core\Exception;
+	use nutshell\core\exception\Exception;
 	use nutshell\core\Component;
 	use \Iterator;
 	
@@ -11,7 +11,7 @@ namespace nutshell\core\config
 	 * @author guillaume
 	 *
 	 */
-	class Config extends Complement implements Iterator
+	class Config extends Component implements Iterator
 	{
 		/**
 		 * 
@@ -68,7 +68,7 @@ namespace nutshell\core\config
 		 */
 		protected function __construct($obj) 
 		{
-			$this->load($obj);
+			$this->loadObject($obj);
 		}
 		
 		/**
@@ -77,7 +77,7 @@ namespace nutshell\core\config
 		 * @param mixed $obj
 		 * @throws Exception if the argument is not of a supported type
 		 */
-		protected function load($obj) 
+		protected function loadObject($obj) 
 		{
 			$this->data = array();
 			

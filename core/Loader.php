@@ -1,5 +1,5 @@
 <?php
-namespace nutshell\core\config
+namespace nutshell\core
 {
 	use nutshell\core\Component;
 	
@@ -9,7 +9,7 @@ namespace nutshell\core\config
 	 * @author guillaume
 	 *
 	 */
-	class Loader extends Complement
+	class Loader extends Component
 	{
 		/**
 		 * 

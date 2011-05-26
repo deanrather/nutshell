@@ -1,7 +1,7 @@
 <?php
 namespace nutshell\core\config
 {
-	use nutshell\core\Exception;
+	use nutshell\core\exception\Exception;
 	
 	/**
 	 * Configuration node instance

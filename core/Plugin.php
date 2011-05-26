@@ -3,6 +3,11 @@ namespace nutshell\core
 {
 	abstract class Plugin extends Component
 	{
+		public static function register() 
+		{
+			static::load(array());
+		}
+		
 		public function __construct()
 		{
 			parent::__construct();

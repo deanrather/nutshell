@@ -7,6 +7,8 @@ namespace nutshell\core
 		
 		public static function load($files)
 		{
+			$namespace = preg_replace('/\\\\[^\\\\]*$/', '', get_called_class());
+			
 			if (!is_array($files))$files=array($files);
 			for ($i=0,$j=count($files); $i<$j; $i++)
 			{
@@ -14,8 +16,8 @@ namespace nutshell\core
 				(
 					array('nutshell\\','\\'),
 					array('',_),
-					__NAMESPACE__
-				).$files[$i];
+					$namespace
+				)._.$files[$i];
 				require($file);
 			}
 		}
