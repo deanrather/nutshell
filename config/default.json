@@ -1,11 +1,6 @@
 {
 	"config":
 	{
-		"cheese" : 
-		{
-			"a" : [1,2],
-			"c" : "test"
-		},
 		"core":
 		{
 			"dir":
@@ -15,13 +10,7 @@
 		},
 		"plugin":
 		{
-			"FormParser":
-			{
-				"numeric" : 1,
-				"text" : "Ho ho ho",
-				"boolean" : true,
-				"array" : [1,2,3,4, "test", true]
-			}
+			
 		}
 	}
 }
