@@ -11,6 +11,8 @@ namespace nutshell\core
 	
 	abstract class Plugin extends Component
 	{
+		private static $PLUGIN_CONFIG_LOADED = array();
+		
 		public static function register() 
 		{
 			$GLOBALS['NUTSHELL_PLUGIN_SINGLETON']=array();
@@ -32,19 +34,19 @@ namespace nutshell\core
 			//If $instance is set, then it is definately a singleton.
 			if (!isset($GLOBALS['NUTSHELL_PLUGIN_SINGLETON'][$className]))
 			{
-				self::loadPluginConfig($className);
-				
 				//Create a new instance.
 				$instance=new static();
 				//Is it a Factory?
 				if ($instance instanceof Factory)
 				{
+					self::loadPluginConfig($className);
 					call_user_func_array(array($instance,'init'),$args);
 					return $instance;
 				}
 				//Is it a singleton?
 				else if ($instance instanceof Singleton)
 				{
+					self::loadPluginConfig($className);
 					$GLOBALS['NUTSHELL_PLUGIN_SINGLETON'][$className]=$instance;
 					call_user_func_array(array($instance,'init'),$args);
 				}
@@ -70,6 +72,12 @@ namespace nutshell\core
 		 */
 		private static function loadPluginConfig($pluginClassName)
 		{
+			if(isset(self::$PLUGIN_CONFIG_LOADED[$pluginClassName]))
+			{
+				//already registered, skip
+				return;
+			}
+			
 			//compute the config folder path for the plugin
 			$pluginConfigPath = 
 				self::getPluginBasePath($pluginClassName)
