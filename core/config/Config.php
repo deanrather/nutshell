@@ -75,6 +75,7 @@ namespace nutshell\core\config
 		 * Loads the supplied object into the current config instance
 		 * 
 		 * @param mixed $obj
+		 * @return nutshell\core\config\Config the current instance
 		 * @throws Exception if the argument is not of a supported type
 		 */
 		protected function loadObject($obj) 
@@ -101,6 +102,7 @@ namespace nutshell\core\config
 		 * 
 		 * @param mixed $obj
 		 * @param boolean $isRoot
+		 * @return mixed the value to be associated to a property
 		 */
 		public static function parse($obj)
 		{
@@ -115,11 +117,33 @@ namespace nutshell\core\config
 		}
 		
 		/**
+		 * Extends the current node with either a Config node or the config node built from a config file specified by path. 
 		 * 
-		 * 
-		 * @param nutshell\config\Config $config
+		 * @param mixed Config object or file path (String)
+		 * @param String optional, the environment to load (used with the file path argument)
+		 * @return nutshell\core\config\Config the updated config node (technically $this)
 		 */
-		public function extendWith($config)
+		public function extendWith($first_arg, $sec_arg = null) 
+		{
+			if($first_arg instanceof Config)
+			{
+				//use the specialised method
+				$this->extendWithNode($first_arg);
+			}
+			else
+			{
+				$this->extendFromPath($first_arg, $sec_arg);
+			}
+			
+			return $this;
+		}
+		
+		/**
+		 * Specialised method to extend the current node with another Config node.
+		 * 
+		 * @param nutshell\core\config\Config $config
+		 */
+		protected function extendWithNode(Config $config)
 		{
 			foreach($config as $property => $value) 
 			{
@@ -148,23 +172,68 @@ namespace nutshell\core\config
 					} 
 				}
 			}
-						
 			return $this;
 		}
 		
 		/**
+		 * Specialised method to extend the current node with a Config node built from the specified path.
 		 * 
-		 * @param unknown_type $key
+		 * @param String $configPath
+		 * @param String $environment
+		 */
+		protected function extendFromPath($configPath, $environment = null)
+		{
+			if (!is_dir($configPath))
+			{
+				throw new Exception(sprintf('Specified configuration directory not found, or is not a directory: %s', $configPath));
+			}
+			
+			if(!$environment) 
+			{
+				$environment = self::DEFAULT_ENVIRONMENT;
+			}	
+			
+			//computing the file path of the require environment
+			$configFile = $configPath . _DS_ . self::makeConfigFileName($environment);
+			
+			if (!is_readable($configFile) && $environment != self::DEFAULT_ENVIRONMENT)
+			{
+				$configFile = $configPath . _DS_ . self::makeConfigFileName(self::DEFAULT_ENVIRONMENT);
+				if (!is_readable($configFile))
+				{
+					throw new Exception(sprintf('No config file could be found and no fallback file available: %s', $configPath));
+				}
+			}
+			
+			//extend the current node with the loaded config
+			return $this->extendWithNode(self::loadConfigFile($configFile));
+		}
+		
+		/**
+		 * Derives the config file base name from the environment. 
+		 * @param String $environment
+		 * @return String the config file base name
+		 */
+		protected static function makeConfigFileName($environment)
+		{
+			return sprintf("%s.%s", $environment, self::CONFIG_FILE_EXTENSION);
+		}
+		
+		/**
+		 * Checks whether the config node has a specific key/property 
+		 * @param String $key
+		 * @return boolean true if said key exists, false otherwise
 		 */
 		public function hasKey($key) 
 		{
-			return array_key_exists($key, $this->data);		
+			return array_key_exists($key, $this->data);
 		}
 		
 		/**
 		 * Magic getter
 		 * 
 		 * @param String $key
+		 * @return mixed the value of the specified property
 		 */
 		public function __get($key) 
 		{
@@ -222,6 +291,11 @@ namespace nutshell\core\config
 			return $out;
 		}
 		
+		/**
+		 * Pretty prints the subtree starting from this config node
+		 * 
+		 * @return String a formatted version of the json tree
+		 */
 		public function prettyPrint()
 		{
 			$json = $this->__toString();
@@ -358,23 +432,7 @@ namespace nutshell\core\config
 			}	
 			
 			//computing the file path of the require environment
-			$configFile = self::getCoreConfigPath() . _DS_ . sprintf('%s.%s', $environment, self::CONFIG_FILE_EXTENSION);
-			
-			return self::loadConfigFile($configFile);
-		}
-		
-		/**
-		 * Loads 
-		 * Enter description here ...
-		 */
-		public static function loadPluginConfig($pluginName, $environment = null) 
-		{
-			if(!$environment) 
-			{
-				$environment = self::DEFAULT_ENVIRONMENT;
-			}	
-			
-			$configFile = '';
+			$configFile = self::getCoreConfigPath() . _DS_ . self::makeConfigFileName($environment);
 			
 			return self::loadConfigFile($configFile);
 		}

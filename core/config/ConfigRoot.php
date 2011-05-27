@@ -35,7 +35,7 @@ namespace nutshell\core\config
 					throw new Exception('Cyclic config file dependency detected!');
 				}
 				$parentConfig = $extendHandler($configRoot->extends, $extended);
-				$config = $parentConfig->extendWith($configRoot->config);
+				$config = $parentConfig->extendWithNode($configRoot->config);
 			} 
 			else 
 			{

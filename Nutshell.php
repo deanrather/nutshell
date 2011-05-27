@@ -11,6 +11,8 @@ namespace nutshell
 	
 	class Nutshell
 	{
+		const NUTSHELL_ENVIRONMENT = 'NS_ENV';
+		
 		public $config 	=null;
 //		public $helper	=null;
 		private $loader	=null;
@@ -78,9 +80,9 @@ namespace nutshell
 		 */
 		private function loadCoreConfig()
 		{
-			if (!defined('NS_ENV'))
+			if (!defined(self::NUTSHELL_ENVIRONMENT))
 			{
-				define('NS_ENV', 'production');
+				define(self::NUTSHELL_ENVIRONMENT, 'production');
 			}
 			
 			$this->config = Config::loadCoreConfig(NS_ENV);
