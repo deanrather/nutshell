@@ -49,7 +49,7 @@ namespace nutshell\core
 				//No, so we need to load all of it's dependancies and initiate it.
 				
 				#Load TODO: Fully load everything.
-				require(NS_HOME.'plugin'._DS_.$this->getCamelCaseName($key)._DS_.$key.'.php');
+				require(NS_HOME.'plugin'._DS_.lcfirst($key)._DS_.$key.'.php');
 				
 				//Construct the class name.
 				$className='nutshell\\'.$this->container.'\\'.lcfirst($key).'\\'.$key;

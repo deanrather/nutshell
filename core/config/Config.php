@@ -66,7 +66,7 @@ namespace nutshell\core\config
 		 * Constructor. Loads the supplied object in the current instance.
 		 * 
 		 */
-		protected function __construct($obj) 
+		public function __construct($obj = null) 
 		{
 			$this->loadObject($obj);
 		}
@@ -94,6 +94,11 @@ namespace nutshell\core\config
 				
 				return $this;
 			}
+			else if ($obj  === null) {
+				//do nothing, just return
+				return $this;
+			}
+			
 			throw new Exception(sprintf('Could not parse argument into a config object: not an instance of %s', self::PARSEABLE_CLASS));
 		}
 		
