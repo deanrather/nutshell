@@ -2,6 +2,7 @@
 namespace nutshell\plugin\formParser
 {
 	use nutshell\core\Plugin;
+	use nutshell\core\exception\Exception;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Factory;
 	
