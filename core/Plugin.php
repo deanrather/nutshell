@@ -92,6 +92,9 @@ namespace nutshell\core
 			//add the the nutshell config tree
 			$base = self::getBaseClassName($pluginClassName);
 			Nutshell::getInstance()->config->plugin->{$base} = $config;
+			
+			//set the marker
+			self::$PLUGIN_CONFIG_LOADED[$pluginClassName] = true;
 		}
 		
 		/**
