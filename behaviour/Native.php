@@ -1,6 +1,9 @@
 <?php
 namespace nutshell\behaviour
 {
-	interface Native{}
+	interface Native
+	{
+		public static function loadDependencies();
+	}
 }
 ?>

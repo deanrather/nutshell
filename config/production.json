@@ -2,10 +2,6 @@
 	"extends":	"default",
 	"config":
 	{
-		"cheese" : 
-		{
-			"a" : true,
-			"b" : 2
-		}
+		
 	}
 }

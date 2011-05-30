@@ -6,12 +6,23 @@ namespace nutshell\plugin\formParser\element\container
 	class Page extends Element
 	{
 		private $title		='';
-		private $css		=null;
-		private $js			=null;
+		private $css		='';
+		private $js			='';
 		
-		public function init()
+		public function init($elementDef)
 		{
-			
+			if (isset($elementDef->title))
+			{
+				$this->setTitle($elementDef->title);
+			}
+			if (isset($elementDef->css))
+			{
+				$this->setTitle($elementDef->css);
+			}
+			if (isset($elementDef->js))
+			{
+				$this->setTitle($elementDef->js);
+			}
 		}
 		
 		public function setTitle($title)
@@ -46,10 +57,13 @@ namespace nutshell\plugin\formParser\element\container
 		{
 			return $this->js;
 		}
-	
+		
 		public function render()
 		{
-			
+			$this	->setTemplateVar('TITLE',$this->title)
+					->setTemplateVar('CSS',$this->css)
+					->setTemplateVar('JS',$this->js);
+			return parent::render();
 		}
 	}
 }

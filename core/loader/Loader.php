@@ -1,5 +1,5 @@
 <?php
-namespace nutshell\core
+namespace nutshell\core\loader
 {
 	use nutshell\core\Component;
 	use nutshell\plugin;
@@ -37,11 +37,10 @@ namespace nutshell\core
 		 */
 		public static function register()
 		{
-			static::load(array(
-			));
+			static::load(array());
 		}
 		
-		private function doLoad($key,$args=null)
+		private function doLoad($key,Array $args=array())
 		{
 			//Is the {$this->container} object loaded?
 			if (!isset($this->loaded[$this->container][$key]))
@@ -49,10 +48,12 @@ namespace nutshell\core
 				//No, so we need to load all of it's dependancies and initiate it.
 				
 				#Load TODO: Fully load everything.
-				require(NS_HOME.'plugin'._DS_.$this->getCamelCaseName($key)._DS_.$key.'.php');
+				require(NS_HOME.$this->container._DS_.lcfirst($key)._DS_.$key.'.php');
 				
-				//Construct the cllas name.
-				$className='nutshell\plugin\\'.$this->getCamelCaseName($key).'\\'.$key;
+				//Construct the class name.
+				$className='nutshell\\'.$this->container.'\\'.lcfirst($key).'\\'.$key;
+				$className::loadDependencies();
+				
 				#Initiate
 				$this->loaded[$this->container][$key]=$className::getInstance($args);
 			}
@@ -73,13 +74,6 @@ namespace nutshell\core
 		public function __call($key,$args)
 		{
 			return $this->doLoad($key,$args);
-		}
-		
-		
-		
-		private function getCamelCaseName($name)
-		{
-			return substr_replace($name,strtolower(substr($name,0,1)),0,1);
 		}
 	}
 }

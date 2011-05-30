@@ -1,18 +1,33 @@
 <?php
+/**
+ * Nutshell
+ *  - Built on Faith
+ * 
+ * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+ * @author Timothy Chandler <tim.chandler@spinifexgroup.com>
+ * @copyright Spinifex Group Pty. Ltd.
+ */
 namespace nutshell
 {
 	use nutshell\core\Component;
 	use nutshell\core\config\Config;
-	use nutshell\core\Loader;
-	use nutshell\core\Plugin;
+	use nutshell\core\loader\Loader;
+	use nutshell\core\loader\HipHopLoader;
+	use nutshell\core\plugin\Plugin;
 	use nutshell\core\exception\Exception;
 	use \DIRECTORY_SEPARATOR;
 	use \DirectoryIterator;
 	
 	class Nutshell
 	{
+		const VERSION				= '1.0.0-dev-1';
+		const VERSION_MAJOR			=	1;
+		const VERSION_MINOR			=	0;
+		const VERSION_MICRO			=	0;
+		const VERSION_DEV			=	1;
+		const NUTSHELL_ENVIRONMENT	= 'NS_ENV';
+		
 		public $config 	=null;
-//		public $helper	=null;
 		private $loader	=null;
 		
 		/**
@@ -26,6 +41,9 @@ namespace nutshell
 			
 			//Load the behaviours first.
 			$this->loadBehaviours();
+			
+			//Load the helpers.
+			$this->loadHelpers();
 			
 			//Load the core components.
 			$this->loadCoreComponents();
@@ -45,6 +63,17 @@ namespace nutshell
 			}
 		}
 		
+		private function loadHelpers()
+		{
+			foreach (new DirectoryIterator(NS_HOME.'helper'._DS_) as $iteration)
+			{
+				if (!$iteration->isDot())
+				{
+					require($iteration->getPathname());
+				}
+			}
+		}
+		
 		/**
 		 * Loads all the required core libraries
 		 */
@@ -53,8 +82,10 @@ namespace nutshell
 			require(NS_HOME.'core'._DS_.'Component.php');
 			require(NS_HOME.'core'._DS_.'exception'._DS_.'Exception.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'Config.php');
-			require(NS_HOME.'core'._DS_.'Loader.php');
-			require(NS_HOME.'core'._DS_.'Plugin.php');
+			require(NS_HOME.'core'._DS_.'loader'._DS_.'Loader.php');
+			require(NS_HOME.'core'._DS_.'loader'._DS_.'HipHopLoader.php');
+			require(NS_HOME.'core'._DS_.'plugin'._DS_.'Plugin.php');
+			require(NS_HOME.'core'._DS_.'plugin'._DS_.'PluginExtension.php');
 			
 			Exception::register();
 			Config::register();
@@ -69,7 +100,14 @@ namespace nutshell
 		{
 			$this->loadCoreConfig();
 			
-			$this->loader=new Loader();
+			if (!$this->config->core->hiphop)
+			{
+				$this->loader=new Loader();
+			}
+			else
+			{
+				$this->loader=new HipHopLoader();
+			}
 		}
 		
 		/**
@@ -78,9 +116,9 @@ namespace nutshell
 		 */
 		private function loadCoreConfig()
 		{
-			if (!defined('NS_ENV'))
+			if (!defined(self::NUTSHELL_ENVIRONMENT))
 			{
-				define('NS_ENV', 'production');
+				define(self::NUTSHELL_ENVIRONMENT, 'production');
 			}
 			
 			$this->config = Config::loadCoreConfig(NS_ENV);
@@ -98,7 +136,7 @@ namespace nutshell
 			return $GLOBALS['NUTSHELL'];
 		}
 		
-		public static function getInstance() 
+		public static function getInstance()
 		{
 			if(!$GLOBALS['NUTSHELL']) 
 			{
