@@ -1,4 +1,12 @@
 <?php
+/**
+ * Nutshell
+ *  - Built on Faith
+ * 
+ * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+ * @author Timothy Chandler <tim.chandler@spinifexgroup.com>
+ * @copyright Spinifex Group Pty. Ltd.
+ */
 namespace nutshell
 {
 	use nutshell\core\Component;
