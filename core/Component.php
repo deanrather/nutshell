@@ -1,6 +1,8 @@
 <?php
 namespace nutshell\core
 {
+	use nutshell\Nutshell;
+
 	use nutshell\helper\Object;
 	
 	abstract class Component
@@ -23,9 +25,9 @@ namespace nutshell\core
 		{
 			switch ($key)
 			{
-				case 'config':	return $GlOBALS['NUTSHELL']->config;
-				case 'core':	return $GLOBALS['NUTSHELL'];
-				case 'plugin':	return $GLOBALS['NUTSHELL']->loader('plugin');
+				case 'config':	return Nutshell::getInstance()->config;
+				case 'core':	return Nutshell::getInstance();
+				case 'plugin':	return Nutshell::getInstance()->plugin;
 			}
 		}
 	}
