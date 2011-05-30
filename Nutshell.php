@@ -3,7 +3,8 @@ namespace nutshell
 {
 	use nutshell\core\Component;
 	use nutshell\core\config\Config;
-	use nutshell\core\Loader;
+	use nutshell\core\loader\Loader;
+	use nutshell\core\loader\HipHopLoader;
 	use nutshell\core\Plugin;
 	use nutshell\core\exception\Exception;
 	use \DIRECTORY_SEPARATOR;

@@ -6,7 +6,7 @@
 			"hiphop":	false,
 			"dir":
 			{
-				
+				"tmp":	"../tmp/"
 			}
 		},
 		"plugin":
