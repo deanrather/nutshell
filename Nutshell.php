@@ -11,7 +11,12 @@ namespace nutshell
 	
 	class Nutshell
 	{
-		const NUTSHELL_ENVIRONMENT = 'NS_ENV';
+		const VERSION				= '1.0.0-dev-1';
+		const VERSION_MAJOR			=	1;
+		const VERSION_MINOR			=	0;
+		const VERSION_MICRO			=	0;
+		const VERSION_DEV			=	1;
+		const NUTSHELL_ENVIRONMENT	= 'NS_ENV';
 		
 		public $config 	=null;
 		private $loader	=null;
@@ -68,7 +73,8 @@ namespace nutshell
 			require(NS_HOME.'core'._DS_.'Component.php');
 			require(NS_HOME.'core'._DS_.'exception'._DS_.'Exception.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'Config.php');
-			require(NS_HOME.'core'._DS_.'Loader.php');
+			require(NS_HOME.'core'._DS_.'loader'._DS_.'Loader.php');
+			require(NS_HOME.'core'._DS_.'loader'._DS_.'HipHopLoader.php');
 			require(NS_HOME.'core'._DS_.'Plugin.php');
 			
 			Exception::register();
@@ -84,7 +90,14 @@ namespace nutshell
 		{
 			$this->loadCoreConfig();
 			
-			$this->loader=new Loader();
+			if (!$this->config->core->hiphop)
+			{
+				$this->loader=new Loader();
+			}
+			else
+			{
+				$this->loader=new HipHopLoader();
+			}
 		}
 		
 		/**
@@ -113,7 +126,7 @@ namespace nutshell
 			return $GLOBALS['NUTSHELL'];
 		}
 		
-		public static function getInstance() 
+		public static function getInstance()
 		{
 			if(!$GLOBALS['NUTSHELL']) 
 			{
