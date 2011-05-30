@@ -23,7 +23,7 @@ namespace nutshell\helper
 			if ($numbers)
 			{
 				//Merge numbers into the character array.
-				$chars=array_merge($chars,range(0-9));
+				$chars=array_merge($chars,range(0,9));
 			}
 			//Cache the length.
 			$charLength=count($chars)-1;
