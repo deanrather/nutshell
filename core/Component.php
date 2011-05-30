@@ -1,7 +1,7 @@
 <?php
 namespace nutshell\core
 {
-	use nutshell\helper\String;
+	use nutshell\helper\Object;
 	
 	abstract class Component
 	{
@@ -9,7 +9,7 @@ namespace nutshell\core
 		
 		public static function load($files)
 		{
-			$namespace = String::getNamespace(get_called_class());
+			$namespace = Object::getNamespace(get_called_class());
 			
 			if (!is_array($files))$files=array($files);
 			for ($i=0,$j=count($files); $i<$j; $i++)

@@ -5,7 +5,7 @@ namespace nutshell\core\plugin
 	use nutshell\core\exception\Exception;
 	use nutshell\core\Component;
 	use nutshell\core\config\Config;
-	use nutshell\helper\String;
+	use nutshell\helper\Object;
 	
 	abstract class Plugin extends Component
 	{
@@ -53,7 +53,7 @@ namespace nutshell\core\plugin
 					//Is it an AbstractFactory?
 					else if (in_array('nutshell\behaviour\AbstractFactory', $interfaces))
 					{
-						return call_user_func_array(array($className,'getInstance'),$args);
+						return call_user_func_array(array($className,'runFactory'),$args);
 					}
 	//				//Is it abstractable?
 	//				else if ($instance instanceof Abstractable)
@@ -96,7 +96,7 @@ namespace nutshell\core\plugin
 			$config->extendWith($pluginConfigPath, NS_ENV);
 			
 			//add the the nutshell config tree
-			$base = String::getBaseClassName($pluginClassName);
+			$base = Object::getBaseClassName($pluginClassName);
 			Nutshell::getInstance()->config->plugin->{$base} = $config;
 			
 			//set the marker
