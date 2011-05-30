@@ -1,7 +1,7 @@
 <?php
 namespace nutshell\plugin\i18n
 {
-	use nutshell\core\Plugin;
+	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Singleton;
 	

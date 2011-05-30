@@ -5,7 +5,7 @@ namespace nutshell
 	use nutshell\core\config\Config;
 	use nutshell\core\loader\Loader;
 	use nutshell\core\loader\HipHopLoader;
-	use nutshell\core\Plugin;
+	use nutshell\core\plugin\Plugin;
 	use nutshell\core\exception\Exception;
 	use \DIRECTORY_SEPARATOR;
 	use \DirectoryIterator;
@@ -76,7 +76,8 @@ namespace nutshell
 			require(NS_HOME.'core'._DS_.'config'._DS_.'Config.php');
 			require(NS_HOME.'core'._DS_.'loader'._DS_.'Loader.php');
 			require(NS_HOME.'core'._DS_.'loader'._DS_.'HipHopLoader.php');
-			require(NS_HOME.'core'._DS_.'Plugin.php');
+			require(NS_HOME.'core'._DS_.'plugin'._DS_.'Plugin.php');
+			require(NS_HOME.'core'._DS_.'plugin'._DS_.'PluginExtension.php');
 			
 			Exception::register();
 			Config::register();

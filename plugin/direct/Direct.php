@@ -1,7 +1,7 @@
 <?php
 namespace nutshell\plugin\direct
 {
-	use nutshell\core\Plugin;
+	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Factory;
 	

@@ -1,5 +1,5 @@
 <?php
-namespace nutshell\core
+namespace nutshell\core\plugin
 {
 	use nutshell\Nutshell;
 	use nutshell\core\exception\Exception;
@@ -12,8 +12,7 @@ namespace nutshell\core
 	
 	abstract class Plugin extends Component
 	{
-		
-		
+		abstract public static function loadDependencies();
 		
 		private static $PLUGIN_CONFIG_LOADED = array();
 		

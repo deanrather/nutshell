@@ -9,6 +9,11 @@ namespace nutshell\plugin\formParser\element\container
 		private $css		=null;
 		private $js			=null;
 		
+		public static function preload()
+		{
+			self::depends('parent','Element');
+		}
+		
 		public function init()
 		{
 			

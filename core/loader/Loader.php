@@ -37,8 +37,7 @@ namespace nutshell\core\loader
 		 */
 		public static function register()
 		{
-			static::load(array(
-			));
+			static::load(array());
 		}
 		
 		private function doLoad($key,Array $args=array())
