@@ -12,8 +12,6 @@ namespace nutshell\core\plugin
 	
 	abstract class Plugin extends Component
 	{
-		abstract public static function loadDependencies();
-		
 		private static $PLUGIN_CONFIG_LOADED = array();
 		
 		public static function register() 
