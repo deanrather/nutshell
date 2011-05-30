@@ -1,13 +1,15 @@
 <?php
 namespace nutshell\core
 {
+	use nutshell\helper\String;
+	
 	abstract class Component
 	{
 		abstract public static function register();
 		
 		public static function load($files)
 		{
-			$namespace = preg_replace('/\\\\[^\\\\]*$/', '', get_called_class());
+			$namespace = String::getNamespace(get_called_class());
 			
 			if (!is_array($files))$files=array($files);
 			for ($i=0,$j=count($files); $i<$j; $i++)

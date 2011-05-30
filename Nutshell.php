@@ -14,7 +14,6 @@ namespace nutshell
 		const NUTSHELL_ENVIRONMENT = 'NS_ENV';
 		
 		public $config 	=null;
-//		public $helper	=null;
 		private $loader	=null;
 		
 		/**
@@ -29,6 +28,9 @@ namespace nutshell
 			//Load the behaviours first.
 			$this->loadBehaviours();
 			
+			//Load the helpers.
+			$this->loadHelpers();
+			
 			//Load the core components.
 			$this->loadCoreComponents();
 			
@@ -39,6 +41,17 @@ namespace nutshell
 		private function loadBehaviours()
 		{
 			foreach (new DirectoryIterator(NS_HOME.'behaviour'._DS_) as $iteration)
+			{
+				if (!$iteration->isDot())
+				{
+					require($iteration->getPathname());
+				}
+			}
+		}
+		
+		private function loadHelpers()
+		{
+			foreach (new DirectoryIterator(NS_HOME.'helper'._DS_) as $iteration)
 			{
 				if (!$iteration->isDot())
 				{

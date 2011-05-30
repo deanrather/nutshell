@@ -4,10 +4,11 @@ namespace nutshell\core
 	use nutshell\Nutshell;
 	use nutshell\core\exception\Exception;
 	use nutshell\core\Component;
+	use nutshell\core\config\Config;
 	use nutshell\behaviour\Factory;
 	use nutshell\behaviour\Singleton;
 	use nutshell\behaviour\Abstractable;
-	use nutshell\core\config\Config;
+	use nutshell\helper\String;
 	
 	abstract class Plugin extends Component
 	{
@@ -58,7 +59,7 @@ namespace nutshell\core
 				}
 				else
 				{
-					throw new Exception('Invalid plugin. Plugin must implement one of either "Factory","Singleton" or "Abstractable" interfaces.');
+					throw new Exception('Invalid plugin. Plugin must implement one of either "Factory", "Singleton" or "Abstractable" interfaces.');
 				}
 			}
 			//It must be a singleton. Return the instance.
@@ -90,7 +91,7 @@ namespace nutshell\core
 			$config->extendWith($pluginConfigPath, NS_ENV);
 			
 			//add the the nutshell config tree
-			$base = self::getBaseClassName($pluginClassName);
+			$base = String::getBaseClassName($pluginClassName);
 			Nutshell::getInstance()->config->plugin->{$base} = $config;
 			
 			//set the marker
@@ -116,16 +117,6 @@ namespace nutshell\core
 			}
 			
 			return NS_HOME . 'plugin' . _DS_ . $nsSplit[2]; // plugin folder
-		}
-
-		/**
-		 * 
-		 * @param String $className
-		 * @return String the base class name
-		 */
-		protected static function getBaseClassName($className)
-		{
-			return preg_replace('/^([^\\\\]+\\\\)*/', '', $className);
 		}
 	}
 }
