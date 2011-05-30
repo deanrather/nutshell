@@ -1,23 +1,20 @@
 <?php
-namespace nutshell\plugin
+namespace nutshell\plugin\template
 {
 	use nutshell\core\exception\Exception;
 
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
-	use nutshell\behaviour\Singleton;
+	use nutshell\behaviour\Factory;
 	
 	class Template extends Plugin implements Native,Factory
 	{
 		private $templateFile	=null;
 		private $template		=null;
-		private $keyVals		=null;
+		private $keyVals		=array();
 		private $compiled		=null;
 		
-		public static function loadDependencies()
-		{
-			
-		}
+		public static function loadDependencies(){}
 		
 		public function init($template)
 		{
@@ -35,12 +32,12 @@ namespace nutshell\plugin
 				}
 				else
 				{
-					throw new Exception('Unable to load template. File is unreadable.');
+					throw new Exception('Unable to load template. File is unreadable. FILE: "'.$template.'".');
 				}
 			}
 			else
 			{
-				throw new Exception('Unable to load template. File is missing.');
+				throw new Exception('Unable to load template. File is missing. FILE: "'.$template.'".');
 			}
 		}
 		
