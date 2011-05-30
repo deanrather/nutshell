@@ -7,11 +7,13 @@ namespace nutshell\plugin\logger
 	
 	class Logger extends Plugin implements Native,AbstractFactory
 	{
-		const ROOT_LOGGER = 'root';
+		const ROOT_LOGGER = '__ROOT__';
 		
 		private static $instances = array();
 		
 		protected $loggerName = null;
+		
+		protected $writers = null;
 		
 		/**
 		 * 
@@ -29,13 +31,28 @@ namespace nutshell\plugin\logger
 		
 		public function __construct($loggerName)
 		{
-			$this->loggerName = $loggerName;
 			$this->configure();
 		}
 		
-		protected function configure()
+		protected function configure($loggerName)
 		{
+			$this->loggerName = $loggerName;
+			$this->writers = array();
+			$loggerConfig = $this->resolveLoggerConfig();
 			
+		}
+		
+		protected function resolveLoggerConfig() 
+		{
+			$candidate = null;
+			
+			foreach($this->config->loggers as $nodeName => $config)
+			{
+				if(($candidate === null && $nodeName === self::ROOT_LOGGER) || strstr($this->loggerName, $nodeName) )
+				{
+					$candidate = $nodeName;
+				}
+			}
 		}
 		
 		/**
