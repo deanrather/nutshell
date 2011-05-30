@@ -7,6 +7,11 @@ namespace nutshell\plugin\session
 	
 	class Session extends Plugin implements Native,Singleton
 	{
+		public static function loadDependencies()
+		{
+			
+		}
+		
 		public function init()
 		{
 			

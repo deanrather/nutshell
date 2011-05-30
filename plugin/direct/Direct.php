@@ -7,6 +7,11 @@ namespace nutshell\plugin\direct
 	
 	class Direct extends Plugin implements Native,Factory
 	{
+		public static function loadDependencies()
+		{
+			
+		}
+		
 		public function init()
 		{
 			

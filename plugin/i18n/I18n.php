@@ -7,6 +7,11 @@ namespace nutshell\plugin\i18n
 	
 	class I18n extends Plugin implements Native,Singleton
 	{
+		public static function loadDependencies()
+		{
+			
+		}
+		
 		public function init()
 		{
 			

@@ -1,11 +1,11 @@
 <?php
-namespace nutshell\plugin\db
+namespace nutshell\plugin\mvc
 {
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
-	use nutshell\behaviour\Factory;
+	use nutshell\behaviour\Singleton;
 	
-	class Db extends Plugin implements Native,Factory
+	class Mvc extends Plugin implements Native,Singleton
 	{
 		public static function loadDependencies()
 		{

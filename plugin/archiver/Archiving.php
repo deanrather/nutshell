@@ -7,6 +7,11 @@ namespace nutshell\plugin\archiver
 	
 	class Archiver extends Plugin implements Native,Factory
 	{
+		public static function loadDependencies()
+		{
+			
+		}
+		
 		public function init()
 		{
 			

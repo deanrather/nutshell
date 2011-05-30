@@ -7,6 +7,11 @@ namespace nutshell\plugin\l10n
 	
 	class L10n extends Plugin implements Native,Singleton
 	{
+		public static function loadDependencies()
+		{
+			
+		}
+		
 		public function init()
 		{
 			

@@ -6,6 +6,11 @@ namespace nutshell\plugin
 
 	class HipHop extends Plugin implements Singleton
 	{
+		public static function loadDependencies()
+		{
+			
+		}
+		
 		public function init()
 		{
 			
