@@ -9,10 +9,10 @@ namespace nutshell\plugin\formParser
 	
 	class FormParser extends Plugin implements Native,Factory
 	{
-		private $path	=null;
-		private $raw	=null;
-		private $json	=null;
-		private $parsed	=null;
+		private $path		=null;
+		private $raw		=null;
+		private $json		=null;
+		private $document	=null;
 		
 		public static function loadDependencies()
 		{
@@ -55,25 +55,16 @@ namespace nutshell\plugin\formParser
 		public function parse()
 		{
 			//Create the top level document object.
-			$this->parsed=new Document();
-			
-			//Parse the top level stuff first.
-			foreach ($this->json as $container)
-			{
-				
-			}
+			$this->document=new Document($this->json);
 		}
 		
 		public function render()
 		{
-			if (is_null($this->parsed))
+			if (is_null($this->document))
 			{
 				$this->parse();
 			}
-			else
-			{
-				
-			}
+			return $this->document->render();
 		}
 	}
 }

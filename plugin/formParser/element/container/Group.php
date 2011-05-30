@@ -5,7 +5,16 @@ namespace nutshell\plugin\formParser\element\container
 	
 	class Group extends Element
 	{
+		public function init($elementDef)
+		{
+			
+			
+		}
 		
+		public function render()
+		{
+			
+		}
 	}
 }
 ?>
