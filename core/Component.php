@@ -9,17 +9,12 @@ namespace nutshell\core
 		
 		public static function load($files)
 		{
-			$namespace = Object::getNamespace(get_called_class());
+			$directory = Object::getClassPath(get_called_class());
 			
 			if (!is_array($files))$files=array($files);
 			for ($i=0,$j=count($files); $i<$j; $i++)
 			{
-				$file=NS_HOME.str_replace
-				(
-					array('nutshell\\','\\'),
-					array('',_DS_),
-					$namespace
-				)._DS_.$files[$i];
+				$file= $directory . $files[$i];
 				require($file);
 			}
 		}

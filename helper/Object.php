@@ -39,6 +39,27 @@ namespace nutshell\helper
 		}
 		
 		/**
+		 * Locates the source directory for specified class.
+		 * Note: it does only work with native plugins.
+		 * 
+		 * @return String the physical path to the directory containing the class. 
+		 */
+		public static function getClassPath($className)
+		{
+			return NS_HOME . str_replace(
+				array(
+					'nutshell\\', 
+					'\\'
+				), 
+				array(
+					'\\', 
+					_DS_
+				),  
+				self::getNamespace($className)
+			) . _DS_;
+		}
+		
+		/**
 		 * getClassInfo returns an associative array containing information about the $classname
 		 * 
 		 * @param String $className the class being investigated
