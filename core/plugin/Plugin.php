@@ -5,9 +5,6 @@ namespace nutshell\core\plugin
 	use nutshell\core\exception\Exception;
 	use nutshell\core\Component;
 	use nutshell\core\config\Config;
-	use nutshell\behaviour\Factory;
-	use nutshell\behaviour\Singleton;
-	use nutshell\behaviour\Abstractable;
 	use nutshell\helper\String;
 	
 	abstract class Plugin extends Component
@@ -35,30 +32,39 @@ namespace nutshell\core\plugin
 			//If $instance is set, then it is definately a singleton.
 			if (!isset($GLOBALS['NUTSHELL_PLUGIN_SINGLETON'][$className]))
 			{
-				//Create a new instance.
-				$instance=new static();
-				self::loadPluginConfig($className);
-				//Is it a Factory?
-				if ($instance instanceof Factory)
+				//gets the list of implemented interfaces
+				if($interfaces = class_implements($className, false))
 				{
-					call_user_func_array(array($instance,'init'),$args);
-					return $instance;
-				}
-				//Is it a singleton?
-				else if ($instance instanceof Singleton)
-				{
-					$GLOBALS['NUTSHELL_PLUGIN_SINGLETON'][$className]=$instance;
-					call_user_func_array(array($instance,'init'),$args);
-				}
-//				//Is it abstractable?
-//				else if ($instance instanceof Abstractable)
-//				{
-//					//TODO: Deal with Abstractable interface.
-//					throw new Exception('TODO: Deal with Abstractable interface.');
-//				}
-				else
-				{
-					throw new Exception('Invalid plugin. Plugin must implement one of either "Factory", "Singleton" or "Abstractable" interfaces.');
+					self::loadPluginConfig($className);
+					//Is it a Factory?
+					if (in_array('nutshell\behaviour\Factory', $interfaces))
+					{
+						$instance=new static();
+						call_user_func_array(array($instance,'init'),$args);
+						return $instance;
+					}
+					//Is it a singleton?
+					else if (in_array('nutshell\behaviour\Singleton', $interfaces))
+					{
+						$instance=new static();
+						$GLOBALS['NUTSHELL_PLUGIN_SINGLETON'][$className]=$instance;
+						call_user_func_array(array($instance,'init'),$args);
+					}
+					//Is it an AbstractFactory?
+					else if (in_array('nutshell\behaviour\AbstractFactory', $interfaces))
+					{
+						return call_user_func_array(array($className,'getInstance'),$args);
+					}
+	//				//Is it abstractable?
+	//				else if ($instance instanceof Abstractable)
+	//				{
+	//					//TODO: Deal with Abstractable interface.
+	//					throw new Exception('TODO: Deal with Abstractable interface.');
+	//				}
+					else
+					{
+						throw new Exception('Invalid plugin. Plugin must implement one of either "Factory", "Singleton" or "Abstractable" interfaces.');
+					}
 				}
 			}
 			//It must be a singleton. Return the instance.
