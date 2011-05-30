@@ -40,26 +40,25 @@ namespace nutshell\core
 			{
 				//Create a new instance.
 				$instance=new static();
+				self::loadPluginConfig($className);
 				//Is it a Factory?
 				if ($instance instanceof Factory)
 				{
-					self::loadPluginConfig($className);
 					call_user_func_array(array($instance,'init'),$args);
 					return $instance;
 				}
 				//Is it a singleton?
 				else if ($instance instanceof Singleton)
 				{
-					self::loadPluginConfig($className);
 					$GLOBALS['NUTSHELL_PLUGIN_SINGLETON'][$className]=$instance;
 					call_user_func_array(array($instance,'init'),$args);
 				}
-				//Is it abstractable?
-				else if ($instance instanceof Abstractable)
-				{
-					//TODO: Deal with Abstractable interface.
-					throw new Exception('TODO: Deal with Abstractable interface.');
-				}
+//				//Is it abstractable?
+//				else if ($instance instanceof Abstractable)
+//				{
+//					//TODO: Deal with Abstractable interface.
+//					throw new Exception('TODO: Deal with Abstractable interface.');
+//				}
 				else
 				{
 					throw new Exception('Invalid plugin. Plugin must implement one of either "Factory", "Singleton" or "Abstractable" interfaces.');
@@ -74,7 +73,7 @@ namespace nutshell\core
 		 * 
 		 * @param String $pluginName
 		 */
-		private static function loadPluginConfig($pluginClassName)
+		public static function loadPluginConfig($pluginClassName)
 		{
 			if(isset(self::$PLUGIN_CONFIG_LOADED[$pluginClassName]))
 			{
