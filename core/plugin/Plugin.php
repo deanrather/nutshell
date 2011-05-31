@@ -9,7 +9,14 @@ namespace nutshell\core\plugin
 	
 	abstract class Plugin extends Component
 	{
-		private static $PLUGIN_CONFIG_LOADED = array();
+		private static $PLUGIN_CONFIG_LOADED	= array();
+		protected static $instance				= null;
+		public $config							= null;
+		
+		public function __construct()
+		{
+			$this->config=$this->core->config->plugin->{Object::getBaseClassName($this)};
+		}
 		
 		public static function register() 
 		{
@@ -17,7 +24,7 @@ namespace nutshell\core\plugin
 			static::load(array());
 		}
 		
-		protected static $instance=null;
+		
 		
 		/**
 		 * 
@@ -96,8 +103,7 @@ namespace nutshell\core\plugin
 			$config->extendWith($pluginConfigPath, NS_ENV);
 			
 			//add the the nutshell config tree
-			$base = Object::getBaseClassName($pluginClassName);
-			Nutshell::getInstance()->config->plugin->{$base} = $config;
+			Nutshell::getInstance()->config->plugin->{Object::getBaseClassName($pluginClassName)} = $config;
 			
 			//set the marker
 			self::$PLUGIN_CONFIG_LOADED[$pluginClassName] = true;
@@ -122,6 +128,16 @@ namespace nutshell\core\plugin
 			}
 			
 			return NS_HOME . 'plugin' . _DS_ . $nsSplit[2]; // plugin folder
+		}
+		
+		public function __get($key)
+		{
+			switch ($key)
+			{
+//				case 'config':	return Nutshell::getInstance()->config;
+				case 'core':	return Nutshell::getInstance();
+				case 'plugin':	return Nutshell::getInstance()->plugin;
+			}
 		}
 	}
 }
