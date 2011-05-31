@@ -19,8 +19,7 @@
 			
 			<!-- Page Container -->
 			
-			{$PAGES}
-			
+			{$CHILDREN}
 			
 			<!-- Other Dialogs -->
 			
