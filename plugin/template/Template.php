@@ -59,14 +59,16 @@ namespace nutshell\plugin\template
 			return $this;
 		}
 		
-		public function compile()
+		public function compile($clear=true)
 		{
-			return $this->compiled=str_replace
+			$this->compiled=str_replace
 			(
 				array_keys($this->keyVals),
 				array_values($this->keyVals),
 				$this->template
 			);
+			if ($clear)$this->clearUnusedVars();
+			return $this->compiled;
 		}
 		
 		public function getCompiled()
@@ -75,6 +77,16 @@ namespace nutshell\plugin\template
 			{
 				$this->compile();
 			}
+			return $this->compiled;
+		}
+		
+		public function clearUnusedVars()
+		{
+			if (is_null($this->compiled))
+			{
+				$this->compile();
+			}
+			$this->compiled=preg_replace('/\{\$\w+\}/','',$this->compiled);
 			return $this->compiled;
 		}
 	}
