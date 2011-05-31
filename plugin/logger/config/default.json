@@ -5,12 +5,9 @@
 		{
 			"rootLog" : 
 			{
-				"type" : 
-				{
-					"class" : "FileWriter",
-					"output" : "{NS_HOME}/log/root.log"
-				},
-				"message" : "%d [%P] - %m%n"
+				"class" : "FileWriter",
+				"output" : "{NS_HOME}/log/root.log",
+				"messagePattern" : "%d [%P] - %m%n"
 			}
 		},
 		"loggers": 

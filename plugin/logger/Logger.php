@@ -2,8 +2,17 @@
 namespace nutshell\plugin\logger
 {
 	use nutshell\core\plugin\Plugin;
+	
+	use nutshell\core\exception\Exception;
+	
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\AbstractFactory;
+	
+	use nutshell\plugin\logger\Filter;
+	use nutshell\plugin\logger\Level;
+	
+	use nutshell\plugin\logger\writer\Writer;
+	
 	
 	class Logger extends Plugin implements Native,AbstractFactory
 	{
@@ -13,7 +22,7 @@ namespace nutshell\plugin\logger
 		
 		protected $loggerName = null;
 		
-		protected $writers = null;
+		protected $filters = null;
 		
 		/**
 		 * 
@@ -21,7 +30,12 @@ namespace nutshell\plugin\logger
 		 */
 		public static function loadDependencies()
 		{
+			
+			include_once(__DIR__.'/Level.php');
+			
 			include_once(__DIR__.'/writer/Writer.php');
+			
+			include_once(__DIR__.'/Filter.php');
 			
 			include_once(__DIR__.'/writer/db/DbWriter.php');
 			
@@ -31,13 +45,14 @@ namespace nutshell\plugin\logger
 		
 		public function __construct($loggerName)
 		{
-			$this->configure();
+			parent::__construct();
+			$this->configure($loggerName);
 		}
 		
 		protected function configure($loggerName)
 		{
 			$this->loggerName = $loggerName;
-			$this->writers = array();
+			$this->filters = array();
 			$loggerConfig = $this->resolveLoggerConfig();
 			
 		}
@@ -48,11 +63,59 @@ namespace nutshell\plugin\logger
 			
 			foreach($this->config->loggers as $nodeName => $config)
 			{
-				if(($candidate === null && $nodeName === self::ROOT_LOGGER) || strstr($this->loggerName, $nodeName) )
+				if(
+					($candidate === null && $nodeName === self::ROOT_LOGGER) || 
+					self::isMoreSpecific($candidate, $nodeName, $this->loggerName) 
+				)
 				{
 					$candidate = $nodeName;
 				}
 			}
+			
+			$writers = $this->config->loggers->{$candidate};
+			
+			if($writers) 
+			{
+				foreach($writers as  $writer)
+				{
+					if ($writer->writer === null)
+					{
+						throw new Exception(sprintf("Incorrect logger definition."));
+					}
+					
+					$writerConfig = $this->config->writers->{$writer->writer};
+					if ($writerConfig === null)
+					{
+						throw new Exception(sprintf("Could not locate a writer definition named: %s", $writer->writer));
+					}
+					$this->filters[$writer->writer] = new Filter(
+						$this,
+						Level::fromString($writer->level),
+						Writer::runFactory($writer->writer, $writerConfig))
+					;
+				}
+			}
+			else
+			{
+				throw new Exception("No writers defined for logger: %s", $this->loggerName);
+			}
+		}
+		
+		/**
+		 * 
+		 * @param String $currentCandidate
+		 * @param String $newCandidate
+		 * @param String $requestedName
+		 * @return boolean true if $newCandidate is more specific logger than $currentCandidate regarding $requestedName, false otherwise
+		 */
+		protected static function isMoreSpecific($currentCandidate, $newCandidate, $requestedName)
+		{
+			return 
+				//checks that the new candidate matches the requested name
+				preg_match('/^' . preg_quote($newCandidate) . '(\\..+|$)/', $requestedName)
+				//now checks that the new candidate is more specific than the current candidate
+				&& ($currentCandidate === null || $currentCandidate === self::ROOT_LOGGER || strlen($currentCandidate) > strlen($newCandidate)) 
+			;
 		}
 		
 		/**
@@ -78,10 +141,56 @@ namespace nutshell\plugin\logger
 			
 			if(!array_key_exists($loggerName, self::$instances))
 			{
-				self::$instances = new Logger($loggerName);
+				self::$instances[$loggerName] = new Logger($loggerName);
 			}
 			
 			return self::$instances[$loggerName];
+		}
+		
+		public function __toString()
+		{
+			$writers = '';
+			foreach($this->filters as $name => $filter)
+			{
+				$writers .= sprintf("\n\t%s: %s", $name, $filter->__toString());
+			}
+			return sprintf("Logger[%s]%s", $this->loggerName, $writers);
+		}
+		
+		public function debug($msg) 
+		{
+			$this->log(Level::DEBUG, $msg);
+		}
+		
+		public function info($msg)
+		{
+			$this->log(Level::INFO, $msg);
+		}
+		
+		public function warn($msg)
+		{
+			$this->log(Level::WARN, $msg);
+		}
+		
+		public function error($msg)
+		{
+			$this->log(Level::ERROR, $msg);
+		}
+		
+		public function fatal($msg)
+		{
+			$this->log(Level::FATAL, $msg);
+		}
+		
+		protected function log($level, $msg)
+		{
+			foreach($this->filters as $filter)
+			{
+				if($filter->isLogEnabled($level))
+				{
+					$filter->getWriter()->write($msg);
+				}
+			}
 		}
 	}
 }
