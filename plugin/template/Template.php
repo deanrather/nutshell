@@ -2,7 +2,6 @@
 namespace nutshell\plugin\template
 {
 	use nutshell\core\exception\Exception;
-
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Factory;
@@ -14,7 +13,10 @@ namespace nutshell\plugin\template
 		private $keyVals		=array();
 		private $compiled		=null;
 		
-		public static function loadDependencies(){}
+		public static function loadDependencies()
+		{
+			require('Context.php');
+		}
 		
 		public function init($template)
 		{
@@ -27,8 +29,7 @@ namespace nutshell\plugin\template
 			{
 				if (is_readable($template))
 				{
-					$this->templateFile	=$template;
-					$this->template		=file_get_contents($template);
+					$this->templateFile=$template;
 				}
 				else
 				{
@@ -49,7 +50,7 @@ namespace nutshell\plugin\template
 			{
 				for ($i=0,$j=count($key); $i<$j; $i++)
 				{
-					$this->keyVals['{$'.$key[$i].'}']=$val[$i];
+					$this->keyVals[$key[$i]]=$val[$i];
 				}
 			}
 			else
@@ -61,13 +62,16 @@ namespace nutshell\plugin\template
 		
 		public function compile($clear=true)
 		{
-			$this->compiled=str_replace
-			(
-				array_keys($this->keyVals),
-				array_values($this->keyVals),
-				$this->template
-			);
-			if ($clear)$this->clearUnusedVars();
+			$tpl=new Context($this->keyVals);
+			$closedScopeClosure=function($templateFile) use (&$tpl)
+			{
+				ob_start();
+				include($templateFile);
+				$compiled=ob_get_contents();
+				ob_end_clean();
+				return $compiled;
+			};
+			$this->compiled=$closedScopeClosure($this->templateFile);
 			return $this->compiled;
 		}
 		
@@ -77,16 +81,6 @@ namespace nutshell\plugin\template
 			{
 				$this->compile();
 			}
-			return $this->compiled;
-		}
-		
-		public function clearUnusedVars()
-		{
-			if (is_null($this->compiled))
-			{
-				$this->compile();
-			}
-			$this->compiled=preg_replace('/\{\$\w+\}/','',$this->compiled);
 			return $this->compiled;
 		}
 	}

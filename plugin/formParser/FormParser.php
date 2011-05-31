@@ -22,7 +22,7 @@ namespace nutshell\plugin\formParser
 			
 			
 			require(__DIR__.'/Document.php');
-			require(__DIR__.'/Element.php');
+			require(__DIR__.'/element/Element.php');
 			require(__DIR__.'/element/container/Page.php');
 			require(__DIR__.'/element/container/Group.php');
 			require(__DIR__.'/element/field/Text.php');

@@ -1,5 +1,5 @@
 <?php
-namespace nutshell\plugin\formParser
+namespace nutshell\plugin\formParser\element
 {
 	use nutshell\core\plugin\PluginExtension;
 	use nutshell\helper\Object;
@@ -13,11 +13,12 @@ namespace nutshell\plugin\formParser
 		const TEMPLATE_DIR		='tpl';
 		
 		private $id				=null;
-		private $children		=null;
+		private $children		=array();
 		private $templateVars	=array();
 		
 		public function __construct(stdClass $elementDef)
 		{
+			parent::__construct();
 			if (isset($elementDef->id))
 			{
 				$this->id=$elementDef->id;
@@ -36,14 +37,36 @@ namespace nutshell\plugin\formParser
 		
 		private function compileTemplate()
 		{
-			$template=$this->plugin->Template(Object::getClassPath(get_class($this)).self::TEMPLATE_DIR._DS_.'Page.tpl');
-			$template->setKeyVal
-			(
-				array_keys($this->templateVars),
-				array_values($this->templateVars)
-			);
 			
+			$templateFile=$this->getTemplateFile();
+			if ($templateFile)
+			{
+				$template=$this->plugin->Template();
+				$template->setKeyVal
+				(
+					array_keys($this->templateVars),
+					array_values($this->templateVars)
+				);
+			}
 			return $template->compile();
+		}
+		
+		public function getTemplateFile()
+		{
+			$file=Object::getClassPath($this).self::TEMPLATE_DIR._DS_.Object::getBaseClassName($this).'.tpl';
+			if (file_exists($file))
+			{
+				return ;
+			}
+			else
+			{
+				$parent=get_parent_class($this);
+				if (method_exists($parent,'getTemplateFile'))
+				{
+					
+				}
+				return $parent::getTemplateFile();
+			}
 		}
 		
 		private function generateID()
@@ -62,9 +85,10 @@ namespace nutshell\plugin\formParser
 			return $this->id;
 		}
 		
-		public function addChild()
+		public function addChild(Element $child)
 		{
-			
+			$this->children[]=$child;
+			return $this;
 		}
 		
 		public function getChildren()
@@ -74,7 +98,13 @@ namespace nutshell\plugin\formParser
 		
 		public function render()
 		{
+			$children='';
+			for ($i=0,$j=count($this->children); $i<$j; $i++)
+			{
+				$children.=$this->children[$i]->render();
+			}
 			$this->setTemplateVar('ID',$this->id);
+			$this->setTemplateVar('CHILDREN',$children);
 			return $this->compileTemplate();
 		}
 		
