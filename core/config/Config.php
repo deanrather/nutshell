@@ -114,7 +114,16 @@ namespace nutshell\core\config
 			if (is_object($obj)) 
 			{
 				return new Config($obj);
-			} 
+			}
+			else if (is_array($obj))
+			{
+				$res = array();
+				foreach($obj as $k => $v)
+				{
+					$res[$k] = self::parse($v);
+				}
+				return $res;
+			}
 			else 
 			{
 				return $obj;
@@ -264,16 +273,53 @@ namespace nutshell\core\config
 		 * Render primitive types
 		 * 
 		 * @param mixed $data
+		 * @return String a JSON string representation of the primitive
 		 */
-		protected function primitiveRendering($data) 
+		protected static function primitiveRendering($data) 
 		{
-			return json_encode($data);
+			if(is_array($data))
+			{
+				//special handling for arrays
+				return self::arrayRendering($data);
+			} 
+			else 
+			{
+				return json_encode($data);
+			}
+		}
+		
+		/**
+		 * 
+		 * 
+		 * @param array $data
+		 * @return String a JSON string representation of the array
+		 */
+		protected static function arrayRendering(array $data)
+		{
+			$buff  = '[';
+			foreach($data as $i => $v)
+			{
+				if($i > 0)
+				{
+					$buff .= ',';
+				}
+				if (is_object($v) && ($v instanceof Config))
+				{
+					$buff .= $v->__toString();
+				}
+				else 
+				{
+					$buff .= self::primitiveRendering($v);
+				}
+			}
+			$buff .= ']';
+			return $buff;
 		}
 		
 		/**
 		 * __toString handler
 		 * 
-		 * @return string a representation of the instance
+		 * @return String a JSON string representation of the instance
 		 * 
 		 */
 		public function __toString() 
@@ -286,7 +332,7 @@ namespace nutshell\core\config
 				$out .= sprintf('%s"%s":%s',
 					$separator,
 					$key, 
-					$value instanceof Config ? $value->__toString() : $this->primitiveRendering($value)
+					$value instanceof Config ? $value->__toString() : self::primitiveRendering($value)
 				);
 				
 				//set the separator
