@@ -1,4 +1,4 @@
-<section id="{$ID}" class="group">
-	<h1>{$LABEL}</h1>
-	{$CHILDREN}
+<section id="<?php $tpl->ID; ?>" class="group">
+	<h1><?php $tpl->LABEL; ?></h1>
+	<?php $tpl->CHILDREN; ?>
 </section>

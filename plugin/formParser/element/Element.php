@@ -37,14 +37,36 @@ namespace nutshell\plugin\formParser\element
 		
 		private function compileTemplate()
 		{
-			$template=$this->plugin->Template(Object::getClassPath($this).self::TEMPLATE_DIR._DS_.Object::getBaseClassName($this).'.tpl');
-			$template->setKeyVal
-			(
-				array_keys($this->templateVars),
-				array_values($this->templateVars)
-			);
 			
+			$templateFile=$this->getTemplateFile();
+			if ($templateFile)
+			{
+				$template=$this->plugin->Template();
+				$template->setKeyVal
+				(
+					array_keys($this->templateVars),
+					array_values($this->templateVars)
+				);
+			}
 			return $template->compile();
+		}
+		
+		public function getTemplateFile()
+		{
+			$file=Object::getClassPath($this).self::TEMPLATE_DIR._DS_.Object::getBaseClassName($this).'.tpl';
+			if (file_exists($file))
+			{
+				return ;
+			}
+			else
+			{
+				$parent=get_parent_class($this);
+				if (method_exists($parent,'getTemplateFile'))
+				{
+					
+				}
+				return $parent::getTemplateFile();
+			}
 		}
 		
 		private function generateID()
