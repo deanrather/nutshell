@@ -1,5 +1,5 @@
 <?php
-namespace nutshell\plugin\formParser
+namespace nutshell\plugin\formParser\element
 {
 	use nutshell\core\plugin\PluginExtension;
 	use nutshell\helper\Object;

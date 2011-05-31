@@ -25,16 +25,28 @@ namespace nutshell\plugin\formParser
 			//Create the root document element.
 			$this->root=new Page($json[0]);
 			//Now creat it's children.
-			for ($i=0,$j=count($json[0]->children); $i<$j; $i++)
+			if (isset($json[0]->children))
 			{
-				if (!is_null($class=$this->getClassFromType($json[0]->children[$i]->type)))
+				$this->parseChildren($this->root,$json[0]->children);
+			}
+		}
+		
+		private function parseChildren($parent,$children)
+		{
+			for ($i=0,$j=count($children); $i<$j; $i++)
+			{
+				if (!is_null($class=$this->getClassFromType($children[$i]->type)))
 				{
-					$element=new $class($json[0]->children[$i]);
-					$this->root->addChild($element);
+					$element=new $class($children[$i]);
+					if (isset($children[$i]->children))
+					{
+						$this->parseChildren($element,$children[$i]->children);
+					}
+					$parent->addChild($element);
 				}
 				else
 				{
-					throw new Exception('Unsupported element type "'.$json[0]->children[$i]->type.'".');
+					throw new Exception('Unsupported element type "'.$children[$i]->type.'".');
 				}
 			}
 		}
@@ -57,6 +69,15 @@ namespace nutshell\plugin\formParser
 					{
 						case 'page':	$class.='Page';		break;
 						case 'group':	$class.='Group';	break;
+					}
+					break;
+				}
+				case 'field':
+				{
+					$class=__NAMESPACE__.'\element\field\\';
+					switch ($parts[1])
+					{
+						case 'text':	$class.='Text';		break;
 					}
 					break;
 				}
