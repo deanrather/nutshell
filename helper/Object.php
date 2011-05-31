@@ -22,6 +22,10 @@ namespace nutshell\helper
 		 */
 		public static function getBaseClassName($className)
 		{
+			if (is_object($className))
+			{
+				$className=get_class($className);
+			}
 			return self::getClassInfo($className, self::CLASSINFO_CLASSNAME);
 		}
 		
