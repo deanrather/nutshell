@@ -42,6 +42,7 @@ namespace nutshell\core\loader
 		
 		private function doLoad($key,Array $args=array())
 		{
+			$className='nutshell\\'.$this->container.'\\'.lcfirst($key).'\\'.$key;
 			//Is the {$this->container} object loaded?
 			if (!isset($this->loaded[$this->container][$key]))
 			{
@@ -51,12 +52,10 @@ namespace nutshell\core\loader
 				require(NS_HOME.$this->container._DS_.lcfirst($key)._DS_.$key.'.php');
 				
 				//Construct the class name.
-				$className='nutshell\\'.$this->container.'\\'.lcfirst($key).'\\'.$key;
 				$className::loadDependencies();
-				
-				#Initiate
-				$this->loaded[$this->container][$key]=$className::getInstance($args);
 			}
+			#Initiate
+			$this->loaded[$this->container][$key]=$className::getInstance($args);
 			return $this->loaded[$this->container][$key];
 		}
 		
