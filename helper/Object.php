@@ -54,6 +54,10 @@ namespace nutshell\helper
 		 */
 		public static function getClassPath($className)
 		{
+			if (is_object($className))
+			{
+				$className=get_class($className);
+			}
 			return NS_HOME . str_replace(
 				array(
 					'nutshell\\', 
