@@ -475,7 +475,14 @@ namespace nutshell\core\config
 						$extended = array();
 					}
 					$extended[] = basename($file, '.' . self::CONFIG_FILE_EXTENSION);
-					return ConfigRoot::parse(json_decode(file_get_contents($file)), $extendHandler, $extended);
+					
+					//reading the JSON document
+					$decodedJSON = json_decode(file_get_contents($file));
+					if($decodedJSON === null) 
+					{
+						throw new Exception(sprintf('Invalid JSON document: %s', $file));
+					}
+					return ConfigRoot::parse($decodedJSON, $extendHandler, $extended);
 				} 
 				else
 				{
