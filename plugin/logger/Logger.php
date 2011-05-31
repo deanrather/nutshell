@@ -3,7 +3,7 @@ namespace nutshell\plugin\logger
 {
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
-	use nutshell\behaviour\Factory;
+	use nutshell\behaviour\AbstractFactory;
 	
 	class Logger extends Plugin implements Native,AbstractFactory
 	{
