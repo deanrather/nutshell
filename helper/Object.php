@@ -60,7 +60,7 @@ namespace nutshell\helper
 					'\\'
 				), 
 				array(
-					'\\', 
+					'', 
 					_DS_
 				),  
 				self::getNamespace($className)
