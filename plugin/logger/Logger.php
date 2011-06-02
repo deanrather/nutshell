@@ -34,6 +34,7 @@ namespace nutshell\plugin\logger
 			include_once(__DIR__.'/Level.php');
 			
 			include_once(__DIR__.'/writer/Writer.php');
+			include_once(__DIR__.'/writer/Pattern.php');
 			
 			include_once(__DIR__.'/Filter.php');
 			
@@ -157,38 +158,42 @@ namespace nutshell\plugin\logger
 			return sprintf("Logger[%s]%s", $this->loggerName, $writers);
 		}
 		
-		public function debug($msg) 
+		public function debug($msg, $extraData = null) 
 		{
-			$this->log(Level::DEBUG, $msg);
+			$this->log(Level::DEBUG, $msg, $extraData);
 		}
 		
-		public function info($msg)
+		public function info($msg, $extraData = null)
 		{
-			$this->log(Level::INFO, $msg);
+			$this->log(Level::INFO, $msg, $extraData);
 		}
 		
-		public function warn($msg)
+		public function warn($msg, $extraData = null)
 		{
-			$this->log(Level::WARN, $msg);
+			$this->log(Level::WARN, $msg, $extraData);
 		}
 		
-		public function error($msg)
+		public function error($msg, $extraData = null)
 		{
-			$this->log(Level::ERROR, $msg);
+			$this->log(Level::ERROR, $msg, $extraData);
 		}
 		
-		public function fatal($msg)
+		public function fatal($msg, $extraData = null)
 		{
-			$this->log(Level::FATAL, $msg);
+			$this->log(Level::FATAL, $msg, $extraData);
 		}
 		
-		protected function log($level, $msg)
+		protected function log($level, $msg, $extraData = null)
 		{
 			foreach($this->filters as $filter)
 			{
 				if($filter->isLogEnabled($level))
 				{
-					$filter->getWriter()->write($msg);
+					$filter->getWriter()->write($msg, array(
+						Writer::CTX_LOG_LEVEL => $level,
+					),
+					$extraData
+					);
 				}
 			}
 		}

@@ -5,8 +5,10 @@ namespace nutshell\plugin\logger\writer
 	use nutshell\helper\Object;
 	use nutshell\core\exception\Exception;
 	
-	class Writer
+	abstract class Writer
 	{
+		const CTX_LOG_LEVEL = 'level';
+		
 		/**
 		 * Pattern (using placeholders) for the message output
 		 * 
@@ -103,10 +105,24 @@ namespace nutshell\plugin\logger\writer
 			return new self::$implementations[$config->class]($config);
 		} 
 		
-		public function write($msg)
+		/**
+		 * Write a log message
+		 * 
+		 * @param mixed $msg base message provided to the writer
+		 * @param array $context contextual information for the pattern resolver
+		 * @param mixed $extraData additional debug information
+		 */
+		public function write($msg, array $context, $extraData = null)
 		{
-			//TODO
+			$this->doWrite(Pattern::resolve($this->messagePattern, $msg, $context, $extraData));
 		}
+		
+		/**
+		 * Write the message to the supported media
+		 * 
+		 * @param String $msg
+		 */
+		protected abstract function doWrite($msg);
 		
 		public function __toString()
 		{

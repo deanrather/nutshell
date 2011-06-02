@@ -5,6 +5,9 @@ namespace nutshell\plugin\logger\writer\db
 	
 	class DbWriter extends Writer
 	{
-		
+		protected function doWrite($msg)
+		{
+			//TODO implement
+		}
 	}
 }
