@@ -17,7 +17,20 @@ namespace nutshell\plugin\logger\writer\file
 			parent::parseConfig($config);
 			
 			$this->parseConfigOption($config, 'output');
-			$this->resolveOutput();
+			$this->validateOutput();
+		}
+		
+		/**
+		 * 
+		 * @param unknown_type $path
+		 */
+		protected function resolveOutputPlaceHolders($path)
+		{
+			return str_replace(
+				array('{NS_HOME}'),
+				array(NS_HOME),
+				$path
+			);
 		}
 		
 		/**
@@ -25,13 +38,10 @@ namespace nutshell\plugin\logger\writer\file
 		 * 
 		 * @throws Exception if the log file could not be located or created
 		 */
-		protected function resolveOutput()
+		protected function validateOutput()
 		{
-			$realPath = str_replace(
-				array('{NS_HOME}'),
-				array(NS_HOME),
-				$this->output
-			);
+			$realPath = $this->resolveOutputPlaceHolders($this->output);
+			
 			if(!file_exists($realPath))
 			{
 				if(!touch($realPath)) 

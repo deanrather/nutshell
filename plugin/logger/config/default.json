@@ -5,8 +5,8 @@
 		{
 			"rootLog" : 
 			{
-				"class" : "FileWriter",
-				"output" : "{NS_HOME}/log/root.log",
+				"class" : "DailyFileWriter",
+				"output" : "{NS_HOME}/log/root-{DATE}.log",
 				"messagePattern" : "%d [%P] - %m%n"
 			}
 		},
