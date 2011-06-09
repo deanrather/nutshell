@@ -1,6 +1,8 @@
 <?php
 namespace nutshell\core\plugin
 {
+	use nutshell\behaviour\Singleton;
+
 	use nutshell\Nutshell;
 	use nutshell\core\exception\Exception;
 	use nutshell\core\Component;
@@ -132,11 +134,19 @@ namespace nutshell\core\plugin
 		
 		public function __get($key)
 		{
-			switch ($key)
+			if (($this instanceof Singleton && $this instanceof AbstractFactory)
+			&& $result=self::runFactory($key))
 			{
-//				case 'config':	return Nutshell::getInstance()->config;
-				case 'core':	return Nutshell::getInstance();
-				case 'plugin':	return Nutshell::getInstance()->plugin;
+				return $result;
+			}
+			else
+			{
+				switch ($key)
+				{
+//					case 'config':	return Nutshell::getInstance()->config;
+					case 'core':	return Nutshell::getInstance();
+					case 'plugin':	return Nutshell::getInstance()->plugin;
+				}
 			}
 		}
 	}
