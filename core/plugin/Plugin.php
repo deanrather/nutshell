@@ -17,13 +17,18 @@ namespace nutshell\core\plugin
 		
 		public function __construct()
 		{
-			$this->config=$this->core->config->plugin->{Object::getBaseClassName($this)};
+			$this->config=					$this->core->config->plugin->{Object::getBaseClassName($this)};
 		}
 		
 		public static function register() 
 		{
 			$GLOBALS['NUTSHELL_PLUGIN_SINGLETON']=array();
 			static::load(array());
+		}
+		
+		public static function config()
+		{
+			return Nutshell::getInstance()->config->plugin->{Object::getBaseClassName(get_called_class())};
 		}
 		
 		
