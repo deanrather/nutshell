@@ -123,12 +123,15 @@ namespace nutshell\core\plugin
 				. Config::CONFIG_FOLDER 
 			;
 			
+			$pluginName = Object::getBaseClassName($pluginClassName);
+			
 			//create the plugin config node
 			$config = new Config();
-			$config->extendWith($pluginConfigPath, NS_ENV);
+			$config->{$pluginName} = new Config();
+			$config->{$pluginName}->extendWith($pluginConfigPath, NS_ENV);
 			
 			//add the the nutshell config tree
-			Nutshell::getInstance()->config->plugin->{Object::getBaseClassName($pluginClassName)} = $config;
+			Nutshell::getInstance()->config->plugin->extendWith($config);
 			
 			//set the marker
 			self::$PLUGIN_CONFIG_LOADED[$pluginClassName] = true;
