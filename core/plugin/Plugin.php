@@ -32,8 +32,8 @@ namespace nutshell\core\plugin
 		
 		public function __construct()
 		{
-			$this->config=	$this->core->config->plugin->{Object::getBaseClassName($this)};
 			$this->core=	Nutshell::getInstance();
+			$this->config=	$this->core->config->plugin->{Object::getBaseClassName($this)};
 			$this->plugin=	Nutshell::getInstance()->plugin;
 		}
 		
@@ -45,6 +45,7 @@ namespace nutshell\core\plugin
 		
 		public static function config()
 		{
+			print(Nutshell::getInstance()->config->prettyPrint());
 			return Nutshell::getInstance()->config->plugin->{Object::getBaseClassName(get_called_class())};
 		}
 		
