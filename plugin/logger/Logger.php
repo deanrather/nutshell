@@ -33,6 +33,8 @@ namespace nutshell\plugin\logger
 			
 			include_once(__DIR__.'/Level.php');
 			
+			include_once(__DIR__.'/exception/LoggerException.php');
+			
 			include_once(__DIR__.'/writer/Writer.php');
 			include_once(__DIR__.'/writer/Pattern.php');
 			
