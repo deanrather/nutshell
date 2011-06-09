@@ -2,6 +2,7 @@
 namespace nutshell\core\plugin
 {
 	use nutshell\behaviour\Singleton;
+	use nutshell\behaviour\AbstractFactory;
 
 	use nutshell\Nutshell;
 	use nutshell\core\exception\Exception;
@@ -13,11 +14,27 @@ namespace nutshell\core\plugin
 	{
 		private static $PLUGIN_CONFIG_LOADED	= array();
 		protected static $instance				= null;
+		/**
+		 * @access public
+		 * @var nutshell\core\config\Config
+		 */
 		public $config							= null;
+		/**
+		 * @access public
+		 * @var nutshell\Nutshell
+		 */
+		public $core							= null;
+		/**
+		 * @access public
+		 * @var nutshell\core\plugin\Plugin
+		 */
+		public $plugin							= null;
 		
 		public function __construct()
 		{
-			$this->config=					$this->core->config->plugin->{Object::getBaseClassName($this)};
+			$this->config=	$this->core->config->plugin->{Object::getBaseClassName($this)};
+			$this->core=	Nutshell::getInstance();
+			$this->plugin=	Nutshell::getInstance()->plugin;
 		}
 		
 		public static function register() 
@@ -140,19 +157,11 @@ namespace nutshell\core\plugin
 		public function __get($key)
 		{
 			if (($this instanceof Singleton && $this instanceof AbstractFactory)
-			&& $result=self::runFactory($key))
+			&& $result=static::runFactory($key))
 			{
 				return $result;
 			}
-			else
-			{
-				switch ($key)
-				{
-//					case 'config':	return Nutshell::getInstance()->config;
-					case 'core':	return Nutshell::getInstance();
-					case 'plugin':	return Nutshell::getInstance()->plugin;
-				}
-			}
+			return null;
 		}
 	}
 }
