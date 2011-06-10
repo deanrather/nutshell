@@ -36,11 +36,11 @@ namespace nutshell\plugin\db
 				$username = $connectionParams->username;
 				$password = $connectionParams->password;
 				
-				return new DB($host, $port, $database, $username, $password);
+				return new \DB($host, $port, $database, $username, $password);
 			} 
 			else
 			{
-				throw new Exception();
+				throw new Exception(sprintf("Undefined connection: no configuration for connection named %s", $connectionName));
 			}
 		}
 		

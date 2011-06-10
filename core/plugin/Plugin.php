@@ -45,7 +45,6 @@ namespace nutshell\core\plugin
 		
 		public static function config()
 		{
-			print(Nutshell::getInstance()->config->prettyPrint());
 			return Nutshell::getInstance()->config->plugin->{Object::getBaseClassName(get_called_class())};
 		}
 		
