@@ -67,8 +67,11 @@ namespace nutshell\plugin\formParser
 					$class=__NAMESPACE__.'\element\container\\';
 					switch ($parts[1])
 					{
-						case 'page':	$class.='Page';		break;
-						case 'group':	$class.='Group';	break;
+						case 'page':		$class.='Page';		break;
+						case 'group':		$class.='Group';	break;
+//						case 'inputgroup':	$class.='Group';	break;
+						case 'radiogroup':	$class.='Group';	break;
+						default:			$class=null;
 					}
 					break;
 				}
@@ -78,6 +81,8 @@ namespace nutshell\plugin\formParser
 					switch ($parts[1])
 					{
 						case 'text':	$class.='Text';		break;
+						case 'radio':	$class.='Radio';	break;
+						default:		$class=null;
 					}
 					break;
 				}
