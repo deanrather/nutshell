@@ -20,11 +20,11 @@ namespace nutshell\plugin\formParser
 //			self::depends('local','Document');
 //			self::depends('local','Element');
 			
-			
 			require(__DIR__.'/Document.php');
 			require(__DIR__.'/element/Element.php');
 			require(__DIR__.'/element/container/Page.php');
 			require(__DIR__.'/element/container/Group.php');
+			require(__DIR__.'/element/field/Field.php');
 			require(__DIR__.'/element/field/Text.php');
 			require(__DIR__.'/element/rule/Required.php');
 		}
