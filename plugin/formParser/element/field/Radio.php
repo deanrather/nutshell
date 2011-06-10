@@ -28,7 +28,14 @@ namespace nutshell\plugin\formParser\element\field
 		public function render()
 		{
 			$this->setTemplateVar('CHECKED',$this->checked);
-			return parent::render();
+			if (!$this->parentIsType('InputGroup'))
+			{
+				return parent::render();
+			}
+			else
+			{
+				
+			}
 		}
 	}
 }

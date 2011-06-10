@@ -7,9 +7,9 @@
 		<!-- CSS -->
 		
 <!--		<link rel="stylesheet" type="text/css" media="screen" href="css/reset.css" />-->
-		<link rel="stylesheet" type="text/css" media="screen" href="css/flex.css" />
-		<link rel="stylesheet" type="text/css" media="screen" href="css/theme/default.css" />
-		<link rel="stylesheet" type="text/css" media="screen" href="css/theme/custom.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="build/css/flex.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="build/css/theme/default.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="build/css/theme/custom.css" />
 	</head>
 	<body>
 		

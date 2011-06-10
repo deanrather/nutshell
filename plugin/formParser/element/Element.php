@@ -12,12 +12,14 @@ namespace nutshell\plugin\formParser\element
 		
 		const TEMPLATE_DIR		='tpl';
 		
+		private $parent			=null;
 		private $id				=null;
 		private $children		=array();
 		private $templateVars	=array();
 		
-		public function __construct(stdClass $elementDef)
+		public function __construct($parent,stdClass $elementDef)
 		{
+			$this->parent=$parent;
 			parent::__construct();
 			if (isset($elementDef->id))
 			{
@@ -33,6 +35,11 @@ namespace nutshell\plugin\formParser\element
 		public function __toString()
 		{
 			return (string)$this->render();
+		}
+		
+		public function getParent()
+		{
+			return $this->parent;
 		}
 		
 		private function compileTemplate()
@@ -149,6 +156,29 @@ namespace nutshell\plugin\formParser\element
 		{
 			$this->templateVars[$key]=$val;
 			return $this;
+		}
+		
+		public function parentIsType($type,$strict=false)
+		{
+			if (!$strict)
+			{
+				$current=$this->parent;
+				while (Object::getBaseClassName($current)!='Page')
+				{
+					if (Object::getBaseClassName($current)==$type)
+					{
+						return true;
+					}
+					//Failsafe
+					if (!isset($current->parent))break;
+					$current=$current->parent;
+				}
+			}
+			else
+			{
+				return (Object::getBaseClassName($this->parent)==$type);
+			}
+			return false;
 		}
 	}
 }

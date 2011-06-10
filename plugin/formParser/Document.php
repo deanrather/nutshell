@@ -23,7 +23,7 @@ namespace nutshell\plugin\formParser
 		private function parse(Array $json)
 		{
 			//Create the root document element.
-			$this->root=new Page($json[0]);
+			$this->root=new Page($this,$json[0]);
 			//Now creat it's children.
 			if (isset($json[0]->children))
 			{
@@ -37,7 +37,7 @@ namespace nutshell\plugin\formParser
 			{
 				if (!is_null($class=$this->getClassFromType($children[$i]->type)))
 				{
-					$element=new $class($children[$i]);
+					$element=new $class($parent,$children[$i]);
 					if (isset($children[$i]->children))
 					{
 						$this->parseChildren($element,$children[$i]->children);
@@ -67,10 +67,10 @@ namespace nutshell\plugin\formParser
 					$class=__NAMESPACE__.'\element\container\\';
 					switch ($parts[1])
 					{
-						case 'page':		$class.='Page';		break;
-						case 'group':		$class.='Group';	break;
-//						case 'inputgroup':	$class.='Group';	break;
-						case 'radiogroup':	$class.='Group';	break;
+						case 'page':		$class.='Page';			break;
+						case 'group':		$class.='Group';		break;
+//						case 'inputgroup':	$class.='InputGroup';	break;
+						case 'radiogroup':	$class.='RadioGroup';	break;
 						default:			$class=null;
 					}
 					break;
