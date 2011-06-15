@@ -20,12 +20,12 @@ namespace nutshell
 	
 	class Nutshell
 	{
-		const VERSION				= '1.0.0-dev-2';
+		const VERSION				=	'1.0.0-dev-2';
 		const VERSION_MAJOR			=	1;
 		const VERSION_MINOR			=	0;
 		const VERSION_MICRO			=	0;
 		const VERSION_DEV			=	1;
-		const NUTSHELL_ENVIRONMENT	= 'NS_ENV';
+		const NUTSHELL_ENVIRONMENT	=	'NS_ENV';
 		
 		public $config 	=null;
 		private $loader	=null;
@@ -50,6 +50,11 @@ namespace nutshell
 			
 			//init core components
 			$this->initCoreComponents();
+			
+			/*** MVC & Router Logic ***/
+			
+			
+			
 		}
 		
 		private function loadBehaviours()
@@ -172,7 +177,6 @@ namespace nutshell
 		return Nutshell::init();
 	}
 }
-
 namespace 
 {
 	//checks for overriding bootstrap method
