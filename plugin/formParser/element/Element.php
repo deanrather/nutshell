@@ -12,12 +12,14 @@ namespace nutshell\plugin\formParser\element
 		
 		const TEMPLATE_DIR		='tpl';
 		
+		private $parent			=null;
 		private $id				=null;
 		private $children		=array();
 		private $templateVars	=array();
 		
-		public function __construct(stdClass $elementDef)
+		public function __construct($parent,stdClass $elementDef)
 		{
+			$this->parent=$parent;
 			parent::__construct();
 			if (isset($elementDef->id))
 			{
@@ -35,38 +37,80 @@ namespace nutshell\plugin\formParser\element
 			return (string)$this->render();
 		}
 		
-		private function compileTemplate()
+		public function getParent()
 		{
-			
-			$templateFile=$this->getTemplateFile();
-			if ($templateFile)
-			{
-				$template=$this->plugin->Template();
-				$template->setKeyVal
-				(
-					array_keys($this->templateVars),
-					array_values($this->templateVars)
-				);
-			}
-			return $template->compile();
+			return $this->parent;
 		}
 		
-		public function getTemplateFile()
+		private function compileTemplate()
 		{
-			$file=Object::getClassPath($this).self::TEMPLATE_DIR._DS_.Object::getBaseClassName($this).'.tpl';
+			$elementTpl=self::getTemplateFile();
+			if ($elementTpl)
+			{
+				//Now handle any visual inheritence.
+				$thisClass		=get_class($this);
+				$parentClass	=get_parent_class($thisClass);
+				$parentName		=Object::getBaseClassName($parentClass);
+				
+				//If the parent class is not Element, then fetch the template for that class.
+				if ($parentName!='Element')
+				{
+					$templateDir	=Object::getClassPath($parentClass).self::TEMPLATE_DIR._DS_;
+					$file			=$templateDir.Object::getBaseClassName($parentName).'.tpl';
+					$parentTpl		=$parentClass::getTemplateFile();
+					
+					//This will place the child template inside of the parent template.
+					$elementTpl		=$this->plugin->Template($elementTpl);
+					$template		=$this->plugin->Template($parentTpl);
+					
+					//Bind the variables for the element template.
+					$elementTpl->setKeyVal
+					(
+						array_keys($this->templateVars),
+						array_values($this->templateVars)
+					);
+					/* Now compile the element template and push it into
+					 * the variable list so the parent template can compile it into itself.
+					 */
+					$this->setTemplateVar('EXTENDED',$elementTpl->compile());
+					$template->setKeyVal
+					(
+						array_keys($this->templateVars),
+						array_values($this->templateVars)
+					);
+					return $template->compile();
+				}
+				else
+				{
+					$template=$this->plugin->Template($elementTpl);
+					$template->setKeyVal
+					(
+						array_keys($this->templateVars),
+						array_values($this->templateVars)
+					);
+					return $template->compile();
+				}
+			}
+			return '';
+		}
+		
+		public static function getTemplateFile()
+		{
+			$class	=get_called_class();
+			$file	=Object::getClassPath($class).self::TEMPLATE_DIR._DS_.Object::getBaseClassName($class).'.tpl';
 			if (file_exists($file))
 			{
-				return ;
+				return $file;
 			}
 			else
 			{
-				$parent=get_parent_class($this);
+				$parent=get_parent_class($class);
 				if (method_exists($parent,'getTemplateFile'))
 				{
-					
+					return $parent::getTemplateFile();
 				}
-				return $parent::getTemplateFile();
 			}
+			return null;
 		}
 		
 		private function generateID()
@@ -112,6 +156,29 @@ namespace nutshell\plugin\formParser\element
 		{
 			$this->templateVars[$key]=$val;
 			return $this;
+		}
+		
+		public function parentIsType($type,$strict=false)
+		{
+			if (!$strict)
+			{
+				$current=$this->parent;
+				while (Object::getBaseClassName($current)!='Page')
+				{
+					if (Object::getBaseClassName($current)==$type)
+					{
+						return true;
+					}
+					//Failsafe
+					if (!isset($current->parent))break;
+					$current=$current->parent;
+				}
+			}
+			else
+			{
+				return (Object::getBaseClassName($this->parent)==$type);
+			}
+			return false;
 		}
 	}
 }

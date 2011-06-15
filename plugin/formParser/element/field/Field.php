@@ -2,6 +2,7 @@
 namespace nutshell\plugin\formParser\element\field
 {
 	use nutshell\plugin\formParser\element\Element;
+	use \stdClass;
 	
 	class Field extends Element
 	{
@@ -92,7 +93,18 @@ namespace nutshell\plugin\formParser\element\field
 		
 		public function setStyle($style)
 		{
-			$this->style=$style;
+			if ($style instanceof stdClass)
+			{
+				$this->style='';
+				foreach ($style as $key=>$val)
+				{
+					$this->style.=$key.':'.$val.';';
+				}
+			}
+			else
+			{
+				$this->style=$style;
+			}
 			return $this;
 		}
 		

@@ -2,7 +2,7 @@
 	<div class="message"></div>
 	<section>
 		<label for="<?php $tpl->ID; ?>-field"><?php $tpl->LABEL; ?>:</label>
-		<?php $tpl->FIELD; ?>
+		<?php $tpl->EXTENDED; ?>
 		<div class="icon"></div>
 	</section>
 </section>
