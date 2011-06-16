@@ -24,7 +24,7 @@ namespace nutshell
 		const VERSION_MAJOR			=	1;
 		const VERSION_MINOR			=	0;
 		const VERSION_MICRO			=	0;
-		const VERSION_DEV			=	1;
+		const VERSION_DEV			=	2;
 		const NUTSHELL_ENVIRONMENT	=	'NS_ENV';
 		
 		public $config 	=null;
@@ -35,6 +35,12 @@ namespace nutshell
 		 */
 		public function setup()
 		{
+			//PHP version check.
+			if (version_compare(PHP_VERSION,'5.3.1','<'))
+			{
+				die('Nutshell required PHP version 5.3.1 or higher.');
+			}
+			
 			//Define constants.
 			define('_DS_',DIRECTORY_SEPARATOR);
 			define('NS_HOME',__DIR__._DS_);
@@ -50,11 +56,6 @@ namespace nutshell
 			
 			//init core components
 			$this->initCoreComponents();
-			
-			/*** MVC & Router Logic ***/
-			
-			
-			
 		}
 		
 		private function loadBehaviours()
@@ -143,9 +144,9 @@ namespace nutshell
 		
 		public static function getInstance()
 		{
-			if(!$GLOBALS['NUTSHELL']) 
+			if(!isset($GLOBALS['NUTSHELL'])) 
 			{
-				throw new Exception('Unexpected situation: no running Nutshell instance!');
+				return Nutshell::init();
 			}
 			return $GLOBALS['NUTSHELL'];
 		}
@@ -183,7 +184,8 @@ namespace
 	if(function_exists('bootstrap')) 
 	{
 		//trigger it
-		booststrap();
+		call_user_func('bootstrap');
+//		booststrap();
 	}
 	else
 	{
