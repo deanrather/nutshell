@@ -23,6 +23,7 @@ namespace nutshell\plugin\mvc
 			$route=$this->plugin->Router->getRoute();
 			
 			//Load the controller.
+			
 			$this->loadController($route->getControl());
 			
 			//Construct the namespaced class name.
@@ -44,6 +45,10 @@ namespace nutshell\plugin\mvc
 			if (version_compare(PHP_VERSION,'5.3.3','>='))
 			{
 				//Call the controller action.
+				call_user_func_array(array($this->controller,$route->getAction()),$route->getArgs());
+			}
+			else if ($route->getControl()!=$route->getAction())
+			{
 				call_user_func_array(array($this->controller,$route->getAction()),$route->getArgs());
 			}
 		}

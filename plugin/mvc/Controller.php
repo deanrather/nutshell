@@ -5,7 +5,7 @@ namespace nutshell\plugin\mvc
 	{
 		public function __construct()
 		{
-			
+//			$this->view;
 		}
 	}
 }
