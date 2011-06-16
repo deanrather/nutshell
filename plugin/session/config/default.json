@@ -2,6 +2,6 @@
 	"config":
 	{
 		"timeout" : 3600,
-		"storage" : "db"
+		"storage" : "file"
 	}
 }
