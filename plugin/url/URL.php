@@ -28,9 +28,9 @@ namespace nutshell\plugin\url
 		
 		public function node($num)
 		{
-			if (isset($this->node[$num]))
+			if (isset($this->nodes[$num]))
 			{
-				return $this->node[$num];
+				return $this->nodes[$num];
 			}
 			return null;
 		}
