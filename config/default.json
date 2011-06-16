@@ -13,19 +13,7 @@
 		},
 		"plugin":
 		{
-			"Db":
-			{
-				"source": "default"
-			},
-			"Mvc":
-			{
-				"dir":
-				{
-					"models":		"../private/application/models/",
-					"views":		"../private/application/views/",
-					"controllers":	"../private/application/controllers/"
-				}
-			}
+			
 		}
 	}
 }
