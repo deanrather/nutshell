@@ -4,13 +4,17 @@
 	{
 		"loggers": 
 		{
-			"nutshell.plugin" : 
-			[
-				{
-					"writer" : "rootLog",
-					"level" : "DEBUG" 
-				}
-			]
+			"nutshell.plugin":
+			{ 
+				"bubbleUp": false,
+				"writers":
+				[
+					{
+						"writer" : "rootLog",
+						"level" : "DEBUG" 
+					}
+				]
+			}
 		}
 	}
 }

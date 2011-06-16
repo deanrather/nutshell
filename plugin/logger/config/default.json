@@ -6,26 +6,31 @@
 			"rootLog": 
 			{
 				"class":			"DailyFileWriter",
-				"output":			"{NS_HOME}/log/root-{DATE}.log",
-				"messagePattern":	"%d [%P] - %m%n"
+				"output":			"{NS_HOME}/log/root-{DATE}.log"
 			},
 			"dbLog":
 			{
-				"class":			"DailyFileWriter",
+				"class":			"DbWriter",
 				"connector":		"mysql",
-				"table":			"log",
-				"messagePattern":	"%d [%P] - %m%n"
+				"table":			"log"
 			}
 		},
 		"loggers": 
 		{
 			"__ROOT__": 
-			[
-				{
-					"writer":	"rootLog",
-					"level" :	"WARN" 
-				}
-			]
+			{
+				"writers":
+				[
+					{
+						"writer":	"rootLog",
+						"level" :	"WARN" 
+					},
+					{
+						"writer":	"dbLog",
+						"level" :	"DEBUG" 
+					}
+				]
+			}
 		}
 	}
 }

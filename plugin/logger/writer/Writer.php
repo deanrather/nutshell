@@ -8,6 +8,10 @@ namespace nutshell\plugin\logger\writer
 	abstract class Writer
 	{
 		const CTX_LOG_LEVEL = 'level';
+
+		const CTX_LOGGER_NAME = 'logger';
+		
+		const DEFAULT_MESSAGE_PATTERN = '%d [%P] - %m%n';
 		
 		/**
 		 * Pattern (using placeholders) for the message output
@@ -39,7 +43,11 @@ namespace nutshell\plugin\logger\writer
 		 */
 		protected function parseConfig(Config $config)
 		{
-			$this->parseConfigOption($config, 'messagePattern');
+			$this->parseConfigOption($config, 'messagePattern', false);
+			if (is_null($this->messagePattern))
+			{
+				$this->messagePattern = static::DEFAULT_MESSAGE_PATTERN;
+			}
 		}
 		
 		/**
@@ -50,7 +58,7 @@ namespace nutshell\plugin\logger\writer
 		 * @param boolean $mandatory
 		 * @param String $memberName 
 		 */
-		protected function parseConfigOption(Config $config, $optionName, boolean $mandatory = null, $memberName = null)
+		protected function parseConfigOption(Config $config, $optionName, $mandatory = null, $memberName = null)
 		{
 			//default override
 			if ($memberName === null) 
@@ -114,7 +122,7 @@ namespace nutshell\plugin\logger\writer
 		 */
 		public function write($msg, array $context, $extraData = null)
 		{
-			$this->doWrite(Pattern::resolve($this->messagePattern, $msg, $context, $extraData));
+			$this->doWrite(Pattern::resolve($this->messagePattern, $msg, $context, $extraData), $context);
 		}
 		
 		/**
@@ -122,7 +130,7 @@ namespace nutshell\plugin\logger\writer
 		 * 
 		 * @param String $msg
 		 */
-		protected abstract function doWrite($msg);
+		protected abstract function doWrite($msg, $context);
 		
 		public function __toString()
 		{
