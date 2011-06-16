@@ -64,7 +64,7 @@ namespace nutshell\plugin\logger\writer\file
 		 * (non-PHPdoc)
 		 * @see nutshell\plugin\logger\writer.Writer::doWrite()
 		 */
-		protected function doWrite($msg)
+		protected function doWrite($msg, $context)
 		{
 			file_put_contents($this->output, $msg, FILE_APPEND);
 		}

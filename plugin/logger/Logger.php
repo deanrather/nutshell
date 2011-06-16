@@ -22,7 +22,15 @@ namespace nutshell\plugin\logger
 		
 		protected $loggerName = null;
 		
+		protected $actualLoggerName = null;
+		
 		protected $filters = null;
+		
+		protected $bubbleUp = true;
+		
+		protected $parentLoggerLookedUp = false;
+		
+		protected $parentLogger = null;
 		
 		/**
 		 * 
@@ -32,6 +40,8 @@ namespace nutshell\plugin\logger
 		{
 			
 			include_once(__DIR__.'/Level.php');
+			
+			include_once(__DIR__.'/exception/LoggerException.php');
 			
 			include_once(__DIR__.'/writer/Writer.php');
 			include_once(__DIR__.'/writer/Pattern.php');
@@ -73,8 +83,17 @@ namespace nutshell\plugin\logger
 				}
 			}
 			
-			$writers = $this->config->loggers->{$candidate};
+			//store the config logger name
+			$this->actualLoggerName = $candidate;
+			$loggerConfig = $this->config->loggers->{$candidate};
 			
+			//set the bubbling configuration
+			if(!is_null($loggerConfig->bubbleUp))
+			{
+				$this->bubbleUp = $loggerConfig->bubbleUp;
+			}
+			
+			$writers = $loggerConfig->writers;
 			if($writers) 
 			{
 				foreach($writers as  $writer)
@@ -191,12 +210,56 @@ namespace nutshell\plugin\logger
 				{
 					$filter->getWriter()->write($msg, array(
 						Writer::CTX_LOG_LEVEL => $level,
+						Writer::CTX_LOGGER_NAME => $this->loggerName
 					),
 					$extraData
 					);
 				}
 			}
+			
+			if($this->bubbleUp)
+			{
+				if($parent = $this->getParentLogger()) 
+				{
+					$parent->log($level, $msg, $extraData);
+				}
+			}
 		}
+		
+		protected function getParentLogger()
+		{
+			if ($this->actualLoggerName == self::ROOT_LOGGER) 
+			{
+				//nothing above the root logger
+				return null;
+			}
+			
+			if (!$this->parentLoggerLookedUp) 
+			{
+				$candidate = $this->actualLoggerName;
+				foreach($this->config->loggers as $nodeName => $config)
+				{
+					//inverts the candidate and nodeName parameters to 
+					//use as isLessSpecific
+					if(self::isMoreSpecific($nodeName, $candidate, $this->actualLoggerName))
+					{
+						$candidate = $nodeName;
+					}
+				}
+				
+				//if not better option is found and a root logger is available, use it
+				if ($this->actualLoggerName == $candidate && $this->config->{self::ROOT_LOGGER})
+				{
+					$candidate = self::ROOT_LOGGER;
+				}
+				
+				if ($this->actualLoggerName != $candidate) {
+					$this->parentLogger = Logger::runFactory($candidate);
+				}
+			}
+			
+			return $this->parentLogger;
+		} 
 	}
 }
 ?>

@@ -1,24 +1,36 @@
 {
 	"config":
 	{
-		"writers" : 
+		"writers": 
 		{
-			"rootLog" : 
+			"rootLog": 
 			{
-				"class" : "DailyFileWriter",
-				"output" : "{NS_HOME}/log/root-{DATE}.log",
-				"messagePattern" : "%d [%P] - %m%n"
+				"class":			"DailyFileWriter",
+				"output":			"{NS_HOME}/log/root-{DATE}.log"
+			},
+			"dbLog":
+			{
+				"class":			"DbWriter",
+				"connector":		"mysql",
+				"table":			"log"
 			}
 		},
 		"loggers": 
 		{
-			"__ROOT__" : 
-			[
-				{
-					"writer" : "rootLog",
-					"level" : "WARN" 
-				}
-			]
+			"__ROOT__": 
+			{
+				"writers":
+				[
+					{
+						"writer":	"rootLog",
+						"level" :	"WARN" 
+					},
+					{
+						"writer":	"dbLog",
+						"level" :	"DEBUG" 
+					}
+				]
+			}
 		}
 	}
 }
