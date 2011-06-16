@@ -1,6 +1,11 @@
 {
 	"config":
 	{
-		
+		"dir":
+		{
+			"models":		"../private/application/models/",
+			"views":		"../private/application/views/",
+			"controllers":	"../private/application/controllers/"
+		}
 	}
 }
