@@ -74,12 +74,12 @@ namespace nutshell\plugin\session
 		{
 			if(!is_null($this->config->timeout))
 			{
-				$this->timeout = $this->config->timeout;
+				$this->setTimeout($this->config->timeout);
 			}
 			
 			if(!is_null($this->config->idRegenRate))
 			{
-				$this->idRegenRate = $this->config->idRegenRate;
+				$this->setIdRegenRate($this->config->idRegenRate);
 			}
 			
 			if(!is_null($this->config->storage))
@@ -98,9 +98,19 @@ namespace nutshell\plugin\session
 			{
 				$deleteOldSession = false;
 			}
+			//stores the old id
+			$oldId = $this->getId();
 			session_regenerate_id($deleteOldSession);
 			$_SESSION[self::SESSION_KEY_LAST_ID_REGEN] = $this->now;
+			
+			//calls a hook
+			$this->regenerateIdHook($oldId, $this->getId());
 			return $this;
+		}
+		
+		protected function regenerateIdHook($oldId, $newId)
+		{
+			//default does nothing
 		}
 		
 		public function getId()
@@ -126,12 +136,24 @@ namespace nutshell\plugin\session
 		public function setTimeout($timeout)
 		{
 			$this->timeout = $timeout;
+			ini_set('session.gc-maxlifetime', $timeout);
 			return $this;
 		}
 		
 		public function getTimeout()
 		{
 			return $this->timeout;
+		}
+		
+		public function setIdRegenRate($rate)
+		{
+			$this->idRegenRate = $rate;
+			return $this;
+		}
+		
+		public function getIdRegenRate()
+		{
+			return $this->idRegenRate;
 		}
 		
 		public function __get($key)

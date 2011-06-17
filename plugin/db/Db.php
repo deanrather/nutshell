@@ -36,7 +36,14 @@ namespace nutshell\plugin\db
 				$username = $connectionParams->username;
 				$password = $connectionParams->password;
 				
-				return new \DB($host, $port, $database, $username, $password);
+				$connection = new \DB($host, $port, $database, $username, $password);
+				
+				if(!$connection->isConnected())
+				{
+					throw new Exception(sprintf("Failed to initiate connection for %s", $connectionName));
+				}
+				
+				return $connection;
 			} 
 			else
 			{
