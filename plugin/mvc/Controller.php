@@ -3,9 +3,13 @@ namespace nutshell\plugin\mvc
 {
 	abstract class Controller
 	{
-		public function __construct()
+		public $MVC	=null;
+		public $view=null;
+		
+		public function __construct(Mvc $MVC)
 		{
-//			$this->view;
+			$this->MVC	=$MVC;
+			$this->view	=new View($this->MVC);
 		}
 	}
 }

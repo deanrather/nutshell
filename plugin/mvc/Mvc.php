@@ -30,7 +30,7 @@ namespace nutshell\plugin\mvc
 			$className='application\controller\\'.ucwords($route->getControl());
 			
 			//Initiate the controller.
-			$this->controller=new $className();
+			$this->controller=new $className($this);
 			
 			/* A hack to get around PHP4's constructor.
 			 * This only applies to version of PHP 5.3 lower than 5.3.3.
