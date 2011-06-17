@@ -8,7 +8,8 @@ namespace nutshell\plugin\mvc
 		public function __construct()
 		{
 			parent::__construct();
-			
+			//TODO: Make this namespace configurable.
+			$this->core->getLoader()->registerContainer('model','application\model\\');
 		}
 	}
 }

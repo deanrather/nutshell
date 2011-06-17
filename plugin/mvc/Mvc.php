@@ -23,7 +23,6 @@ namespace nutshell\plugin\mvc
 			$route=$this->plugin->Router->getRoute();
 			
 			//Load the controller.
-			
 			$this->loadController($route->getControl());
 			
 			//Construct the namespaced class name.

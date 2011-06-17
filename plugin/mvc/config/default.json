@@ -3,9 +3,9 @@
 	{
 		"dir":
 		{
-			"models":		"../private/application/models/",
-			"views":		"../private/application/views/",
-			"controllers":	"../private/application/controllers/"
+			"models":		"../private/application/model/",
+			"views":		"../private/application/view/",
+			"controllers":	"../private/application/controller/"
 		}
 	}
 }
