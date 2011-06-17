@@ -56,6 +56,9 @@ namespace nutshell
 			
 			//init core components
 			$this->initCoreComponents();
+			
+			//Register the plugin container.
+			$this->loader->registerContainer('plugin',NS_HOME.'plugin'._DS_,'nutshell\plugin\\');
 		}
 		
 		private function loadBehaviours()
@@ -151,6 +154,14 @@ namespace nutshell
 			return $GLOBALS['NUTSHELL'];
 		}
 		
+		/**
+		 * Returns the loader instance.
+		 */
+		public function getLoader()
+		{
+			return $this->loader;
+		}
+		
 		/*** OVERLOADING ***/
 		
 		public function __get($key)
@@ -164,6 +175,11 @@ namespace nutshell
 			{
 				throw new Exception('Attempted to get invalid property "'.$key.'" from core.');
 			}
+		}
+		
+		public function __set($key,$val)
+		{
+			throw new Exception('Sorry, nutshell core is read only!');
 		}
 		
 		

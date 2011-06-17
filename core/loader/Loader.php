@@ -1,6 +1,8 @@
 <?php
 namespace nutshell\core\loader
 {
+	use nutshell\core\exception\Exception;
+
 	use nutshell\core\Component;
 	use nutshell\plugin;
 	
@@ -12,6 +14,13 @@ namespace nutshell\core\loader
 	 */
 	class Loader extends Component
 	{
+		/**
+		 * A list of valid containers and their paths.
+		 * 
+		 * @access private
+		 * @var Array
+		 */
+		private $containers=array();
 		/**
 		 * The current container.
 		 * 
@@ -40,19 +49,35 @@ namespace nutshell\core\loader
 			static::load(array());
 		}
 		
+		public function registerContainer($name,$path,$namespace)
+		{
+			$this->containers[$name]=array
+			(
+				'path'		=>$path,
+				'namespace'	=>$namespace
+			);
+		}
+		
 		private function doLoad($key,Array $args=array())
 		{
-			$className='nutshell\\'.$this->container.'\\'.lcfirst($key).'\\'.$key;
+			//Construct the class name.
+			$className=$this->containers[$this->container]['namespace'].lcfirst($key).'\\'.$key;
 			//Is the {$this->container} object loaded?
 			if (!isset($this->loaded[$this->container][$key]))
 			{
 				//No, so we need to load all of it's dependancies and initiate it.
 				
 				#Load TODO: Fully load everything.
-				require(NS_HOME.$this->container._DS_.lcfirst($key)._DS_.$key.'.php');
+				require($this->containers[$this->container]['path'].lcfirst($key)._DS_.$key.'.php');
 				
-				//Construct the class name.
-				$className::loadDependencies();
+				if($interfaces = class_implements($className, false))
+				{
+					//Load class dependencies
+					if (in_array('nutshell\behaviour\Native', $interfaces))
+					{
+						$className::loadDependencies();
+					}
+				}
 			}
 			#Initiate
 			$this->loaded[$this->container][$key]=$className::getInstance($args);
@@ -61,8 +86,15 @@ namespace nutshell\core\loader
 		
 		public function __invoke($container)
 		{
-			$this->container=$container;
-			return $this;
+			if (isset($this->containers[$container]))
+			{
+				$this->container=$container;
+				return $this;
+			}
+			else
+			{
+				throw new Exception('Invalid container. Containre "'.$container.'" has not been registered.');
+			}
 		}
 		
 		public function __get($key)
