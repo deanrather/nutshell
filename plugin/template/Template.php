@@ -11,6 +11,7 @@ namespace nutshell\plugin\template
 		private $templateFile	=null;
 		private $template		=null;
 		private $keyVals		=array();
+		private $context		=null;
 		private $compiled		=null;
 		
 		public static function loadDependencies()
@@ -21,6 +22,7 @@ namespace nutshell\plugin\template
 		public function init($template)
 		{
 			$this->setTemplate($template);
+			$this->context=new Context($this->keyVals);
 		}
 		
 		public function setTemplate($template)
@@ -62,7 +64,7 @@ namespace nutshell\plugin\template
 		
 		public function compile($clear=true)
 		{
-			$tpl=new Context($this->keyVals);
+			$tpl=$this->context;
 			$closedScopeClosure=function($templateFile) use (&$tpl)
 			{
 				ob_start();
@@ -82,6 +84,17 @@ namespace nutshell\plugin\template
 				$this->compile();
 			}
 			return $this->compiled;
+		}
+		
+		public function setContext(Context $context)
+		{
+			$this->context=$context;
+			return $this;
+		}
+		
+		public function getContext()
+		{
+			return $this->context;
 		}
 	}
 }
