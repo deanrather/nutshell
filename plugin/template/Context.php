@@ -1,15 +1,32 @@
 <?php
 namespace nutshell\plugin\template
 {
+	use nutshell\core\exception\Exception;
 	use nutshell\core\plugin\PluginExtension;
+	use \Closure;
 	
 	class Context extends PluginExtension
 	{
-		private $keyVals;
+		private $keyVals	=array();
+		private $callbacks	=array();
 		
-		public function __construct($keyVals)
+		public function __construct(Array &$keyVals)
+		{
+			$this->setKeyVals($keyVals);
+		}
+		
+		public function setKeyVals(Array &$keyVals)
 		{
 			$this->keyVals=$keyVals;
+		}
+		
+		public function get($key)
+		{
+			if (isset($this->keyVals[$key]))
+			{
+				return $this->keyVals[$key];
+			}
+			return null;
 		}
 		
 		public function __get($key)
@@ -21,13 +38,22 @@ namespace nutshell\plugin\template
 			print '';
 		}
 		
-		public function get($key)
+		public function registerCallback($name,Closure $closure)
 		{
-			if (isset($this->keyVals[$key]))
+			$this->callbacks[$name]=$closure;
+			return $this;
+		}
+		
+		public function __call($method,$args)
+		{
+			if (isset($this->callbacks[$method]))
 			{
-				return $this->keyVals[$key];
+				call_user_func_array($this->callbacks[$method],$args);
 			}
-			return null;
+			else
+			{
+				throw new Exception('Invalid template function. Function "'.$method.'" hsa not been registered. Register with $context->registerCallback($name,$closure).');
+			}
 		}
 	}
 }
