@@ -1,6 +1,8 @@
 <?php
 namespace nutshell\core\plugin
 {
+	use nutshell\Nutshell;
+	
 	use nutshell\core\exception\Exception;
 	use nutshell\core\Component;
 	use nutshell\helper\Object;
@@ -13,7 +15,7 @@ namespace nutshell\core\plugin
 		
 		public function __construct()
 		{
-			$this->config=$this->core->config->plugin->{Object::getBaseClassName($this->getParentPlugin())};
+			$this->config=Nutshell::getInstance()->config->plugin->{Object::getBaseClassName($this->getParentPlugin())};
 		}
 		
 		private function getParentPlugin()
