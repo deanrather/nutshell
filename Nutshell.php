@@ -20,12 +20,12 @@ namespace nutshell
 	
 	class Nutshell
 	{
-		const VERSION				= '1.0.0-dev-1';
+		const VERSION				=	'1.0.0-dev-2';
 		const VERSION_MAJOR			=	1;
 		const VERSION_MINOR			=	0;
 		const VERSION_MICRO			=	0;
-		const VERSION_DEV			=	1;
-		const NUTSHELL_ENVIRONMENT	= 'NS_ENV';
+		const VERSION_DEV			=	2;
+		const NUTSHELL_ENVIRONMENT	=	'NS_ENV';
 		
 		public $config 	=null;
 		private $loader	=null;
@@ -35,6 +35,12 @@ namespace nutshell
 		 */
 		public function setup()
 		{
+			//PHP version check.
+			if (version_compare(PHP_VERSION,'5.3.1','<'))
+			{
+				die('Nutshell required PHP version 5.3.1 or higher.');
+			}
+			
 			//Define constants.
 			define('_DS_',DIRECTORY_SEPARATOR);
 			define('NS_HOME',__DIR__._DS_);
@@ -50,6 +56,9 @@ namespace nutshell
 			
 			//init core components
 			$this->initCoreComponents();
+			
+			//Register the plugin container.
+			$this->loader->registerContainer('plugin',NS_HOME.'plugin'._DS_,'nutshell\plugin\\');
 		}
 		
 		private function loadBehaviours()
@@ -138,11 +147,19 @@ namespace nutshell
 		
 		public static function getInstance()
 		{
-			if(!$GLOBALS['NUTSHELL']) 
+			if(!isset($GLOBALS['NUTSHELL'])) 
 			{
-				throw new Exception('Unexpected situation: no running Nutshell instance!');
+				return Nutshell::init();
 			}
 			return $GLOBALS['NUTSHELL'];
+		}
+		
+		/**
+		 * Returns the loader instance.
+		 */
+		public function getLoader()
+		{
+			return $this->loader;
 		}
 		
 		/*** OVERLOADING ***/
@@ -160,6 +177,11 @@ namespace nutshell
 			}
 		}
 		
+		public function __set($key,$val)
+		{
+			throw new Exception('Sorry, nutshell core is read only!');
+		}
+		
 		
 	}
 	
@@ -172,14 +194,14 @@ namespace nutshell
 		return Nutshell::init();
 	}
 }
-
 namespace 
 {
 	//checks for overriding bootstrap method
 	if(function_exists('bootstrap')) 
 	{
 		//trigger it
-		booststrap();
+		call_user_func('bootstrap');
+//		booststrap();
 	}
 	else
 	{

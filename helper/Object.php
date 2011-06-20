@@ -22,6 +22,10 @@ namespace nutshell\helper
 		 */
 		public static function getBaseClassName($className)
 		{
+			if (is_object($className))
+			{
+				$className=get_class($className);
+			}
 			return self::getClassInfo($className, self::CLASSINFO_CLASSNAME);
 		}
 		
@@ -35,6 +39,10 @@ namespace nutshell\helper
 		 */
 		public static function getNamespace($className)
 		{
+			if (is_object($className))
+			{
+				$className=get_class($className);
+			}
 			return self::getClassInfo($className, self::CLASSINFO_NAMESPACE);
 		}
 		
@@ -46,13 +54,17 @@ namespace nutshell\helper
 		 */
 		public static function getClassPath($className)
 		{
+			if (is_object($className))
+			{
+				$className=get_class($className);
+			}
 			return NS_HOME . str_replace(
 				array(
 					'nutshell\\', 
 					'\\'
 				), 
 				array(
-					'\\', 
+					'', 
 					_DS_
 				),  
 				self::getNamespace($className)

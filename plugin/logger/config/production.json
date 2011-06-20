@@ -1,0 +1,20 @@
+{
+	"extends" : "default",
+	"config":
+	{
+		"loggers": 
+		{
+			"nutshell.plugin":
+			{ 
+				"bubbleUp": false,
+				"writers":
+				[
+					{
+						"writer" : "rootLog",
+						"level" : "DEBUG" 
+					}
+				]
+			}
+		}
+	}
+}

@@ -2,7 +2,6 @@
 namespace nutshell\plugin\template
 {
 	use nutshell\core\exception\Exception;
-
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Factory;
@@ -12,13 +11,18 @@ namespace nutshell\plugin\template
 		private $templateFile	=null;
 		private $template		=null;
 		private $keyVals		=array();
+		private $context		=null;
 		private $compiled		=null;
 		
-		public static function loadDependencies(){}
+		public static function loadDependencies()
+		{
+			require('Context.php');
+		}
 		
 		public function init($template)
 		{
 			$this->setTemplate($template);
+			$this->context=new Context($this->keyVals);
 		}
 		
 		public function setTemplate($template)
@@ -27,8 +31,7 @@ namespace nutshell\plugin\template
 			{
 				if (is_readable($template))
 				{
-					$this->templateFile	=$template;
-					$this->template		=file_get_contents($template);
+					$this->templateFile=$template;
 				}
 				else
 				{
@@ -49,7 +52,7 @@ namespace nutshell\plugin\template
 			{
 				for ($i=0,$j=count($key); $i<$j; $i++)
 				{
-					$this->keyVals['{$'.$key[$i].'}']=$val[$i];
+					$this->keyVals[$key[$i]]=$val[$i];
 				}
 			}
 			else
@@ -59,14 +62,19 @@ namespace nutshell\plugin\template
 			return $this;
 		}
 		
-		public function compile()
+		public function compile($clear=true)
 		{
-			return $this->compiled=str_replace
-			(
-				array_keys($this->keyVals),
-				array_values($this->keyVals),
-				$this->template
-			);
+			$tpl=$this->context;
+			$closedScopeClosure=function($templateFile) use (&$tpl)
+			{
+				ob_start();
+				include($templateFile);
+				$compiled=ob_get_contents();
+				ob_end_clean();
+				return $compiled;
+			};
+			$this->compiled=$closedScopeClosure($this->templateFile);
+			return $this->compiled;
 		}
 		
 		public function getCompiled()
@@ -76,6 +84,17 @@ namespace nutshell\plugin\template
 				$this->compile();
 			}
 			return $this->compiled;
+		}
+		
+		public function setContext(Context $context)
+		{
+			$this->context=$context;
+			return $this;
+		}
+		
+		public function getContext()
+		{
+			return $this->context;
 		}
 	}
 }

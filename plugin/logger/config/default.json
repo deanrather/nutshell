@@ -1,6 +1,36 @@
 {
 	"config":
 	{
-		
+		"writers": 
+		{
+			"rootLog": 
+			{
+				"class":			"DailyFileWriter",
+				"output":			"{NS_HOME}/log/root-{DATE}.log"
+			},
+			"dbLog":
+			{
+				"class":			"DbWriter",
+				"connector":		"mysql",
+				"table":			"log"
+			}
+		},
+		"loggers": 
+		{
+			"__ROOT__": 
+			{
+				"writers":
+				[
+					{
+						"writer":	"rootLog",
+						"level" :	"WARN" 
+					},
+					{
+						"writer":	"dbLog",
+						"level" :	"DEBUG" 
+					}
+				]
+			}
+		}
 	}
 }

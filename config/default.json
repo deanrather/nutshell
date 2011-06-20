@@ -6,15 +6,14 @@
 			"hiphop":	false,
 			"dir":
 			{
-				"tmp":	"../tmp/"
+				"public":	"../../public/",
+				"private":	"../private/",
+				"tmp":		"../tmp/"
 			}
 		},
 		"plugin":
 		{
-			"Db":
-			{
-				
-			}
+			
 		}
 	}
 }

@@ -1,6 +1,9 @@
 <?php
 namespace nutshell\core\plugin
 {
+	use nutshell\behaviour\Singleton;
+	use nutshell\behaviour\AbstractFactory;
+
 	use nutshell\Nutshell;
 	use nutshell\core\exception\Exception;
 	use nutshell\core\Component;
@@ -9,7 +12,30 @@ namespace nutshell\core\plugin
 	
 	abstract class Plugin extends Component
 	{
-		private static $PLUGIN_CONFIG_LOADED = array();
+		private static $PLUGIN_CONFIG_LOADED	= array();
+		protected static $instance				= null;
+		/**
+		 * @access public
+		 * @var nutshell\core\config\Config
+		 */
+		public $config							= null;
+		/**
+		 * @access public
+		 * @var nutshell\Nutshell
+		 */
+		public $core							= null;
+		/**
+		 * @access public
+		 * @var nutshell\core\plugin\Plugin
+		 */
+		public $plugin							= null;
+		
+		public function __construct()
+		{
+			$this->core=	Nutshell::getInstance();
+			$this->config=	$this->core->config->plugin->{Object::getBaseClassName($this)};
+			$this->plugin=	Nutshell::getInstance()->plugin;
+		}
 		
 		public static function register() 
 		{
@@ -17,7 +43,12 @@ namespace nutshell\core\plugin
 			static::load(array());
 		}
 		
-		protected static $instance=null;
+		public static function config()
+		{
+			return Nutshell::getInstance()->config->plugin->{Object::getBaseClassName(get_called_class())};
+		}
+		
+		
 		
 		/**
 		 * 
@@ -91,13 +122,15 @@ namespace nutshell\core\plugin
 				. Config::CONFIG_FOLDER 
 			;
 			
+			$pluginName = Object::getBaseClassName($pluginClassName);
+			
 			//create the plugin config node
 			$config = new Config();
-			$config->extendWith($pluginConfigPath, NS_ENV);
+			$config->{$pluginName} = new Config();
+			$config->{$pluginName}->extendWith($pluginConfigPath, NS_ENV);
 			
 			//add the the nutshell config tree
-			$base = Object::getBaseClassName($pluginClassName);
-			Nutshell::getInstance()->config->plugin->{$base} = $config;
+			Nutshell::getInstance()->config->plugin->extendWith($config);
 			
 			//set the marker
 			self::$PLUGIN_CONFIG_LOADED[$pluginClassName] = true;
@@ -122,6 +155,16 @@ namespace nutshell\core\plugin
 			}
 			
 			return NS_HOME . 'plugin' . _DS_ . $nsSplit[2]; // plugin folder
+		}
+		
+		public function __get($key)
+		{
+			if (($this instanceof Singleton && $this instanceof AbstractFactory)
+			&& $result=static::runFactory($key))
+			{
+				return $result;
+			}
+			return null;
 		}
 	}
 }

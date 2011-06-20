@@ -19,7 +19,7 @@ namespace nutshell\core\config
 		 */
 		public static function parse($obj, $extendHandler, &$extended)
 		{
-			if ($extended === null) 
+			if (is_null($extended)) 
 			{
 				$extended = array();
 			}
@@ -27,7 +27,7 @@ namespace nutshell\core\config
 			$configRoot = parent::parse($obj);
 			$config = null;
 			
-			if($configRoot->extends !== null) 
+			if(!is_null($configRoot->extends)) 
 			{
 				//lookup through the extended files list
 				if(in_array($configRoot->extends, $extended)) 
