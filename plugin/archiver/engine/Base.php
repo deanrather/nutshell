@@ -52,10 +52,10 @@ namespace nutshell\plugin\archiver\engine
 		 * 
 		 * @access public
 		 * @param String $realPath path to the entry to add
-		 * @param String $archivePath local path inside the archive to save the entry as
+		 * @param String $archivePath local path inside the archive to save the entry as. Defaults to the real path's basename.
 		 * @throws ArchiverException if could not add the entry to archive
 		 */
-		public abstract function addEntry($realPath, $archivePath);
+		public abstract function addEntry($realPath, $archivePath = null);
 		
 		/**
 		 * Remove specified entry from the current archive.
@@ -77,5 +77,15 @@ namespace nutshell\plugin\archiver\engine
 		 * @throws ArchiverException if could not rename the entry
 		 */
 		public abstract function renameEntry($archivePath, $newArchivePath);
+		
+		/**
+		 * Extract the complete archive or the given files to the specified destination.
+		 * 
+		 * @access public
+		 * @param String $destination Location where to extract the files.
+		 * @param mixed $entries The entries to extract. It accepts either a single entry name or an array of names.
+		 * @throws ArchiverException if the decompression fails
+		 */
+		public abstract function extractTo($destination, $entries = null);
 	}
 }

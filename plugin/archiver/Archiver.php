@@ -9,9 +9,11 @@ namespace nutshell\plugin\archiver
 	{
 		public static function loadDependencies()
 		{
+			include_once __DIR__ . '/exception/ArchiverException.php';
+			
 			include_once __DIR__ . '/engine/Base.php';
 			include_once __DIR__ . '/engine/Zip.php';
-			include_once __DIR__ . '/engine/Rar.php';
+			//include_once __DIR__ . '/engine/Rar.php';
 		}
 		
 		public static function runFactory($engine)
