@@ -116,18 +116,17 @@ namespace nutshell\core\plugin
 			}
 			
 			//compute the config folder path for the plugin
-			$pluginConfigPath = 
-				self::getPluginBasePath($pluginClassName)
-				. _DS_ 
-				. Config::CONFIG_FOLDER 
-			;
+			$pluginConfigPaths = array(
+				self::getPluginBasePath(APP_HOME, $pluginClassName) . _DS_ . Config::CONFIG_FOLDER,
+				self::getPluginBasePath(NS_HOME, $pluginClassName) . _DS_ . Config::CONFIG_FOLDER
+			);
 			
 			$pluginName = Object::getBaseClassName($pluginClassName);
 			
 			//create the plugin config node
 			$config = new Config();
 			$config->{$pluginName} = new Config();
-			$config->{$pluginName}->extendWith($pluginConfigPath, NS_ENV);
+			$config->{$pluginName}->extendWith($alternatives, NS_ENV);
 			
 			//add the the nutshell config tree
 			Nutshell::getInstance()->config->plugin->extendWith($config);
@@ -137,13 +136,13 @@ namespace nutshell\core\plugin
 		}
 		
 		/**
-		 * Compute the config folder path for the plugin to which the specified class belongs to
+		 * Compute the config folder path for the plugin to which the specified class belongs to.
 		 * 
 		 * @param String $pluginClassName
 		 * @throws Exception
 		 * @return String the absolute system path to the plugin's config folder 
 		 */
-		protected static function getPluginBasePath($pluginClassName)
+		protected static function getPluginBasePath($basePath, $pluginClassName)
 		{
 			$nsSplit = explode('\\', $pluginClassName);
 			
@@ -154,7 +153,7 @@ namespace nutshell\core\plugin
 				throw new Exception(sprintf('Invalid plugin. The namespace does not meet the structural requirement: %s.', $pluginClassName));
 			}
 			
-			return NS_HOME . 'plugin' . _DS_ . $nsSplit[2]; // plugin folder
+			return $basePath . 'plugin' . _DS_ . $nsSplit[2]; // plugin folder
 		}
 		
 		public function __get($key)

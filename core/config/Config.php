@@ -195,32 +195,28 @@ namespace nutshell\core\config
 		 * @param String $configPath
 		 * @param String $environment
 		 */
-		protected function extendFromPath($configPath, $environment = null)
+		protected function extendFromPath($alternatives, $environment = null)
 		{
-			if (!is_dir($configPath))
-			{
-				throw new Exception(sprintf('Specified configuration directory not found, or is not a directory: %s', $configPath));
-			}
+			$useDefaultEnvironment = true;
 			
-			if(!$environment) 
+			foreach($alternatives as $alternativePath)
 			{
-				$environment = self::DEFAULT_ENVIRONMENT;
-			}	
-			
-			//computing the file path of the require environment
-			$configFile = $configPath . _DS_ . self::makeConfigFileName($environment);
-			
-			if (!is_readable($configFile) && $environment != self::DEFAULT_ENVIRONMENT)
-			{
-				$configFile = $configPath . _DS_ . self::makeConfigFileName(self::DEFAULT_ENVIRONMENT);
-				if (!is_readable($configFile))
+				$file = $alternativePath . _DS_ . self::makeConfigFileName($environment);
+				if (is_file($file) && is_readable($file))
 				{
-					throw new Exception(sprintf('No config file could be found and no fallback file available: %s', $configPath));
+					$useDefaultEnvironment = false;
+					break;
 				}
 			}
 			
+			//the specified environment was not found, so try to load the default environment config
+			if($useDefaultEnvironment) 
+			{
+				$environment = self::DEFAULT_ENVIRONMENT;
+			}
+			
 			//extend the current node with the loaded config
-			return $this->extendWithNode(self::loadConfigFile($configFile));
+			return $this->extendWithNode(self::loadConfigFile($alternatives, self::makeConfigFileName($environment)));
 		}
 		
 		/**
@@ -228,7 +224,7 @@ namespace nutshell\core\config
 		 * @param String $environment
 		 * @return String the config file base name
 		 */
-		protected static function makeConfigFileName($environment)
+		public static function makeConfigFileName($environment)
 		{
 			return sprintf("%s.%s", $environment, self::CONFIG_FILE_EXTENSION);
 		}
@@ -483,9 +479,33 @@ namespace nutshell\core\config
 			}	
 			
 			//computing the file path of the require environment
-			$configFile = self::getCoreConfigPath($configPath) . _DS_ . self::makeConfigFileName($environment);
+			$configPaths = array(
+				self::getCoreConfigPath($configPath),
+				NS_HOME . self::CONFIG_FOLDER
+			);
+			return self::loadConfigFile($configPaths, self::makeConfigFileName($environment));
+		}
+		
+		public static function loadConfigFile($alternatives, $basename, $extendHandler = null, &$extended = null)
+		{ 
+			if (!is_array($alternatives))
+			{
+				$alternatives = array($alternatives);
+			}
 			
-			return self::loadConfigFile($configFile);
+			if($alternatives)
+			{
+				foreach($alternatives as $pathAlternative)
+				{
+					$file = $pathAlternative . _DS_ . $basename;
+					if(is_file($file) && is_readable($file)) 
+					{
+						return self::doLoadConfigFile($alternatives, $file);
+					}
+				}
+			}
+			
+			throw new Exception(sprintf("Failed to find a suitable config file named %s", $basename));
 		}
 		
 		/**
@@ -495,18 +515,16 @@ namespace nutshell\core\config
 		 * @throws Exception if the file could not be found/read
 		 * @return nutshell\config\Config an instance of the config
 		 */
-		public static function loadConfigFile($file, $extendHandler = null, &$extended = null) 
+		protected static function doLoadConfigFile($alternatives, $file, $extendHandler = null, &$extended = null) 
 		{
-			if($extendHandler === null) 
+			if(is_null($extendHandler)) 
 			{
 				$scope=get_called_class();
-				$extendHandler = function($environment, &$extended) use ($scope,$file)
+				$extendHandler = function($environment, &$extended) use ($scope, $alternatives)
 				{
 					return $scope::loadConfigFile(
-						dirname($file) 
-						. _DS_ 
-						. $environment 
-						. '.' . $scope::CONFIG_FILE_EXTENSION,
+						$alternatives,
+						$scope::makeConfigFileName($environment),
 						null,
 						$extended
 					);
@@ -545,22 +563,22 @@ namespace nutshell\core\config
 		 * Returns the core config path
 		 * 
 		 */
-		protected static function getCoreConfigPath($configPath) 
+		protected static function getCoreConfigPath($configPath = null) 
 		{
-			if (self::$default_core_config_path === null) 
+			if(is_null($configPath))
 			{
-				self::$default_core_config_path = realpath(
-					$configPath
-				);
-				
-				if (self::$default_core_config_path === null) 
-				{
-					//the path could not be resolved => it doesn't exist
-					throw new Exception('Could not find the config');
-				}
+				$configPath = NS_HOME . _DS_ . self::CONFIG_FOLDER;
+			}
+			$realPath = realpath(
+				$configPath
+			); 
+			if (is_null($realPath)) 
+			{
+				//the path could not be resolved => it doesn't exist
+				throw new Exception('Could not find the config');
 			}
 			
-			return self::$default_core_config_path;
+			return $realPath;
 		}
 	}
 }
