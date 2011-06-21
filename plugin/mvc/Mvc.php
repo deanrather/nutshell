@@ -54,7 +54,7 @@ namespace nutshell\plugin\mvc
 		
 		public function loadController($controller)
 		{
-			include($this->config->dir->controllers.$controller.'.php');
+			include(APP_HOME.$this->config->dir->controllers.$controller.'.php');
 		}
 	}
 }
