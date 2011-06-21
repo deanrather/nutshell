@@ -6,10 +6,15 @@
 			"hiphop":	false,
 			"dir":
 			{
-				"public":	"../../public/",
-				"private":	"../private/",
-				"tmp":		"../tmp/"
+				"public":		"../../public/",
+				"private":		"../private/",
+				"application":	"../private/application/",
+				"tmp":			"../tmp/"
 			}
+		},
+		"application":
+		{
+			
 		},
 		"plugin":
 		{

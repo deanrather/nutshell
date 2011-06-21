@@ -475,7 +475,7 @@ namespace nutshell\core\config
 		 * 
 		 * @param String $environment
 		 */
-		public static function loadCoreConfig($environment = null) 
+		public static function loadCoreConfig($configPath, $environment = null) 
 		{
 			if(!$environment) 
 			{
@@ -483,7 +483,7 @@ namespace nutshell\core\config
 			}	
 			
 			//computing the file path of the require environment
-			$configFile = self::getCoreConfigPath() . _DS_ . self::makeConfigFileName($environment);
+			$configFile = self::getCoreConfigPath($configPath) . _DS_ . self::makeConfigFileName($environment);
 			
 			return self::loadConfigFile($configFile);
 		}
@@ -545,14 +545,12 @@ namespace nutshell\core\config
 		 * Returns the core config path
 		 * 
 		 */
-		protected static function getCoreConfigPath() 
+		protected static function getCoreConfigPath($configPath) 
 		{
 			if (self::$default_core_config_path === null) 
 			{
 				self::$default_core_config_path = realpath(
-					//calculate the nesting level and repeat
-					NS_HOME 
-					. self::CONFIG_FOLDER
+					$configPath
 				);
 				
 				if (self::$default_core_config_path === null) 

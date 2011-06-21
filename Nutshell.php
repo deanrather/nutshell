@@ -27,8 +27,9 @@ namespace nutshell
 		const VERSION_DEV			=	2;
 		const NUTSHELL_ENVIRONMENT	=	'NS_ENV';
 		
-		public $config 	=null;
-		private $loader	=null;
+		public $config 				=	null;
+		private $loader				=	null;
+		private static $configPath	=	null;
 		
 		/**
 		 * Configures all special constants and libraries linking.
@@ -36,9 +37,14 @@ namespace nutshell
 		public function setup()
 		{
 			//PHP version check.
-			if (version_compare(PHP_VERSION,'5.3.1','<'))
+			if (version_compare(PHP_VERSION,'5.3.3','<'))
 			{
-				die('Nutshell required PHP version 5.3.1 or higher.');
+				die('Nutshell required PHP version 5.3.3 or higher.');
+			}
+			//Config path check.
+			if (is_null(self::$configPath))
+			{
+				die('Config path not defined. Define config path in your bootsrap by using Nutshell::setConfigPath($path).');
 			}
 			
 			//Define constants.
@@ -56,6 +62,9 @@ namespace nutshell
 			
 			//init core components
 			$this->initCoreComponents();
+			
+			//Define APP_HOME.
+			define('APP_HOME',$this->config->core->dir->application);
 			
 			//Register the plugin container.
 			$this->loader->registerContainer('plugin',NS_HOME.'plugin'._DS_,'nutshell\plugin\\');
@@ -130,7 +139,7 @@ namespace nutshell
 				define(self::NUTSHELL_ENVIRONMENT, 'production');
 			}
 			
-			$this->config = Config::loadCoreConfig(NS_ENV);
+			$this->config = Config::loadCoreConfig(self::$configPath, NS_ENV);
 		}
 		
 		/**
@@ -143,6 +152,11 @@ namespace nutshell
 			$GLOBALS['NUTSHELL'] = new Nutshell();
 			$GLOBALS['NUTSHELL']->setup();
 			return $GLOBALS['NUTSHELL'];
+		}
+		
+		public static function setConfigPath($path)
+		{
+			self::$configPath=$path;
 		}
 		
 		public static function getInstance()
