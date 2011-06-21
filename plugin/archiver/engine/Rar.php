@@ -55,6 +55,5 @@ namespace nutshell\plugin\archiver\engine
 		public function extractTo($destination, $entries = null)
 		{
 		}
-		}
 	}
 }
