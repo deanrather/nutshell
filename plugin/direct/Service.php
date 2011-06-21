@@ -21,7 +21,7 @@ namespace nutshell\plugin\direct
 			$this->version		=$this->config->{$this->ref}->version;
 			
 			
-			//$this->buildDescriptor()
+			$this->buildDescriptor();
 			
 		}
 		
@@ -46,7 +46,7 @@ namespace nutshell\plugin\direct
 					(
 						'type'		=>$provider->type,
 						'url'		=>'?',
-						'namespace'	=>$this->namespace.'.'.$provider['namespace'],
+						'namespace'	=>$provider->namespace,//TODO: Prefix?
 						'actions'	=>array()
 					);
 				}
@@ -54,14 +54,20 @@ namespace nutshell\plugin\direct
 				{
 					throw new Exception('Invalid provider type "'.$provider->type.'".');
 				}
-				
-				
 				foreach ($provider->modules as $moduleName=>$module)
 				{
-					
+					for ($i=0,$j=count($module); $i<$j; $i++)
+					{
+						$thisProvider['actions'][$moduleName][]=array
+						(
+							'name'	=>$module[$i]->name,
+							'len'	=>$module[$i]->args
+						);
+					}
 				}
 				$descriptor[]=$thisProvider;
 			}
+			var_dump($descriptor);
 		}
 	}
 }
