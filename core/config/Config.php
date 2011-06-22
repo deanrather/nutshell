@@ -266,6 +266,16 @@ namespace nutshell\core\config
 		}
 		
 		/**
+		 * Magic isset
+		 * 
+		 * @param unknown_type $key
+		 */
+		public function __isset($key)
+		{
+			return isset($this->data[$key]);
+		}
+		
+		/**
 		 * Render primitive types
 		 * 
 		 * @param mixed $data
