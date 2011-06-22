@@ -126,7 +126,7 @@ namespace nutshell\core\plugin
 			//create the plugin config node
 			$config = new Config();
 			$config->{$pluginName} = new Config();
-			$config->{$pluginName}->extendWith($alternatives, NS_ENV);
+			$config->{$pluginName}->extendWith($pluginConfigPaths, NS_ENV);
 			
 			//add the the nutshell config tree
 			Nutshell::getInstance()->config->plugin->extendWith($config);
