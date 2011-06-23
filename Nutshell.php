@@ -137,11 +137,7 @@ namespace nutshell
 		{
 			if (!defined(self::NUTSHELL_ENVIRONMENT))
 			{
-				if($env = getenv(self::NUTSHELL_ENVIRONMENT)) 
-				{
-					//nothing
-				}
-				else 
+				if(!$env = getenv('NS_ENV')) 
 				{
 					$env = self::DEFAULT_ENVIRONMENT;
 				}
