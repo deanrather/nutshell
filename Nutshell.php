@@ -26,6 +26,7 @@ namespace nutshell
 		const VERSION_MICRO			=	0;
 		const VERSION_DEV			=	2;
 		const NUTSHELL_ENVIRONMENT	=	'NS_ENV';
+		const DEFAULT_ENVIRONMENT	= 	'production';
 		
 		public $config 				=	null;
 		private $loader				=	null;
@@ -136,7 +137,15 @@ namespace nutshell
 		{
 			if (!defined(self::NUTSHELL_ENVIRONMENT))
 			{
-				define(self::NUTSHELL_ENVIRONMENT, 'production');
+				if($env = getenv(self::NUTSHELL_ENVIRONMENT)) 
+				{
+					//nothing
+				}
+				else 
+				{
+					$env = self::DEFAULT_ENVIRONMENT;
+				}
+				define(self::NUTSHELL_ENVIRONMENT, $env);
 			}
 			
 			$this->config = Config::loadCoreConfig(self::$configPath, NS_ENV);
