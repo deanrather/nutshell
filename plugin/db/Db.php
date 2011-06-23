@@ -12,11 +12,16 @@ namespace nutshell\plugin\db
 	
 	class Db extends Plugin implements Singleton, AbstractFactory
 	{
-		protected static $connections = array(); 
+		protected static $connections = array();
+		
+		protected static $dependenciesLoaded = false;
 		
 		public static function loadDependencies()
 		{
-			include_once(__DIR__.'/impl/DB.php');
+			if(!self::$dependenciesLoaded)
+			{
+				include_once(__DIR__.'/impl/DB.php');
+			}
 		}
 		
 		public function init()
@@ -53,6 +58,7 @@ namespace nutshell\plugin\db
 		
 		public static function runFactory($connectionName)
 		{
+			self::loadDependencies();
 			if (!array_key_exists($connectionName, self::$connections))
 			{
 				self::$connections[$connectionName] = self::setupConnection($connectionName);
