@@ -1,8 +1,8 @@
 <?php
 namespace nutshell\plugin\direct
 {
+	use nutshell\plugin\mvc\Controller;
 	use nutshell\core\exception\Exception;
-
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Singleton;
@@ -22,18 +22,18 @@ namespace nutshell\plugin\direct
 			
 		}
 		
-		public function initService($APIRef)
+		public function initService(Controller $controller,$APIRef)
 		{
 			if (isset($this->config->{$APIRef}))
 			{
 				if (!isset($this->services[$APIRef]))
 				{
-					$this->services[$APIRef]=new Service($APIRef);
+					return $this->services[$APIRef]=new Service($controller,$APIRef);
 				}
-//				else
-//				{
-//					return $this->services[$APIRef];
-//				}
+				else
+				{
+					return $this->services[$APIRef];
+				}
 			}
 			else
 			{
