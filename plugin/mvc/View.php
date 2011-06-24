@@ -5,10 +5,14 @@ namespace nutshell\plugin\mvc
 	
 	class View extends PluginExtension
 	{
+		const DEFAULT_MIME_TYPE	= 'text/html';
+		
 		private $MVC			=null;
 		private $templateVars	=array();
 		private $viewFile		=null;
-		public $templateContext=null;
+		public $templateContext	=null;
+		
+		private $mimeType		= self::DEFAULT_MIME_TYPE;
 		
 		public function __construct(Mvc $MVC)
 		{
@@ -21,6 +25,15 @@ namespace nutshell\plugin\mvc
 			$this->viewFile=$this->buildViewPath($viewName);
 		}
 		
+		public function setMimeType($type = null)
+		{
+			if(empty($type))
+			{
+				$type = self::DEFAULT_MIME_TYPE;
+			}
+			$this->mimeType = $type;
+		}
+		
 		public function buildViewPath($viewName)
 		{
 			return APP_HOME.$this->MVC->config->dir->views.$viewName.'.php';
@@ -28,6 +41,8 @@ namespace nutshell\plugin\mvc
 		
 		public function render()
 		{
+			header(sprintf('Content-Type: %s', $this->mimeType));
+			
 			$template=$this->plugin->Template($this->viewFile);
 			$template->setKeyVal
 			(
