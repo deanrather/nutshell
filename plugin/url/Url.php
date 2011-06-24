@@ -17,11 +17,15 @@ namespace nutshell\plugin\url
 		public function init()
 		{
 			$nodes=explode('/',strtolower($_SERVER['REQUEST_URI']));
-			if (!end($nodes))	array_pop($nodes);
 			if (!reset($nodes))	array_shift($nodes);
+			if (!end($nodes))	array_pop($nodes);
 			if (!isset($nodes[0]))
 			{
 				$nodes[0]='';
+			}
+			if (substr(current($nodes),0,1)=='?')
+			{
+				array_pop($nodes);
 			}
 			$this->nodes=$nodes;
 		}
@@ -43,6 +47,18 @@ namespace nutshell\plugin\url
 		public function getNodes()
 		{
 			return $this->nodes;
+		}
+		
+		public function makeURL($URL='',$protocol='http://')
+		{
+			$URL=trim($URL,'/');
+			if (strstr($URL,'?'))
+			{
+				list($prefix,$suffix)=explode('?',$URL,2);
+				$URL=trim($prefix,'/');
+				$URL.=(empty($prefix)?'?':'/?').$suffix;
+			}
+			return $protocol.$_SERVER['HTTP_HOST'].'/'.$URL.'/';
 		}
 	}
 }
