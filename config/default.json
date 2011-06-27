@@ -1,6 +1,10 @@
 {
 	"config":
 	{
+		"php":
+		{
+			
+		},
 		"core":
 		{
 			"hiphop":	false,
