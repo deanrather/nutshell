@@ -15,7 +15,9 @@ namespace nutshell\plugin\direct
 		{
 			require(__DIR__.'/ProviderController.php');
 			require(__DIR__.'/Responder.php');
-			require(__DIR__.'/Service.php');
+			require(__DIR__.'/Service.php');;
+			require(__DIR__.'/behaviour/Pollable.php');
+			require(__DIR__.'/behaviour/Remotable.php');
 		}
 		
 		public function init()
