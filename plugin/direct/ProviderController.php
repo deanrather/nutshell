@@ -9,6 +9,7 @@ namespace nutshell\plugin\direct
 		const CODE_SUCCESS	=1;
 		
 		private $core		=null;
+		private $plugin		=null;
 		private $responder	=null;
 		
 		private $response	=array
@@ -31,17 +32,24 @@ namespace nutshell\plugin\direct
 			'data'		=>null
 		);
 		
-		public function __construct(Responder $responder,$request)
+		public function __construct(Responder $responder,$request=null)
 		{
 			$this->core		=Nutshell::getInstance();
+			$this->plugin	=$this->core->plugin;
 			$this->responder=$responder;
 			
-			$this->response['tid']		=$request->tid;
-			$this->response['type']		=$request->type;
-			$this->response['action']	=$request->action;
-			$this->response['method']	=$request->method;
+			if (!is_null($request))
+			{
+				$this->response['tid']		=$request->tid;
+				$this->response['type']		=$request->type;
+				$this->response['action']	=$request->action;
+				$this->response['method']	=$request->method;
+			}
+			else
+			{
+				$this->response['type']		='polling';
+			}
 			$this->response['timestamp']=time();
-			
 			//Link the response result to result.
 			$this->response['result']=&$this->result;
 		}
@@ -90,6 +98,18 @@ namespace nutshell\plugin\direct
 		{
 			$this->responder->push($this->response);
 			return $this;
+		}
+		
+		public function fireEvent($name,$data=array())
+		{
+			$this->response['type']='event';
+			$this->response['name']=$name;
+			$this->response['data']=$data;
+			unset($this->response['result']);
+			unset($this->response['method']);
+			unset($this->response['action']);
+			unset($this->response['tid']);
+			unset($this->response['where']);
 		}
 	}
 }
