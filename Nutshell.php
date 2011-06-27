@@ -40,7 +40,7 @@ namespace nutshell
 			//PHP version check.
 			if (version_compare(PHP_VERSION,'5.3.3','<'))
 			{
-				die('Nutshell required PHP version 5.3.3 or higher.');
+				die('Nutshell requires PHP version 5.3.3 or higher.');
 			}
 			//Config path check.
 			if (is_null(self::$configPath))
@@ -51,6 +51,20 @@ namespace nutshell
 			//Define constants.
 			define('_DS_',DIRECTORY_SEPARATOR);
 			define('NS_HOME',__DIR__._DS_);
+			
+			if (isset($_SERVER['argv']))
+			{
+				define('NS_INTERFACE','CLI');
+			}
+			else if (strstr($_SERVER['PHP_SELF'],'phpunit'))
+			{
+				define('NS_INTERFACE','PHPUNIT');
+			}
+			else
+			{
+				define('NS_INTERFACE','HTTP');
+			}
+			
 			
 			//Load the behaviours first.
 			$this->loadBehaviours();
