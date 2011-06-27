@@ -16,7 +16,7 @@ namespace nutshell\plugin\url
 		
 		public function init()
 		{
-			$nodes=explode('/',strtolower($_SERVER['REQUEST_URI']));
+			$nodes=explode('/',$_SERVER['REQUEST_URI']);
 			if (!reset($nodes))	array_shift($nodes);
 			if (!end($nodes))	array_pop($nodes);
 			if (!isset($nodes[0]))
