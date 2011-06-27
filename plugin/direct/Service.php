@@ -2,10 +2,10 @@
 namespace nutshell\plugin\direct
 {
 	use nutshell\helper\Object;
-
 	use nutshell\plugin\mvc\Controller;
 	use nutshell\core\exception\Exception;
 	use nutshell\core\plugin\PluginExtension;
+	use nutshell\behaviour\direct\Pollable;
 	
 	class Service extends PluginExtension
 	{
@@ -59,21 +59,21 @@ namespace nutshell\plugin\direct
 						'namespace'	=>$this->nsPrefix.'.'.$providerName,
 						'actions'	=>array()
 					);
+					foreach ($provider->modules as $moduleName=>$module)
+					{
+						for ($i=0,$j=count($module); $i<$j; $i++)
+						{
+							$thisProvider['actions'][$moduleName][]=array
+							(
+								'name'	=>$module[$i]->name,
+								'len'	=>$module[$i]->args
+							);
+						}
+					}
 				}
 				else
 				{
 					throw new Exception('Invalid provider type "'.$provider->type.'".');
-				}
-				foreach ($provider->modules as $moduleName=>$module)
-				{
-					for ($i=0,$j=count($module); $i<$j; $i++)
-					{
-						$thisProvider['actions'][$moduleName][]=array
-						(
-							'name'	=>$module[$i]->name,
-							'len'	=>$module[$i]->args
-						);
-					}
 				}
 				$descriptor[]=$thisProvider;
 			}
@@ -82,48 +82,47 @@ namespace nutshell\plugin\direct
 		
 		public function processRequest($provider)
 		{
-			$request=json_decode($GLOBALS['HTTP_RAW_POST_DATA']);
+			if (isset($GLOBALS['HTTP_RAW_POST_DATA']))
+			{
+				$request=json_decode($GLOBALS['HTTP_RAW_POST_DATA']);
+			}
+			//Remoting Request
 			if (!empty($request))
 			{
 				//Non-Batch
 				if (!is_array($request))
 				{
-					$this->handleRequest($provider,$request);
+					$this->handleRemotingRequest($provider,$request);
 				}
 				//Batch
 				else
 				{
 					for ($i=0,$j=count($request); $i<$j; $i++)
 					{
-						$this->handleRequest($provider,$request[$i]);
+						$this->handleRemotingRequest($provider,$request[$i]);
 					}
 				}
 			}
 			//Polling Request
 			else
 			{
-//				include_once(APP_HOME.$this->config->dir->providers.$this->plugin->Url->node(2).'.php');
-//				$moduleName	=?;
-//				$module		=new $moduleName($this->scope,$this->responder,null);
+				$this->handlePollingRequest($provider);
 			}
 			$this->responder->send();
 		}
 		
-		private function handleRequest($provider,$request)
+		private function handleRemotingRequest($provider,$request)
 		{
 			if ($this->moduleExists($provider,$request->action))
 			{
 				include_once(APP_HOME.$this->config->dir->providers.$provider._DS_.$request->action.'.php');
-				$moduleName='application\controller\provider\\'.$provider.'\\'.$request->action;
-				
-				
-				$module=new $moduleName($this->responder,$request);
-				
-				
+				$moduleName	='application\controller\provider\\'.$provider.'\\'.$request->action;
+				$module		=new $moduleName($this->responder,$request);
 				if (method_exists($module,$request->method))
 				{
 					if (!is_array($request->data))$request->data=array();
 					call_user_func_array(array($module,$request->method),$request->data);
+					$module->sendResponse();
 				}
 				else
 				{
@@ -136,12 +135,24 @@ namespace nutshell\plugin\direct
 			}
 		}
 		
+		private function handlePollingRequest($provider)
+		{
+			include_once(APP_HOME.$this->config->dir->providers.$provider.'.php');
+			$providerName	='application\controller\provider\\'.ucfirst($provider);
+			$provider		=new $providerName($this->responder);
+			if ($provider instanceof Pollable)
+			{
+				$provider->poll();
+				$provider->sendResponse();
+			}
+		}
+		
 		public function providerExists($provider=false)
 		{
 			//Remoting Provider
 			if (is_dir(APP_HOME.$this->config->dir->providers.$provider)
 			//Polling Provider
-			|| is_file(APP_HOME.$this->config->dir->providers.$provider.'php'))
+			|| is_file(APP_HOME.$this->config->dir->providers.$provider.'.php'))
 			{
 				return true;
 			}
