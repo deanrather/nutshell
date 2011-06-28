@@ -12,6 +12,7 @@ namespace nutshell\plugin\direct
 		const DEFAULT_INTERVAL	=3000;
 		
 		private $controller		=null;
+		private $responder		=null;
 		private $ref			=null;
 		private $name			=null;
 		private $description	=null;
@@ -28,7 +29,10 @@ namespace nutshell\plugin\direct
 			$this->version		=$this->config->{$this->ref}->version;
 			$this->nsPrefix		=$this->config->{$this->ref}->nsPrefix;
 			
-			
+			/* Create a responder object which will hold 
+			 * all the request responses and output them.
+			 */
+			$this->responder	=new Responder();
 		}
 		
 		public function buildDescriptor()
@@ -76,24 +80,24 @@ namespace nutshell\plugin\direct
 			print json_encode($descriptor);
 		}
 		
-		public function processRequest()
+		public function processRequest($provider)
 		{
-			var_dump($GLOBALS['HTTP_RAW_POST_DATA']);
-			if (count($_POST))
+			$request=json_decode($GLOBALS['HTTP_RAW_POST_DATA']);
+			if (!empty($request))
 			{
 				//Non-Batch
-//				if ()
-//				{
-//					$this->handleRequest($this->global->post());
-//				}
-//				//Batch
-//				else
-//				{
-//					for ($i=0,$j=count($this->global->post()); $i<$j; $i++)
-//					{
-//						$this->handleRequest($this->global->post($i));
-//					}
-//				}
+				if (!is_array($request))
+				{
+					$this->handleRequest($provider,$request);
+				}
+				//Batch
+				else
+				{
+					for ($i=0,$j=count($request); $i<$j; $i++)
+					{
+						$this->handleRequest($provider,$request[$i]);
+					}
+				}
 			}
 			//Polling Request
 			else
@@ -103,6 +107,33 @@ namespace nutshell\plugin\direct
 //				$module		=new $moduleName($this->scope,$this->responder,null);
 			}
 			$this->responder->send();
+		}
+		
+		private function handleRequest($provider,$request)
+		{
+			if ($this->moduleExists($provider,$request->action))
+			{
+				include_once(APP_HOME.$this->config->dir->providers.$provider._DS_.$request->action.'.php');
+				$moduleName='application\controller\provider\\'.$provider.'\\'.$request->action;
+				
+				
+				$module=new $moduleName($this->responder,$request);
+				
+				
+				if (method_exists($module,$request->method))
+				{
+					if (!is_array($request->data))$request->data=array();
+					call_user_func_array(array($module,$request->method),$request->data);
+				}
+				else
+				{
+					die('Module "'.$provider.'::'.$request->action.'" method "'.$request->method.'" is invalid.');
+				}
+			}
+			else
+			{
+				die('Module "'.$provider.'::'.$request->action.'" could not be found.');
+			}
 		}
 		
 		public function providerExists($provider=false)
@@ -115,6 +146,11 @@ namespace nutshell\plugin\direct
 				return true;
 			}
 			return false;
+		}
+		
+		private function moduleExists($provider,$module)
+		{
+			 return is_file(APP_HOME.$this->config->dir->providers.$provider._DS_.$module.'.php');
 		}
 	}
 }
