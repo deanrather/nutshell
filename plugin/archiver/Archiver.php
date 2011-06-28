@@ -16,6 +16,11 @@ namespace nutshell\plugin\archiver
 			//include_once __DIR__ . '/engine/Rar.php';
 		}
 		
+		public static function registerBehaviours()
+		{
+			
+		}
+		
 		public static function runFactory($engine)
 		{
 			$className = __NAMESPACE__ . '\\engine\\' . ucfirst($engine);

@@ -1,6 +1,10 @@
 <?php
 namespace nutshell\core\loader
 {
+	use nutshell\Nutshell;
+
+	use nutshell\helper\Object;
+
 	use nutshell\core\exception\Exception;
 
 	use nutshell\core\Component;
@@ -41,6 +45,31 @@ namespace nutshell\core\loader
 			'plugin'		=>array()
 		);
 		
+		public static function autoload($className)
+		{
+			$namespace=Object::getNamespace($className);
+			$className=Object::getBaseClassName($className);
+			//Check for a plugin behaviour.
+			if (strstr($namespace,'behaviour\\'))
+			{
+				list(,,$plugin)	=explode('\\',$namespace);
+				$pathSuffix		='plugin'._DS_.$plugin._DS_.'behaviour'._DS_.$className.'.php';
+				if (is_file($file=NS_HOME.$pathSuffix))
+				{
+					//Invoke the plugin.
+					Nutshell::getInstance()->plugin->{ucfirst($plugin)};
+				}
+				else if (is_file($file=APP_HOME.$pathSuffix))
+				{
+					Nutshell::getInstance()->plugin->{ucfirst($plugin)};
+				}
+				else
+				{
+					throw new Exception('Unable to autoload class "'.$namespace.$className.'".');
+				}
+			}
+		}
+		
 		/**
 		 * 
 		 */
@@ -48,6 +77,12 @@ namespace nutshell\core\loader
 		{
 			static::load(array());
 		}
+		
+		public function __construct()
+		{
+			spl_autoload_register(__NAMESPACE__ .'\Loader::autoload');
+		}
+		
 		
 		public function registerContainer($name,$path,$namespace)
 		{
@@ -76,6 +111,7 @@ namespace nutshell\core\loader
 					if (in_array('nutshell\behaviour\Native', $interfaces))
 					{
 						$className::loadDependencies();
+						$className::registerBehaviours();
 					}
 				}
 			}

@@ -19,6 +19,11 @@ namespace nutshell\plugin\template
 			require('Context.php');
 		}
 		
+		public static function registerBehaviours()
+		{
+			
+		}
+		
 		public function init($template)
 		{
 			$this->setTemplate($template);

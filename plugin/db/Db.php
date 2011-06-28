@@ -24,6 +24,11 @@ namespace nutshell\plugin\db
 			}
 		}
 		
+		public static function registerBehaviours()
+		{
+			
+		}
+		
 		public function init()
 		{
 		}

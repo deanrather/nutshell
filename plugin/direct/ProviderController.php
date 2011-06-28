@@ -8,8 +8,8 @@ namespace nutshell\plugin\direct
 		const CODE_FAIL		=0;
 		const CODE_SUCCESS	=1;
 		
-		private $core		=null;
-		private $plugin		=null;
+		public $core		=null;
+		public $plugin		=null;
 		private $responder	=null;
 		
 		private $response	=array

@@ -12,6 +12,11 @@ namespace nutshell\plugin\l10n
 			
 		}
 		
+		public static function registerBehaviours()
+		{
+			
+		}
+		
 		public function init()
 		{
 			

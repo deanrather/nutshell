@@ -12,6 +12,11 @@ namespace nutshell\plugin\i18n
 			
 		}
 		
+		public static function registerBehaviours()
+		{
+			
+		}
+		
 		public function init()
 		{
 			

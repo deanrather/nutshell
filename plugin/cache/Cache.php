@@ -12,6 +12,11 @@ namespace nutshell\plugin\cache
 			
 		}
 		
+		public static function registerBehaviours()
+		{
+			
+		}
+		
 		public function init()
 		{
 			

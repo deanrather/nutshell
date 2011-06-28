@@ -54,6 +54,11 @@ namespace nutshell\plugin\logger
 			include_once(__DIR__.'/writer/file/DailyFileWriter.php');
 		}
 		
+		public static function registerBehaviours()
+		{
+			
+		}
+		
 		public function __construct($loggerName)
 		{
 			parent::__construct();

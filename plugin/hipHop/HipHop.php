@@ -11,6 +11,11 @@ namespace nutshell\plugin
 			
 		}
 		
+		public static function registerBehaviours()
+		{
+			
+		}
+		
 		public function init()
 		{
 			

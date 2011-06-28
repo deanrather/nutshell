@@ -14,6 +14,8 @@ namespace nutshell\core\plugin
 	{
 		private static $PLUGIN_CONFIG_LOADED	= array();
 		protected static $instance				= null;
+		protected static $behaviours			= array();
+		
 		/**
 		 * @access public
 		 * @var nutshell\core\config\Config
@@ -48,7 +50,19 @@ namespace nutshell\core\plugin
 			return Nutshell::getInstance()->config->plugin->{Object::getBaseClassName(get_called_class())};
 		}
 		
-		
+		protected static function registerBehaviour($plugin,$behaviourName,$callback)
+		{
+			$pluginName	=lcfirst(Object::getBaseClassName($plugin));
+			$behaviour	='nutshell\behaviour\\'.$pluginName.'\\'.$behaviourName;
+			if (!isset(self::$behaviours[$behaviour]))
+			{
+				self::$behaviours[$behaviour]=$callback;
+			}
+			else
+			{
+				throw new Exception('Plugin ".$pluginName." tried to define the behaviour "'.$behaviourName.'". But this behaviour has already been defined.');
+			}
+		}
 		
 		/**
 		 * 
@@ -66,11 +80,14 @@ namespace nutshell\core\plugin
 				//gets the list of implemented interfaces
 				if($interfaces = class_implements($className, false))
 				{
+					//Load the plugin config.
 					self::loadPluginConfig($className);
+					
 					//Is it a Factory?
 					if (in_array('nutshell\behaviour\Factory', $interfaces))
 					{
 						$instance=new static();
+						self::applyBehaviours($instance);
 						call_user_func_array(array($instance,'init'),$args);
 						return $instance;
 					}
@@ -78,6 +95,7 @@ namespace nutshell\core\plugin
 					else if (in_array('nutshell\behaviour\Singleton', $interfaces))
 					{
 						$instance=new static();
+						self::applyBehaviours($instance);
 						$GLOBALS['NUTSHELL_PLUGIN_SINGLETON'][$className]=$instance;
 						call_user_func_array(array($instance,'init'),$args);
 					}
@@ -100,6 +118,19 @@ namespace nutshell\core\plugin
 			}
 			//It must be a singleton. Return the instance.
 			return $GLOBALS['NUTSHELL_PLUGIN_SINGLETON'][$className];
+		}
+		
+		public static function applyBehaviours($classInstance)
+		{
+			$interfaces=class_implements($classInstance,false);
+			//Apply behaviours.
+			foreach (self::$behaviours as $behaviour=>$callback)
+			{
+				if (in_array($behaviour,$interfaces))
+				{
+					$callback($classInstance);
+				}
+			}
 		}
 		
 		/**

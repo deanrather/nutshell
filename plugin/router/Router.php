@@ -21,6 +21,11 @@ namespace nutshell\plugin\router
 			require(__DIR__.'/handler/Advanced.php');
 		}
 		
+		public static function registerBehaviours()
+		{
+			
+		}
+		
 		public function init()
 		{
 			//Handle simple routing.

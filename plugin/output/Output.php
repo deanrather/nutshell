@@ -12,6 +12,11 @@ namespace nutshell\plugin\output
 			
 		}
 		
+		public static function registerBehaviours()
+		{
+			
+		}
+		
 		public function init()
 		{
 			

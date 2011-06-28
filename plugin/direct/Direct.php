@@ -20,6 +20,11 @@ namespace nutshell\plugin\direct
 			require(__DIR__.'/behaviour/Remotable.php');
 		}
 		
+		public static function registerBehaviours()
+		{
+			
+		}
+		
 		public function init()
 		{
 			

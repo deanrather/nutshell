@@ -65,7 +65,6 @@ namespace nutshell
 				define('NS_INTERFACE','HTTP');
 			}
 			
-			
 			//Load the behaviours first.
 			$this->loadBehaviours();
 			

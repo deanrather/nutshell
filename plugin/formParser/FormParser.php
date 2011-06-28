@@ -32,6 +32,11 @@ namespace nutshell\plugin\formParser
 			require(__DIR__.'/element/rule/Required.php');
 		}
 		
+		public static function registerBehaviours()
+		{
+			
+		}
+		
 		public function init($document=null)
 		{
 			if (is_string($document))

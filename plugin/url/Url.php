@@ -14,6 +14,11 @@ namespace nutshell\plugin\url
 			
 		}
 		
+		public static function registerBehaviours()
+		{
+			
+		}
+		
 		public function init()
 		{
 			$nodes=explode('/',$_SERVER['REQUEST_URI']);

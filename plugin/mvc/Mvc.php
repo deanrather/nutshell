@@ -17,6 +17,11 @@ namespace nutshell\plugin\mvc
 			require(__DIR__.'/Controller.php');
 		}
 		
+		public static function registerBehaviours()
+		{
+			
+		}
+		
 		public function init()
 		{
 			//Get the route from the rotuer.
