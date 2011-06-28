@@ -51,6 +51,7 @@ namespace nutshell\plugin\mvc
 			);
 			//Register some fucntions that can be used in the template.
 			$this->templateContext=$template->getContext();
+			
 			$scope=$this;
 			$this->templateContext->registerCallback
 			(

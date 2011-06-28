@@ -10,14 +10,31 @@ namespace nutshell\plugin\template
 		private $keyVals	=array();
 		private $callbacks	=array();
 		
-		public function __construct(Array &$keyVals)
+		public function __construct()
 		{
-			$this->setKeyVals($keyVals);
+			
 		}
 		
-		public function setKeyVals(Array &$keyVals)
+		public function setKeyVals($key,$val)
 		{
-			$this->keyVals=$keyVals;
+			if (!is_array($key))	$key=array($key);
+			if (!is_array($val))	$val=array($val);
+			if (count($key)==count($val))
+			{
+				for ($i=0,$j=count($key); $i<$j; $i++)
+				{
+					$this->keyVals[$key[$i]]=$val[$i];
+				}
+			}
+			else
+			{
+				throw new Exception('Invalid keyval lengths. Keys and values should contain the same number of items.');
+			}
+		}
+		
+		public function setKeyVal($key,$val)
+		{
+			$this->keyVals[$key]=$val;
 		}
 		
 		public function get($key)

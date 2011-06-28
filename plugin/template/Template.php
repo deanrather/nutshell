@@ -10,7 +10,6 @@ namespace nutshell\plugin\template
 	{
 		private $templateFile	=null;
 		private $template		=null;
-		private $keyVals		=array();
 		private $context		=null;
 		private $compiled		=null;
 		
@@ -27,7 +26,7 @@ namespace nutshell\plugin\template
 		public function init($template)
 		{
 			$this->setTemplate($template);
-			$this->context=new Context($this->keyVals);
+			$this->context=new Context();
 		}
 		
 		public function setTemplate($template)
@@ -51,19 +50,7 @@ namespace nutshell\plugin\template
 		
 		public function setKeyVal($key,$val)
 		{
-			if (!is_array($key))	$key=array($key);
-			if (!is_array($val))	$val=array($val);
-			if (count($key)==count($val))
-			{
-				for ($i=0,$j=count($key); $i<$j; $i++)
-				{
-					$this->keyVals[$key[$i]]=$val[$i];
-				}
-			}
-			else
-			{
-				throw new Exception('Invalid keyval lengths. Keys and values should contain the same number of items.');
-			}
+			$this->context->setKeyVals($key,$val);
 			return $this;
 		}
 		
