@@ -77,6 +77,7 @@ namespace nutshell\plugin\direct
 				}
 				$descriptor[]=$thisProvider;
 			}
+			header('Content-type:application/json;');
 			print json_encode($descriptor);
 		}
 		
