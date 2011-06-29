@@ -1,6 +1,7 @@
 <?php
 namespace nutshell\plugin\mvc
 {
+	use nutshell\core\exception\Exception;
 	use nutshell\Nutshell;
 
 	abstract class Controller
@@ -16,6 +17,20 @@ namespace nutshell\plugin\mvc
 			$this->plugin	=$this->core->plugin;
 			$this->MVC		=$MVC;
 			$this->view		=new View($this->MVC);
+			$this->core->getLoader()->registerContainer('model',APP_HOME.'model'._DS_,'application\model\\');
+		}
+		
+		public function __get($key)
+		{
+			if ($key=='model')
+			{
+				$loader=$this->core->getLoader();
+				return $loader('model');
+			}
+			else
+			{
+				throw new Exception('Attempted to get invalid property "'.$key.'" from controller.');
+			}
 		}
 	}
 }

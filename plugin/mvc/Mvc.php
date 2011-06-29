@@ -15,6 +15,7 @@ namespace nutshell\plugin\mvc
 			require(__DIR__.'/Model.php');
 			require(__DIR__.'/View.php');
 			require(__DIR__.'/Controller.php');
+			require(__DIR__.'/model/CRUD.php');
 		}
 		
 		public static function registerBehaviours()
