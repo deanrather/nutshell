@@ -3,6 +3,7 @@ namespace nutshell\core\plugin
 {
 	use nutshell\behaviour\Singleton;
 	use nutshell\behaviour\AbstractFactory;
+	use nutshell\behaviour\Loadable;
 
 	use nutshell\Nutshell;
 	use nutshell\core\exception\Exception;
@@ -10,7 +11,7 @@ namespace nutshell\core\plugin
 	use nutshell\core\config\Config;
 	use nutshell\helper\Object;
 	
-	abstract class Plugin extends Component
+	abstract class Plugin extends Component implements Loadable
 	{
 		private static $PLUGIN_CONFIG_LOADED	= array();
 		protected static $instance				= null;
@@ -104,12 +105,12 @@ namespace nutshell\core\plugin
 					{
 						return call_user_func_array(array($className,'runFactory'),$args);
 					}
-	//				//Is it abstractable?
-	//				else if ($instance instanceof Abstractable)
-	//				{
-	//					//TODO: Deal with Abstractable interface.
-	//					throw new Exception('TODO: Deal with Abstractable interface.');
-	//				}
+//					//Is it abstractable?
+//					else if ($instance instanceof Abstractable)
+//					{
+//						//TODO: Deal with Abstractable interface.
+//						throw new Exception('TODO: Deal with Abstractable interface.');
+//					}
 					else
 					{
 						throw new Exception('Invalid plugin. Plugin must implement one of either "Factory", "Singleton" or "Abstractable" interfaces.');

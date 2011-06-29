@@ -95,16 +95,29 @@ namespace nutshell\core\loader
 		
 		private function doLoad($key,Array $args=array())
 		{
-			//Construct the class name.
-			$className=$this->containers[$this->container]['namespace'].lcfirst($key).'\\'.$key;
 			//Is the {$this->container} object loaded?
 			if (!isset($this->loaded[$this->container][$key]))
 			{
 				//No, so we need to load all of it's dependancies and initiate it.
 				
 				#Load TODO: Fully load everything.
-				require($this->containers[$this->container]['path'].lcfirst($key)._DS_.$key.'.php');
-				
+				$dirBase=$this->containers[$this->container]['path'];
+				if (is_file($file=$dirBase.lcfirst($key)._DS_.$key.'.php'))
+				{
+					require($file);
+					//Construct the class name.
+					$className=$this->getClassName($key);
+				}
+				else if (is_file($file=$dirBase.$key.'.php'))
+				{
+					require($file);
+					//Construct the class name.
+					$className=$this->getClassName($key);
+				}
+				else
+				{
+					throw new Exception('Loader failed to load "'.$key.'" from container "'.$this->container.'".');
+				}
 				if($interfaces = class_implements($className, false))
 				{
 					//Load class dependencies
@@ -115,9 +128,38 @@ namespace nutshell\core\loader
 					}
 				}
 			}
-			#Initiate
-			$this->loaded[$this->container][$key]=$className::getInstance($args);
-			return $this->loaded[$this->container][$key];
+			else
+			{
+				$className=$this->getClassName($key);
+			}
+			if (!isset($interfaces))
+			{
+				$interfaces=class_implements($className, false);
+			}
+			if (in_array('nutshell\behaviour\Loadable', $interfaces))
+			{
+				#Initiate
+				$this->loaded[$this->container][$key]=$className::getInstance($args);
+				return $this->loaded[$this->container][$key];
+			}
+			else
+			{
+				throw new Exception('Loader failed to load class "'.$className.'". This is likely because the container '
+									.'handle you\'re using to handle the loading with doesn\'t impement the "Loadable" behaviour.');
+			}
+		}
+		
+		private function getClassName($key)
+		{
+			$dirBase=$this->containers[$this->container]['path'];
+			if (is_file($dirBase.lcfirst($key)._DS_.$key.'.php'))
+			{
+				return $this->containers[$this->container]['namespace'].lcfirst($key).'\\'.$key;
+			}
+			else if (is_file($dirBase.$key.'.php'))
+			{
+				return $this->containers[$this->container]['namespace'].$key;
+			}
 		}
 		
 		public function __invoke($container)
