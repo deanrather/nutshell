@@ -1,7 +1,7 @@
 <?php
 namespace nutshell\core\config
 {
-	use nutshell\core\exception\Exception;
+	use nutshell\core\config\exception\ConfigException;
 	use nutshell\core\Component;
 	use \Iterator;
 	
@@ -99,7 +99,7 @@ namespace nutshell\core\config
 				return $this;
 			}
 			
-			throw new Exception(sprintf('Could not parse argument into a config object: not an instance of %s', self::PARSEABLE_CLASS));
+			throw new ConfigException(sprintf('Could not parse argument into a config object: not an instance of %s', self::PARSEABLE_CLASS), ConfigException::CODE_NON_PARSEABLE_STRUCTURE);
 		}
 		
 		/**
@@ -182,7 +182,7 @@ namespace nutshell\core\config
 					}
 					else
 					{
-						throw new Exception(sprintf('Could not extend config object: trying to extend/overwrite a Config node'));
+						throw new ConfigException(sprintf('Could not extend config object: trying to extend/overwrite a Config node'), ConfigException::CODE_INVALID_NODE_EXTENSION);
 					} 
 				}
 			}
@@ -476,26 +476,6 @@ namespace nutshell\core\config
 		
 		/*** Loader part ***/
 		
-		/**
-		 * 
-		 * 
-		 * @param String $environment
-		 */
-		public static function loadCoreConfig($configPath, $environment = null) 
-		{
-			if(!$environment) 
-			{
-				$environment = self::DEFAULT_ENVIRONMENT;
-			}	
-			
-			//computing the file path of the require environment
-			$configPaths = array(
-				self::getCoreConfigPath($configPath),
-				NS_HOME . self::CONFIG_FOLDER
-			);
-			return self::loadConfigFile($configPaths, self::makeConfigFileName($environment));
-		}
-		
 		public static function loadConfigFile($alternatives, $basename, $extendHandler = null, &$extended = null)
 		{ 
 			if (!is_array($alternatives))
@@ -515,7 +495,7 @@ namespace nutshell\core\config
 				}
 			}
 			
-			throw new Exception(sprintf("Failed to find a suitable config file named %s", $basename));
+			throw new ConfigException(sprintf("Failed to find a suitable config file named %s", $basename), ConfigException::CODE_CONFIG_FILE_NOT_FOUND);
 		}
 		
 		/**
@@ -554,41 +534,19 @@ namespace nutshell\core\config
 					$decodedJSON = json_decode(file_get_contents($file));
 					if($decodedJSON === null) 
 					{
-						throw new Exception(sprintf('Invalid JSON document: %s', $file));
+						throw new ConfigException(sprintf('Invalid JSON document: %s', $file), ConfigException::CODE_INVALID_JSON);
 					}
 					return ConfigRoot::parse($decodedJSON, $extendHandler, $extended);
 				} 
 				else
 				{
-					throw new Exception(sprintf('File is not accessible for reading: %s', $file));
+					throw new ConfigException(sprintf('File is not accessible for reading: %s', $file), ConfigException::CODE_INVALID_CONFIG_FILE);
 				}  
 			} 
 			else 
 			{
-				throw new Exception(sprintf('Could not find file: %s', $file));
+				throw new ConfigException(sprintf('Could not find file: %s', $file), ConfigException::CODE_INVALID_CONFIG_FILE);
 			}
-		}
-		
-		/**
-		 * Returns the core config path
-		 * 
-		 */
-		protected static function getCoreConfigPath($configPath = null) 
-		{
-			if(is_null($configPath))
-			{
-				$configPath = NS_HOME . _DS_ . self::CONFIG_FOLDER;
-			}
-			$realPath = realpath(
-				$configPath
-			); 
-			if (is_null($realPath)) 
-			{
-				//the path could not be resolved => it doesn't exist
-				throw new Exception('Could not find the config');
-			}
-			
-			return $realPath;
 		}
 	}
 }

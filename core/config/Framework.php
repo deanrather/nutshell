@@ -1,6 +1,8 @@
 <?php
 namespace nutshell\core\config 
 {
+	use nutshell\core\config\exception\ConfigException;
+
 	use nutshell\core\exception\Exception;
 
 	use nutshell\Nutshell;
@@ -18,7 +20,7 @@ namespace nutshell\core\config
 		 */
 		const CONFIG_EXPIRATION = 900;
 		
-		const CONFIG_REBUILD_KEY = '__config';
+		const CONFIG_REBUILD_KEY = 'config-reload';
 		
 		public static function loadConfig($configPath, $environment) 
 		{
@@ -82,23 +84,63 @@ namespace nutshell\core\config
 		{
 			return 
 			
-				//DEBUG
-				//(NS_INTERFACE == Nutshell::INTERFACE_CLI)
-				false 
+				(NS_INTERFACE == Nutshell::INTERFACE_CLI && in_array('--' . self::CONFIG_REBUILD_KEY, $_SERVER['argv']))
 				|| (NS_INTERFACE == Nutshell::INTERFACE_HTTP && $_GET[self::CONFIG_REBUILD_KEY])
 			;
 		}
 		
 		protected static function rebuild($configPath, $environment)
 		{
-			$config = new Config();
-			$config->config = Config::loadCoreConfig($configPath, $environment);
+			$configFile = new Config();
 			
-			if(file_put_contents(self::getCachedConfigFile(), $config->__toString()) === false)
+			//loads the framework default
+			$config = Config::loadConfigFile(NS_HOME . Config::CONFIG_FOLDER, Config::makeConfigFileName(Config::DEFAULT_ENVIRONMENT));
+			//loads the framework default plugins config
+			$config->extendWith(self::loadAllPluginConfig(NS_HOME . 'plugin', Config::DEFAULT_ENVIRONMENT));
+			//loads the application config
+			$config->extendWith(Config::loadConfigFile($configPath, Config::makeConfigFileName($environment)));
+			//loads the application plugins config
+			$config->extendWith(self::loadAllPluginConfig(APP_HOME . 'plugin', $environment));
+			
+			$configFile->config = $config;
+			
+			if(file_put_contents(self::getCachedConfigFile(), $configFile->__toString()) === false)
 			{
 				throw new Exception(sprintf("Failed to write to file %s.", self::getCachedConfigFile()));
 			}
+			
 			return $config;
+		}
+		
+		protected static function loadAllPluginConfig($location, $environment)
+		{
+			$pluginConfig = new Config();
+			$pluginConfig->plugin = new Config();
+			$files = glob(rtrim($location, _DS_) . _DS_ . '*');
+			if($files)
+			{
+				foreach($files as $file)
+				{
+					$pluginConfigPath = $file . _DS_ . Config::CONFIG_FOLDER;
+					if(is_dir($file) && is_dir($pluginConfigPath))
+					{
+						try {
+							$config = Config::loadConfigFile($pluginConfigPath, Config::makeConfigFileName($environment));
+							$pluginName = basename($file);
+							$pluginConfig->plugin->{ucfirst($pluginName)} = $config;
+						}
+						catch(ConfigException $e)
+						{
+							if(!in_array($e->getCode(), array(ConfigException::CODE_CONFIG_FILE_NOT_FOUND)))
+							{
+								throw $e;
+							}
+						}
+					}
+				}
+			}
+			
+			return $pluginConfig;
 		}
 		
 		protected static function loadCachedConfig()
@@ -110,7 +152,7 @@ namespace nutshell\core\config
 		
 		protected static function getCachedConfigFolder() 
 		{
-			return Nutshell::getConfigPath() . _DS_ . self::CONFIG_CACHE_FOLDER;
+			return APP_HOME . _DS_ . Config::CONFIG_FOLDER . _DS_ . self::CONFIG_CACHE_FOLDER;
 		}
 		
 		protected static function getCachedConfigFile() 

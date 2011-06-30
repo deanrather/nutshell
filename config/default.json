@@ -7,18 +7,14 @@
 		},
 		"core":
 		{
-			"hiphop":	false,
-			"dir":
-			{
-				"public":		"../../public/",
-				"private":		"../private/",
-				"application":	"../private/application/",
-				"tmp":			"../tmp/"
-			}
+			"hiphop":	false
 		},
 		"application":
 		{
-			
+			"dir":
+			{
+				"tmp":	"tmp/"
+			}
 		},
 		"plugin":
 		{

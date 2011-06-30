@@ -6,7 +6,7 @@
 			"rootLog": 
 			{
 				"class":			"DailyFileWriter",
-				"output":			"{NS_HOME}/log/root-{DATE}.log"
+				"output":			"{APP_HOME}/log/root-{DATE}.log"
 			},
 			"dbLog":
 			{
@@ -24,10 +24,6 @@
 					{
 						"writer":	"rootLog",
 						"level" :	"WARN" 
-					},
-					{
-						"writer":	"dbLog",
-						"level" :	"DEBUG" 
 					}
 				]
 			}

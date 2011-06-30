@@ -81,9 +81,6 @@ namespace nutshell\core\plugin
 				//gets the list of implemented interfaces
 				if($interfaces = class_implements($className, false))
 				{
-					//Load the plugin config.
-					self::loadPluginConfig($className);
-					
 					//Is it a Factory?
 					if (in_array('nutshell\behaviour\Factory', $interfaces))
 					{
@@ -132,60 +129,6 @@ namespace nutshell\core\plugin
 					$callback($classInstance);
 				}
 			}
-		}
-		
-		/**
-		 * Loads the plugin's configuration into the Nutshell config node.
-		 * 
-		 * @param String $pluginName
-		 */
-		public static function loadPluginConfig($pluginClassName)
-		{
-			if(isset(self::$PLUGIN_CONFIG_LOADED[$pluginClassName]))
-			{
-				//already registered, skip
-				return;
-			}
-			
-			//compute the config folder path for the plugin
-			$pluginConfigPaths = array(
-				self::getPluginBasePath(APP_HOME, $pluginClassName) . _DS_ . Config::CONFIG_FOLDER,
-				self::getPluginBasePath(NS_HOME, $pluginClassName) . _DS_ . Config::CONFIG_FOLDER
-			);
-			
-			$pluginName = Object::getBaseClassName($pluginClassName);
-			
-			//create the plugin config node
-			$config = new Config();
-			$config->{$pluginName} = new Config();
-			$config->{$pluginName}->extendWith($pluginConfigPaths, NS_ENV);
-			
-			//add the the nutshell config tree
-			Nutshell::getInstance()->config->plugin->extendWith($config);
-			
-			//set the marker
-			self::$PLUGIN_CONFIG_LOADED[$pluginClassName] = true;
-		}
-		
-		/**
-		 * Compute the config folder path for the plugin to which the specified class belongs to.
-		 * 
-		 * @param String $pluginClassName
-		 * @throws Exception
-		 * @return String the absolute system path to the plugin's config folder 
-		 */
-		protected static function getPluginBasePath($basePath, $pluginClassName)
-		{
-			$nsSplit = explode('\\', $pluginClassName);
-			
-			//necessary depth of 4 minimum
-			//nutshell\plugin\<plugin_folder>\<loaded_class>
-			if(count($nsSplit) < 4)
-			{
-				throw new Exception(sprintf('Invalid plugin. The namespace does not meet the structural requirement: %s.', $pluginClassName));
-			}
-			
-			return $basePath . 'plugin' . _DS_ . $nsSplit[2]; // plugin folder
 		}
 		
 		public function __get($key)

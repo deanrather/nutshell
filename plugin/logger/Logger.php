@@ -122,7 +122,7 @@ namespace nutshell\plugin\logger
 			}
 			else
 			{
-				throw new Exception("No writers defined for logger: %s", $this->loggerName);
+				throw new Exception(sprintf("No writers defined for logger: %s", $this->loggerName));
 			}
 		}
 		

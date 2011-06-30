@@ -27,8 +27,8 @@ namespace nutshell\plugin\logger\writer\file
 		protected function resolveOutputPlaceHolders($path)
 		{
 			return str_replace(
-				array('{NS_HOME}'),
-				array(NS_HOME),
+				array('{NS_HOME}', '{APP_HOME}'),
+				array(NS_HOME, APP_HOME),
 				$path
 			);
 		}

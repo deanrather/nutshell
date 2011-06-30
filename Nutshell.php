@@ -35,7 +35,6 @@ namespace nutshell
 		
 		public $config 				=	null;
 		private $loader				=	null;
-		private static $configPath	=	null;
 		
 		/**
 		 * Configures all special constants and libraries linking.
@@ -48,9 +47,9 @@ namespace nutshell
 				die('Nutshell requires PHP version 5.3.3 or higher.');
 			}
 			//Config path check.
-			if (is_null(self::$configPath))
+			if (!defined('APP_HOME'))
 			{
-				die('Config path not defined. Define config path in your bootsrap by using Nutshell::setConfigPath($path).');
+				die('Application path not defined. Define application path in your bootsrap by using Nutshell::setAppPath($path).');
 			}
 			
 			//Define constants.
@@ -81,9 +80,6 @@ namespace nutshell
 			
 			//init core components
 			$this->initCoreComponents();
-			
-			//Define APP_HOME.
-			define('APP_HOME',$this->config->core->dir->application);
 			
 			//Register the plugin container.
 			$this->loader->registerContainer('plugin',NS_HOME.'plugin'._DS_,'nutshell\plugin\\');
@@ -118,6 +114,7 @@ namespace nutshell
 		{
 			require(NS_HOME.'core'._DS_.'Component.php');
 			require(NS_HOME.'core'._DS_.'exception'._DS_.'Exception.php');
+			require(NS_HOME.'core'._DS_.'config'._DS_.'exception'._DS_.'ConfigException.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'Config.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'Framework.php');
 			require(NS_HOME.'core'._DS_.'loader'._DS_.'Loader.php');
@@ -163,7 +160,7 @@ namespace nutshell
 				define(self::NUTSHELL_ENVIRONMENT, $env);
 			}
 			
-			$this->config = Framework::loadConfig(self::$configPath, NS_ENV);
+			$this->config = Framework::loadConfig(APP_HOME . Config::CONFIG_FOLDER, NS_ENV);
 		}
 		
 		/**
@@ -178,14 +175,14 @@ namespace nutshell
 			return $GLOBALS['NUTSHELL'];
 		}
 		
-		public static function setConfigPath($path)
+		public static function setAppPath($path)
 		{
-			self::$configPath=$path;
-		}
-		
-		public static function getConfigPath()
-		{
-			return self::$configPath;
+			$path = realpath($path);
+			if(is_null($path)) 
+			{
+				throw new Exception('Invalid application path');
+			}
+			define('APP_HOME', $path . DIRECTORY_SEPARATOR);
 		}
 		
 		public static function getInstance()
