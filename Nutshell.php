@@ -11,6 +11,7 @@ namespace nutshell
 {
 	use nutshell\core\Component;
 	use nutshell\core\config\Config;
+	use nutshell\core\config\Framework;
 	use nutshell\core\loader\Loader;
 	use nutshell\core\loader\HipHopLoader;
 	use nutshell\core\plugin\Plugin;
@@ -27,6 +28,10 @@ namespace nutshell
 		const VERSION_DEV			=	2;
 		const NUTSHELL_ENVIRONMENT	=	'NS_ENV';
 		const DEFAULT_ENVIRONMENT	= 	'production';
+		
+		const INTERFACE_CLI 		= 	'CLI';
+		const INTERFACE_HTTP 		= 	'HTTP';
+		const INTERFACE_PHPUNIT		= 	'PHPUNIT';
 		
 		public $config 				=	null;
 		private $loader				=	null;
@@ -54,15 +59,15 @@ namespace nutshell
 			
 			if (isset($_SERVER['argv']))
 			{
-				define('NS_INTERFACE','CLI');
+				define('NS_INTERFACE', self::INTERFACE_CLI);
 			}
 			else if (strstr($_SERVER['PHP_SELF'],'phpunit'))
 			{
-				define('NS_INTERFACE','PHPUNIT');
+				define('NS_INTERFACE', self::INTERFACE_PHPUNIT);
 			}
 			else
 			{
-				define('NS_INTERFACE','HTTP');
+				define('NS_INTERFACE', self::INTERFACE_HTTP);
 			}
 			
 			//Load the behaviours first.
@@ -114,6 +119,7 @@ namespace nutshell
 			require(NS_HOME.'core'._DS_.'Component.php');
 			require(NS_HOME.'core'._DS_.'exception'._DS_.'Exception.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'Config.php');
+			require(NS_HOME.'core'._DS_.'config'._DS_.'Framework.php');
 			require(NS_HOME.'core'._DS_.'loader'._DS_.'Loader.php');
 			require(NS_HOME.'core'._DS_.'loader'._DS_.'HipHopLoader.php');
 			require(NS_HOME.'core'._DS_.'plugin'._DS_.'Plugin.php');
@@ -157,7 +163,7 @@ namespace nutshell
 				define(self::NUTSHELL_ENVIRONMENT, $env);
 			}
 			
-			$this->config = Config::loadCoreConfig(self::$configPath, NS_ENV);
+			$this->config = Framework::loadConfig(self::$configPath, NS_ENV);
 		}
 		
 		/**
@@ -175,6 +181,11 @@ namespace nutshell
 		public static function setConfigPath($path)
 		{
 			self::$configPath=$path;
+		}
+		
+		public static function getConfigPath()
+		{
+			return self::$configPath;
 		}
 		
 		public static function getInstance()
