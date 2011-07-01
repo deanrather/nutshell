@@ -85,7 +85,7 @@ namespace nutshell\core\config
 			return 
 			
 				(NS_INTERFACE == Nutshell::INTERFACE_CLI && in_array('--' . self::CONFIG_REBUILD_KEY, $_SERVER['argv']))
-				|| (NS_INTERFACE == Nutshell::INTERFACE_HTTP && $_GET[self::CONFIG_REBUILD_KEY])
+				|| (NS_INTERFACE == Nutshell::INTERFACE_HTTP && isset($_GET[self::CONFIG_REBUILD_KEY]) && $_GET[self::CONFIG_REBUILD_KEY])
 			;
 		}
 		
