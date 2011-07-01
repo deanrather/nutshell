@@ -41,7 +41,7 @@ namespace nutshell\core\config
 			{
 				if(!mkdir($folder))
 				{
-					throw new Exception(sprintf("Could not create the config cache folder. Please check the write permission on %.", dirname($folder)));
+					throw new Exception(sprintf("Could not create the config cache folder. Please check the write permission on %s.", dirname($folder)));
 				}
 			}
 			else if(!is_dir($folder))
