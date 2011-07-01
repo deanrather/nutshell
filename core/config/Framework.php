@@ -39,7 +39,7 @@ namespace nutshell\core\config
 			
 			if(!file_exists($folder))
 			{
-				if(!mkdir($folder))
+				if(!@mkdir($folder))
 				{
 					throw new Exception(sprintf("Could not create the config cache folder. Please check the write permission on %s.", dirname($folder)));
 				}
@@ -152,7 +152,7 @@ namespace nutshell\core\config
 		
 		protected static function getCachedConfigFolder() 
 		{
-			return APP_HOME . _DS_ . Config::CONFIG_FOLDER . _DS_ . self::CONFIG_CACHE_FOLDER;
+			return APP_HOME . Config::CONFIG_FOLDER . _DS_ . self::CONFIG_CACHE_FOLDER;
 		}
 		
 		protected static function getCachedConfigFile() 
