@@ -83,7 +83,7 @@ namespace nutshell\plugin\mvc
 		
 		public function getVar()
 		{
-			return ($this->templateVars[$key])?$this->templateVars[$key]:null;
+			return (isset($this->templateVars[$key]))?$this->templateVars[$key]:null;
 		}
 		
 		public function getContext()
