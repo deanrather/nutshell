@@ -1,7 +1,0 @@
-{
-	"extends" : "default",
-	"config":
-	{
-		"timeout" : 900
-	}
-}

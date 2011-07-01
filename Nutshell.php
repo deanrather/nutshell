@@ -11,6 +11,7 @@ namespace nutshell
 {
 	use nutshell\core\Component;
 	use nutshell\core\config\Config;
+	use nutshell\core\config\Framework;
 	use nutshell\core\loader\Loader;
 	use nutshell\core\loader\HipHopLoader;
 	use nutshell\core\plugin\Plugin;
@@ -28,9 +29,12 @@ namespace nutshell
 		const NUTSHELL_ENVIRONMENT	=	'NS_ENV';
 		const DEFAULT_ENVIRONMENT	= 	'production';
 		
+		const INTERFACE_CLI 		= 	'CLI';
+		const INTERFACE_HTTP 		= 	'HTTP';
+		const INTERFACE_PHPUNIT		= 	'PHPUNIT';
+		
 		public $config 				=	null;
 		private $loader				=	null;
-		private static $configPath	=	null;
 		
 		/**
 		 * Configures all special constants and libraries linking.
@@ -43,9 +47,9 @@ namespace nutshell
 				die('Nutshell requires PHP version 5.3.3 or higher.');
 			}
 			//Config path check.
-			if (is_null(self::$configPath))
+			if (!defined('APP_HOME'))
 			{
-				die('Config path not defined. Define config path in your bootsrap by using Nutshell::setConfigPath($path).');
+				die('Application path not defined. Define application path in your bootsrap by using Nutshell::setAppPath($path).');
 			}
 			
 			//Define constants.
@@ -54,15 +58,15 @@ namespace nutshell
 			
 			if (isset($_SERVER['argv']))
 			{
-				define('NS_INTERFACE','CLI');
+				define('NS_INTERFACE', self::INTERFACE_CLI);
 			}
 			else if (strstr($_SERVER['PHP_SELF'],'phpunit'))
 			{
-				define('NS_INTERFACE','PHPUNIT');
+				define('NS_INTERFACE', self::INTERFACE_PHPUNIT);
 			}
 			else
 			{
-				define('NS_INTERFACE','HTTP');
+				define('NS_INTERFACE', self::INTERFACE_HTTP);
 			}
 			
 			//Load the behaviours first.
@@ -76,9 +80,6 @@ namespace nutshell
 			
 			//init core components
 			$this->initCoreComponents();
-			
-			//Define APP_HOME.
-			define('APP_HOME',$this->config->core->dir->application);
 			
 			//Register the plugin container.
 			$this->loader->registerContainer('plugin',NS_HOME.'plugin'._DS_,'nutshell\plugin\\');
@@ -113,7 +114,9 @@ namespace nutshell
 		{
 			require(NS_HOME.'core'._DS_.'Component.php');
 			require(NS_HOME.'core'._DS_.'exception'._DS_.'Exception.php');
+			require(NS_HOME.'core'._DS_.'config'._DS_.'exception'._DS_.'ConfigException.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'Config.php');
+			require(NS_HOME.'core'._DS_.'config'._DS_.'Framework.php');
 			require(NS_HOME.'core'._DS_.'loader'._DS_.'Loader.php');
 			require(NS_HOME.'core'._DS_.'loader'._DS_.'HipHopLoader.php');
 			require(NS_HOME.'core'._DS_.'plugin'._DS_.'Plugin.php');
@@ -157,7 +160,7 @@ namespace nutshell
 				define(self::NUTSHELL_ENVIRONMENT, $env);
 			}
 			
-			$this->config = Config::loadCoreConfig(self::$configPath, NS_ENV);
+			$this->config = Framework::loadConfig(APP_HOME . Config::CONFIG_FOLDER, NS_ENV);
 		}
 		
 		/**
@@ -172,9 +175,14 @@ namespace nutshell
 			return $GLOBALS['NUTSHELL'];
 		}
 		
-		public static function setConfigPath($path)
+		public static function setAppPath($path)
 		{
-			self::$configPath=$path;
+			$path = realpath($path);
+			if(is_null($path)) 
+			{
+				throw new Exception('Invalid application path');
+			}
+			define('APP_HOME', $path . DIRECTORY_SEPARATOR);
 		}
 		
 		public static function getInstance()
