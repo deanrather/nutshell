@@ -97,18 +97,8 @@ namespace nutshell\core\config
 			$config = Config::loadConfigFile(NS_HOME . Config::CONFIG_FOLDER, Config::makeConfigFileName(Config::DEFAULT_ENVIRONMENT));
 			//loads the framework default plugins config
 			$config->extendWith(self::loadAllPluginConfig(NS_HOME . 'plugin', Config::DEFAULT_ENVIRONMENT));
-			try 
-			{
-				//loads the application config
-				$config->extendWith(Config::loadConfigFile($configPath, Config::makeConfigFileName($environment)));
-			}
-			catch(ConfigException $e)
-			{
-				if(!in_array($e->getCode(), array(ConfigException::CODE_CONFIG_FILE_NOT_FOUND)))
-				{
-					throw $e;
-				}
-			}
+			//loads the application config
+			$config->extendWith(Config::loadConfigFile($configPath, Config::makeConfigFileName($environment)));
 			//loads the application plugins config
 			$config->extendWith(self::loadAllPluginConfig(APP_HOME . 'plugin', $environment));
 			
