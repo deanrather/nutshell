@@ -48,7 +48,7 @@ namespace nutshell\core\config
 			{
 				throw new Exception(sprintf("%s does not resolve to a directory.", $folder));
 			}
-			else if(!is_executable($folder) || !is_writeable($folder))
+			else if((PHP_OS=="linux" && !is_executable($folder)) || !is_writeable($folder))
 			{
 				throw new Exception(sprintf("Nutshell requires write and execute permission on %s", $folder));
 			}
