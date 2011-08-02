@@ -65,8 +65,8 @@ SQL;
 		public function create(Array $record)
 		{
 			$placeholders	=rtrim(str_repeat('?,',count($this->columns),','));
-			$keys			=implode(',',array_keys($query));
-			$values			=array_values($query);
+			$keys			=implode(',',array_keys($record));
+			$values			=array_values($record);
 			$query=<<<SQL
 			INSERT INTO {$this->name}
 				({$keys})
@@ -76,7 +76,14 @@ SQL;
 			return $this->db->insert($query,$values);
 		}
 		
-		public function read($whereKeyVals,$limit=-1,$order='ASC')
+		/**
+		 * @todo - Finish read method.
+		 * Enter description here ...
+		 * @param unknown_type $whereKeyVals
+		 * @param unknown_type $limit
+		 * @param unknown_type $order
+		 */
+		public function read($whereKeyVals=1,$limit=-1,$order='ASC')
 		{
 			$query=<<<SQL
 			SELECT *
