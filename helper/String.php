@@ -1,6 +1,15 @@
 <?php
 namespace nutshell\helper
 {
+	/**
+	 * The String helper class.
+	 * 
+	 * This class has many specialized methods for dealing 
+	 * with strings.
+	 *  
+	 * 
+	 * @static
+	 */
 	class String
 	{
 		/**

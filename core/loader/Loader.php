@@ -25,6 +25,7 @@ namespace nutshell\core\loader
 		 * @var Array
 		 */
 		private $containers=array();
+		
 		/**
 		 * The current container.
 		 * 

@@ -38,6 +38,12 @@ namespace nutshell
 		
 		/**
 		 * Configures all special constants and libraries linking.
+		 * 
+		 * Note: This function should only be run in instances where
+		 * {link:init}() is not used.
+		 * 
+		 * @access public
+		 * @return void
 		 */
 		public function setup()
 		{
@@ -78,13 +84,25 @@ namespace nutshell
 			//Load the core components.
 			$this->loadCoreComponents();
 			
-			//init core components
-			$this->initCoreComponents();
+			//Load the core config.
+			$this->loadCoreConfig();
+			
+			//init loader.
+			$this->initLoader();
 			
 			//Register the plugin container.
 			$this->loader->registerContainer('plugin',NS_HOME.'plugin'._DS_,'nutshell\plugin\\');
 		}
 		
+		/**
+		 * Loads core behaviours from the behaviour folder.
+		 * 
+		 * Behaviours are interfaces which affect the way certain objects
+		 * interact with other objects.
+		 * 
+		 * @access private
+		 * @return Nutshell
+		 */
 		private function loadBehaviours()
 		{
 			foreach (new DirectoryIterator(NS_HOME.'behaviour'._DS_) as $iteration)
@@ -94,8 +112,18 @@ namespace nutshell
 					require($iteration->getPathname());
 				}
 			}
+			return $this;
 		}
 		
+		/**
+		 * Loads core helpers from the helder folder.
+		 * 
+		 * Helpers are specialized static classes containing methods for
+		 * dealing with specific things which PHP does not offer out of the box.
+		 * 
+		 * @access private
+		 * @return Nutshell
+		 */
 		private function loadHelpers()
 		{
 			foreach (new DirectoryIterator(NS_HOME.'helper'._DS_) as $iteration)
@@ -105,10 +133,18 @@ namespace nutshell
 					require($iteration->getPathname());
 				}
 			}
+			return $this;
 		}
 		
 		/**
-		 * Loads all the required core libraries
+		 * Loads core components and registers them for loading.
+		 * 
+		 * Loads all the required core libraries and then
+		 * registers their child classes for loading with the
+		 * core loader.
+		 * 
+		 * @access private
+		 * @return Nutshell
 		 */
 		private function loadCoreComponents()
 		{
@@ -126,15 +162,22 @@ namespace nutshell
 			Config::register();
 			Loader::register();
 			Plugin::register();
+			
+			return $this;
 		}
 		
 		/**
-		 * Create instances of the core components
+		 * Initiates the loader class.
+		 * 
+		 * Note that the loader class which gets initiated
+		 * will change depending on the environment Nutshell
+		 * is running in.
+		 * 
+		 * @access private
+		 * @return Nutshell
 		 */
-		private function initCoreComponents() 
+		private function initLoader() 
 		{
-			$this->loadCoreConfig();
-			
 			if (!$this->config->core->hiphop)
 			{
 				$this->loader=new Loader();
@@ -143,11 +186,18 @@ namespace nutshell
 			{
 				$this->loader=new HipHopLoader();
 			}
+			return $this;
 		}
 		
 		/**
+		 * Load the core config based on environment variables.
+		 * Defaults to production mode.
 		 * 
-		 * Load the core config based on environment variables. Defaults to production mode.
+		 * The environment can be changed by setting an
+		 * environment variable named "NS_ENV" to anything else.
+		 * 
+		 * @access private
+		 * @return Nutshell
 		 */
 		private function loadCoreConfig()
 		{
@@ -161,12 +211,17 @@ namespace nutshell
 			}
 			
 			$this->config = Framework::loadConfig(APP_HOME . Config::CONFIG_FOLDER, NS_ENV);
+			return $this;
 		}
 		
 		/**
 		 * Nutshell framework initialisation.
 		 * Creates an instance and performs the setup.
 		 * Should always be used to start the framework.
+		 * 
+		 * @static
+		 * @access public
+		 * @return void
 		 */
 		public static function init() 
 		{
@@ -175,6 +230,14 @@ namespace nutshell
 			return $GLOBALS['NUTSHELL'];
 		}
 		
+		/**
+		 * Sets the application path.
+		 * 
+		 * @param String $path - The application path to be set.
+		 * @static
+		 * @access public
+		 * @return void
+		 */
 		public static function setAppPath($path)
 		{
 			$path = realpath($path);
@@ -185,6 +248,14 @@ namespace nutshell
 			define('APP_HOME', $path . DIRECTORY_SEPARATOR);
 		}
 		
+		
+		/**
+		 * Returns the nutshell instance.
+		 * 
+		 * @static
+		 * @access public
+		 * @return void
+		 */
 		public static function getInstance()
 		{
 			if(!isset($GLOBALS['NUTSHELL'])) 
@@ -195,7 +266,10 @@ namespace nutshell
 		}
 		
 		/**
-		 * Returns the loader instance.
+		 * Returns the core loader instance.
+		 * 
+		 * @access public
+		 * @return nutshell\core\loader\Loader
 		 */
 		public function getLoader()
 		{
@@ -204,6 +278,15 @@ namespace nutshell
 		
 		/*** OVERLOADING ***/
 		
+		/**
+		 * Overloads the loader to provide direct access to the
+		 * plugin loader container.
+		 * 
+		 * @param String $key - The shortcut.
+		 * @access public
+		 * @return nutshell\core\loader\Loader
+		 * @throws nutshell\core\exception\Exception - If $key is not "plugin".
+		 */
 		public function __get($key)
 		{
 			if ($key=='plugin')
@@ -217,19 +300,27 @@ namespace nutshell
 			}
 		}
 		
+		/**
+		 * Overloads setting on the core and blocks it.
+		 * 
+		 * @param String $key
+		 * @param String $val
+		 * @access public
+		 * @return void
+		 * @throws nutshell\core\exception\Exception - If anything attempts to set something on the core.
+		 */
 		public function __set($key,$val)
 		{
 			throw new Exception('Sorry, nutshell core is read only!');
 		}
-		
-		
 	}
 	
 	/**
-	 * 
 	 * Nutshell default bootstrapper
+	 * 
+	 * @return Nutshell
 	 */
-	function bootstrap() 
+	function bootstrap()
 	{
 		return Nutshell::init();
 	}
@@ -241,7 +332,7 @@ namespace
 	{
 		//trigger it
 		call_user_func('bootstrap');
-//		booststrap();
+//		booststrap(); - not working - why???
 	}
 	else
 	{

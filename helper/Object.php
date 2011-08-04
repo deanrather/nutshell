@@ -2,23 +2,41 @@
 namespace nutshell\helper
 {
 	/**
+	 * The Object helper class.
 	 * 
+	 * This class has many specialized methods for dealing 
+	 * with classes and objects.
+	 *  
+	 * 
+	 * @static
 	 */
 	class Object
 	{
+		/**
+		 * @var Integer
+		 */
 		const CLASSINFO_NAMESPACE = 1;
-		
+		/**
+		 * @var Integer
+		 */
 		const CLASSINFO_CLASSNAME = 2;
-		
+		/**
+		 * @var String
+		 */
 		const CLASSINFO_VAL_NAMESPACE = 'namespace';
-		
+		/**
+		 * @var String
+		 */
 		const CLASSINFO_VAL_CLASSNAME = 'classname';
 		
 		
 		/**
+		 * Gets the base class name for a given class.
 		 * 
-		 * @param String $className
-		 * @return String the base class name
+		 * @access public
+		 * @static
+		 * @param Mixed $className - Either the class name or an instance of the class.
+		 * @return String - The base class name
 		 */
 		public static function getBaseClassName($className)
 		{
@@ -30,11 +48,11 @@ namespace nutshell\helper
 		}
 		
 		/**
-		 * 
-		 * Enter description here ...
+		 * Gets the namespace for a given class.
 		 * 
 		 * @access public
-		 * @param string $className
+		 * @static
+		 * @param Mixed $className - Either the class name or an instance of the class.
 		 * @return String
 		 */
 		public static function getNamespace($className)
@@ -50,6 +68,9 @@ namespace nutshell\helper
 		 * Locates the source directory for specified class.
 		 * Note: it does only work with native plugins.
 		 * 
+		 * @access public
+		 * @static
+		 * @param Mixed $className - Either the class name or an instance of the class.
 		 * @return String the physical path to the directory containing the class. 
 		 */
 		public static function getClassPath($className)
@@ -74,6 +95,8 @@ namespace nutshell\helper
 		/**
 		 * getClassInfo returns an associative array containing information about the $classname
 		 * 
+		 * @access public
+		 * @static
 		 * @param String $className the class being investigated
 		 * @param int $options You can specify which elements are returned with optional parameter options. It composes from Object::CLASSINFO_NAMESPACE, Object::CLASSINFO_CLASSNAME. It defaults to return all elements.
 		 * @return array an associative array of information corresponding to the following keys: 
