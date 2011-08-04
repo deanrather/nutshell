@@ -46,14 +46,14 @@ namespace nutshell\plugin\logger\writer\file
 			{
 				if(!touch($realPath)) 
 				{
-					throw new Exception('Could not create log file at: %s', $realPath);
+					throw new Exception(sprintf('Could not create log file at: %s', $realPath));
 				}
 			}
 			else
 			{
 				if(!is_writable($realPath)) 
 			  	{
-					throw new Exception('Could not access log file at : %s for writing', $realPath);
+					throw new Exception(sprintf('Could not access log file at : %s for writing', $realPath));
 			  	}
 			}
 			
