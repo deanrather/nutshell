@@ -41,7 +41,7 @@ namespace nutshell\plugin\session
 			);
 		}
 		
-		public static function runFactory()
+		public static function runFactory($string)
 		{
 			if (is_null(self::$instance))
 			{

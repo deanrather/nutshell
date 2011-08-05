@@ -31,6 +31,7 @@ namespace nutshell\plugin\db
 		
 		public function init()
 		{
+			
 		}
 		
 		protected static function setupConnection($connectionName) 

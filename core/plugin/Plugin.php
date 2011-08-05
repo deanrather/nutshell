@@ -160,6 +160,7 @@ namespace nutshell\core\plugin
 					//Is it an AbstractFactory?
 					else if (in_array('nutshell\behaviour\AbstractFactory', $interfaces))
 					{
+						if (!count($args))$args[0]=null;
 						return call_user_func_array(array($className,'runFactory'),$args);
 					}
 //					//Is it abstractable?
