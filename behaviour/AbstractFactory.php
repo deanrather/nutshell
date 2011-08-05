@@ -3,7 +3,7 @@ namespace nutshell\behaviour
 {
 	interface AbstractFactory
 	{
-		public static function runFactory();
+		public static function runFactory($string);
 	}
 }
 ?>
