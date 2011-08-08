@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 namespace nutshell\plugin\template
 {
 	use nutshell\core\exception\Exception;
@@ -6,6 +10,10 @@ namespace nutshell\plugin\template
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Factory;
 	
+	/**
+	 * @package nutshell-plugin
+	 * @author guillaume
+	 */
 	class Template extends Plugin implements Native,Factory
 	{
 		private $templateFile	=null;

@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+ */
 namespace nutshell\plugin\logger
 {
 	use nutshell\core\plugin\Plugin;
@@ -13,7 +17,10 @@ namespace nutshell\plugin\logger
 	
 	use nutshell\plugin\logger\writer\Writer;
 	
-	
+	/**
+	 * @package nutshell-plugin
+	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+	 */
 	class Logger extends Plugin implements Native,AbstractFactory
 	{
 		const ROOT_LOGGER = '__ROOT__';

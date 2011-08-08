@@ -1,8 +1,16 @@
 <?php
+/**
+ * @package nutshell
+ * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+ */
 namespace nutshell\core\config\exception
 {
 	use nutshell\core\exception\Exception;
 
+	/**
+	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+	 * @package nutshell
+	 */
 	class ConfigException extends Exception
 	{
 		const CODE_INVALID_JSON = 1;

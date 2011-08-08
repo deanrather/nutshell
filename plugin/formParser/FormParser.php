@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 namespace nutshell\plugin\formParser
 {
 	use nutshell\core\plugin\Plugin;
@@ -7,6 +11,10 @@ namespace nutshell\plugin\formParser
 	use nutshell\behaviour\Factory;
 	use nutshell\plugin\formParser\Document;
 	
+	/**
+	 * @package nutshell-plugin
+	 * @author guillaume
+	 */
 	class FormParser extends Plugin implements Native,Factory
 	{
 		private $path		=null;

@@ -1,6 +1,14 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 namespace nutshell\plugin\formParser\element\field
 {
+	/**
+	 * @package nutshell-plugin
+	 * @author guillaume
+	 */
 	class Text extends Field
 	{
 		private $multiline	=false;

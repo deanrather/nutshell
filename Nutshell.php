@@ -5,6 +5,7 @@
  * 
  * @author Guillaume Bodi <guillaume@spinifexgroup.com>
  * @author Timothy Chandler <tim.chandler@spinifexgroup.com>
+ * @package nutshell
  * @copyright Spinifex Group Pty. Ltd.
  */
 namespace nutshell
@@ -19,6 +20,10 @@ namespace nutshell
 	use \DIRECTORY_SEPARATOR;
 	use \DirectoryIterator;
 	
+	/**
+	 * @author Timothy Chandler <tim.chandler@spinifexgroup.com>
+	 * @package nutshell
+	 */
 	class Nutshell
 	{
 		const VERSION				=	'1.0.0-dev-3';

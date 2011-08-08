@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+ */
 namespace nutshell\plugin\logger\writer\db
 {
 	use nutshell\Nutshell;
@@ -7,6 +11,10 @@ namespace nutshell\plugin\logger\writer\db
 	use nutshell\plugin\logger\exception\LoggerException;
 	use nutshell\plugin\logger\writer\Writer;
 	
+	/**
+	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+	 * @package nutshell-plugin
+	 */
 	class DbWriter extends Writer
 	{
 		const DEFAULT_MESSAGE_PATTERN = '%m';

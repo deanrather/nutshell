@@ -1,10 +1,18 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 namespace nutshell\plugin\url
 {
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Singleton;
 	
+	/**
+	 * @author guillaume
+	 * @package nutshell-plugin
+	 */
 	class Url extends Plugin implements Native,Singleton
 	{
 		private $nodes=array();

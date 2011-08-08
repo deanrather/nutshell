@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+ */
 namespace nutshell\plugin\db
 {
 	use nutshell\Nutshell;
@@ -10,6 +14,10 @@ namespace nutshell\plugin\db
 	use nutshell\behaviour\Singleton;
 	use nutshell\behaviour\AbstractFactory;
 	
+	/**
+	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+	 * @package nutshell-plugin
+	 */
 	class Db extends Plugin implements Singleton, AbstractFactory
 	{
 		protected static $connections = array();

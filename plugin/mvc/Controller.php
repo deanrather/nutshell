@@ -1,9 +1,18 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 namespace nutshell\plugin\mvc
 {
 	use nutshell\core\exception\Exception;
 	use nutshell\Nutshell;
 
+	/**
+	 * @author guillaume
+	 * @package nutshell-plugin
+	 * @abstract
+	 */
 	abstract class Controller
 	{
 		public $core	=null;

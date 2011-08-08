@@ -1,9 +1,17 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+ */
 namespace nutshell\plugin\logger
 {
 	use nutshell\plugin\logger\Logger;
 	use nutshell\plugin\logger\writer\Writer;
 	
+	/**
+	 * @package nutshell-plugin
+	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+	 */
 	class Filter
 	{
 		protected $logger = null;

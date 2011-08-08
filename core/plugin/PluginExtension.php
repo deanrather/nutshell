@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package nutshell
+ */
 namespace nutshell\core\plugin
 {
 	use nutshell\Nutshell;
@@ -6,6 +9,9 @@ namespace nutshell\core\plugin
 	use nutshell\core\Component;
 	use nutshell\helper\Object;
 	
+	/**
+	 * @package nutshell
+	 */
 	abstract class PluginExtension extends Component
 	{
 		public static function register(){}

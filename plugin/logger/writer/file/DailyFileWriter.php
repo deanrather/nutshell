@@ -1,8 +1,16 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+ */
 namespace nutshell\plugin\logger\writer\file
 {
 	use nutshell\plugin\logger\writer\file\FileWriter;
 	
+	/**
+	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+	 * @package nutshell-plugin
+	 */
 	class DailyFileWriter extends FileWriter
 	{
 		

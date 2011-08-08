@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 namespace nutshell\plugin\direct
 {
 	use nutshell\helper\Object;
@@ -7,6 +11,10 @@ namespace nutshell\plugin\direct
 	use nutshell\core\plugin\PluginExtension;
 	use nutshell\behaviour\direct\Pollable;
 	
+	/**
+	 * @package nutshell-plugin
+	 * @author guillaume
+	 */
 	class Service extends PluginExtension
 	{
 		const DEFAULT_INTERVAL	=3000;

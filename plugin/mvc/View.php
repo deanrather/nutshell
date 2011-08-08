@@ -1,8 +1,16 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 namespace nutshell\plugin\mvc
 {
 	use nutshell\core\plugin\PluginExtension;
 	
+	/**
+	 * @author guillaume
+	 * @package nutshell-plugin
+	 */
 	class View extends PluginExtension
 	{
 		const DEFAULT_MIME_TYPE	= 'text/html';

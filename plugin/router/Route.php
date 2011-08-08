@@ -1,8 +1,16 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 namespace nutshell\plugin\router
 {
 	use nutshell\core\plugin\PluginExtension;
 
+	/**
+	 * @author guillaume
+	 * @package nutshell-plugin
+	 */
 	class Route
 	{
 		private $control=null;

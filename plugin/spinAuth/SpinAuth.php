@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 namespace nutshell\plugin\spinAuth
 {
 	use nutshell\Nutshell;
@@ -8,6 +12,10 @@ namespace nutshell\plugin\spinAuth
 	use nutshell\behaviour\session\NamedSession;
 	use \stdClass;
 	
+	/**
+	 * @author guillaume
+	 * @package nutshell-plugin
+	 */
 	class SpinAuth extends Plugin implements Native,Singleton,NamedSession
 	{
 		public static function loadDependencies()

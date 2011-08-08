@@ -1,8 +1,16 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+ */
 namespace nutshell\plugin\logger\writer
 {
 	use nutshell\plugin\logger\Level;
 	
+	/**
+	 * @package nutshell-plugin
+	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+	 */
 	class Pattern
 	{
 		const LOG_LEVEL = '%P';

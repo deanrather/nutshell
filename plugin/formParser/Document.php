@@ -1,9 +1,17 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 namespace nutshell\plugin\formParser
 {
 	use nutshell\core\exception\Exception;
 	use nutshell\plugin\formParser\element\container\Page;
 
+	/**
+	 * @package nutshell-plugin
+	 * @author guillaume
+	 */
 	class Document
 	{
 		private $elements	=array();

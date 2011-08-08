@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 namespace nutshell\plugin\formParser\element
 {
 	use nutshell\core\plugin\PluginExtension;
@@ -6,6 +10,11 @@ namespace nutshell\plugin\formParser\element
 	use nutshell\helper\String;
 	use \stdClass;
 	
+	/**
+	 * @package nutshell-plugin
+	 * @author guillaume
+	 * @abstract
+	 */
 	abstract class Element extends PluginExtension
 	{
 		abstract public function init($elementDef);

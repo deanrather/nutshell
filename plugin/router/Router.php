@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 namespace nutshell\plugin\router
 {
 	use nutshell\core\plugin\Plugin;
@@ -7,6 +11,10 @@ namespace nutshell\plugin\router
 	use nutshell\plugin\router\handler\Simple;
 	use nutshell\plugin\router\handler\Advanced;
 	
+	/**
+	 * @author guillaume
+	 * @package nutshell-plugin
+	 */
 	class Router extends Plugin implements Native,Singleton
 	{
 		const MODE_SIMPLE	='simple';
