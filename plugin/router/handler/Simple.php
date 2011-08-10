@@ -33,9 +33,9 @@ namespace nutshell\plugin\router\handler
 					{
 						//Set args to nodes 2 onwards.
 						$node=2;
-						while ($node=$this->plugin->Url->node($node))
+						while ($arg=$this->plugin->Url->node($node))
 						{
-							$args[]=$this->plugin->Url->node($node);
+							$args[]=$this->plugin->Url->node($node++);
 						}
 					}
 				}
