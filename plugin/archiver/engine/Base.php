@@ -1,10 +1,21 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+ */
 namespace nutshell\plugin\archiver\engine
 {
 	use nutshell\plugin\archiver\exception\ArchiverException;
 	
 	use nutshell\core\plugin\PluginExtension;
 
+	/**
+	 * 
+	 * Enter description here ...
+	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+	 * @package nutshell-plugin
+	 * @abstract
+	 */
 	abstract class Base extends PluginExtension
 	{
 		/**

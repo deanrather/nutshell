@@ -1,9 +1,18 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 namespace nutshell\plugin\mvc
 {
 	use nutshell\core\plugin\PluginExtension;
 	use nutshell\behaviour\Loadable;
 	
+	/**
+	 * @author guillaume
+	 * @package nutshell-plugin
+	 * @abstract
+	 */
 	abstract class Model implements Loadable
 	{
 		public function __construct()

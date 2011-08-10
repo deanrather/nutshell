@@ -6,9 +6,13 @@
  * @author Timothy Chandler <tim.chandler@spinifexgroup.com>
  * @since 21/03/2011
  * @version 1.0
+ * @package nutshell-plugin
  */
 if (!interface_exists('Serializable'))
 {
+	/**
+	 * @package nutshell-plugin
+	 */
 	interface Serializable
 	{
 		public function serialize();

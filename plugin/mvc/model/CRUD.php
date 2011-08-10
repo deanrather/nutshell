@@ -1,10 +1,18 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 namespace nutshell\plugin\mvc\model
 {
 	use nutshell\Nutshell;
 	use nutshell\plugin\mvc\Model;
 	use nutshell\core\exception\Exception;
 	
+	/**
+	 * @author guillaume
+	 * @package nutshell-plugin
+	 */
 	abstract class CRUD extends Model
 	{
 		public $name	=null;

@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package nutshell
+ */
 namespace nutshell\core\plugin
 {
 	use nutshell\behaviour\Singleton;
@@ -12,7 +15,7 @@ namespace nutshell\core\plugin
 	use nutshell\helper\Object;
 	
 	/**
-	 * 
+	 * @package nutshell
 	 * @abstract
 	 */
 	abstract class Plugin extends Component implements Loadable

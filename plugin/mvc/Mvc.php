@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 namespace nutshell\plugin\mvc
 {
 	use nutshell\core\plugin\Plugin;
@@ -6,6 +10,10 @@ namespace nutshell\plugin\mvc
 	use nutshell\behaviour\Singleton;
 	use nutshell\plugin\router\Router;
 	
+	/**
+	 * @author guillaume
+	 * @package nutshell-plugin
+	 */
 	class Mvc extends Plugin implements Native,Singleton
 	{
 		private $controller=null;

@@ -1,8 +1,16 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 namespace nutshell\plugin\direct
 {
 	use nutshell\Nutshell;
 
+	/**
+	 * @author guillaume
+	 * @package nutshell-plugin
+	 */
 	class ProviderController
 	{
 		const CODE_FAIL		=0;

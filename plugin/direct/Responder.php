@@ -1,6 +1,12 @@
 <?php
+/**
+ * @package nutshell-plugin
+ */
 namespace nutshell\plugin\direct
 {
+	/**
+	 * @package nutshell-plugin
+	 */
 	class Responder
 	{
 		private $responses=array();

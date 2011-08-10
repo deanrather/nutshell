@@ -1,9 +1,17 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 namespace nutshell\plugin\router\handler
 {
 	use nutshell\core\plugin\PluginExtension;
 	use nutshell\plugin\router\Route;
 	
+	/**
+	 * @author guillaume
+	 * @package nutshell-plugin
+	 */
 	class Simple extends PluginExtension
 	{
 		private $route	=null;

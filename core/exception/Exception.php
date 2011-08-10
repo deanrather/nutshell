@@ -1,9 +1,16 @@
 <?php
+/**
+ * @package nutshell
+ */
 namespace nutshell\core\exception
 {
 	use nutshell\core\Component;
+	use \Exception as SPLException;
 	
-	class Exception extends \Exception
+	/**
+	 * @package nutshell
+	 */
+	class Exception extends SPLException
 	{
 		public static function register() 
 		{

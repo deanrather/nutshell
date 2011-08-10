@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+ */
 namespace nutshell\plugin\Session\engine
 {
 	use nutshell\Nutshell;
@@ -7,6 +11,10 @@ namespace nutshell\plugin\Session\engine
 
 	use nutshell\plugin\session\Handler;
 	
+	/**
+	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+	 * @package nutshell-plugin
+	 */
 	class Db extends Handler
 	{
 		protected $activeConnector;

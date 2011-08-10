@@ -1,10 +1,18 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 namespace nutshell\plugin\template
 {
 	use nutshell\core\exception\Exception;
 	use nutshell\core\plugin\PluginExtension;
 	use \Closure;
 	
+	/**
+	 * @author guillaume
+	 * @package nutshell-plugin
+	 */
 	class Context extends PluginExtension
 	{
 		private $keyVals	=array();

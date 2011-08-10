@@ -1,10 +1,19 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+ */
 namespace nutshell\plugin\archiver
 {
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\AbstractFactory;
 	
+	/**
+	 * 
+	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+	 * @package nutshell-plugin
+	 */
 	class Archiver extends Plugin implements Native,AbstractFactory
 	{
 		public static function loadDependencies()

@@ -1,4 +1,9 @@
 <?php
+/**
+ * 
+ * @package nutshell
+ * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+ */
 namespace nutshell\core\config 
 {
 	use nutshell\core\config\exception\ConfigException;
@@ -7,6 +12,10 @@ namespace nutshell\core\config
 
 	use nutshell\Nutshell;
 
+	/**
+	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+	 * @package nutshell
+	 */
 	class Framework
 	{
 		const CONFIG_CACHE_FOLDER = 'cache';

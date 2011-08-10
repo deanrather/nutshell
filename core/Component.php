@@ -1,4 +1,7 @@
 <?php
+/**
+* @package nutshell
+*/
 namespace nutshell\core
 {
 	use nutshell\Nutshell;
@@ -8,6 +11,7 @@ namespace nutshell\core
 	 * This is the base component class which all core
 	 * components extend from.
 	 * 
+	 * @package nutshell
 	 * @abstract
 	 */
 	abstract class Component

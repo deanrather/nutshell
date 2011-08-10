@@ -1,13 +1,16 @@
 <?php
+/**
+ * @package nutshell
+ * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+ */
 namespace nutshell\core\config
 {
 	use nutshell\core\exception\Exception;
 	
 	/**
 	 * Configuration node instance
-	 * 
-	 * @author guillaume
-	 *
+	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+	 * @package nutshell
 	 */
 	class ConfigRoot extends Config
 	{

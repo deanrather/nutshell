@@ -1,9 +1,17 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 namespace nutshell\plugin\formParser\element\field
 {
 	use nutshell\plugin\formParser\element\Element;
 	use \stdClass;
 	
+	/**
+	 * @package nutshell-plugin
+	 * @author guillaume
+	 */
 	class Field extends Element
 	{
 		private $ref		='';

@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package nutshell
+ */
 namespace nutshell\core\loader
 {
 	use nutshell\Nutshell;
@@ -14,7 +17,7 @@ namespace nutshell\core\loader
 	 * Configuration node instance
 	 * 
 	 * @author guillaume
-	 *
+	 * @package nutshell
 	 */
 	class Loader extends Component
 	{

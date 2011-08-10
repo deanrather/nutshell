@@ -1,9 +1,17 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+ */
 namespace nutshell\plugin\archiver\engine 
 {
 	use ZipArchive;
 	use nutshell\plugin\archiver\exception\ArchiverException;
 
+	/**
+	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+	 * @package nutshell-plugin
+	 */
 	class Zip extends Base
 	{
 		protected $archive = null;

@@ -6,6 +6,7 @@
  * @author Timothy Chandler <tim.chandler@spinifexgroup.com>
  * @since 21/03/2011
  * @version 1.0
+ * @package nutshell-plugin
  * 
  * 
  * @todo - Support setting with [].
@@ -14,6 +15,9 @@
  */
 if (!class_exists('ArrayObject'))
 {
+	/**
+	 * @package nutshell-plugin
+	 */
 	class ArrayObject implements IteratorAggregate,ArrayAccess,Serializable,Countable
 	{
 		private $__private_data=array();
@@ -106,11 +110,11 @@ if (!class_exists('ArrayObject'))
 		private $__private_flags			=self::STD_PROP_LIST;
 		
 		/**
-		 * @const Int - Properties of the object have their normal functionality when accessed as list (var_dump, foreach, etc.).
+		 * @var Int - Properties of the object have their normal functionality when accessed as list (var_dump, foreach, etc.).
 		 */
 		const STD_PROP_LIST		=1;
 		/**
-		 * @const Int - Entries can be accessed as properties (read and write).
+		 * @var Int - Entries can be accessed as properties (read and write).
 		 */
 		const ARRAY_AS_PROPS	=2;
 		
@@ -123,7 +127,6 @@ if (!class_exists('ArrayObject'))
 		 * 
 		 * @access public
 		 * @param Int $flags - See http://www.php.net/manual/en/arrayobject.setflags.php
-		 * @return
 		 */
 		public function setFlags($flags)
 		{

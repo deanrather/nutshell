@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package nutshell
+ * @author guillaume
+ */
 namespace nutshell\helper
 {
 	/**
@@ -7,7 +11,8 @@ namespace nutshell\helper
 	 * This class has many specialized methods for dealing 
 	 * with strings.
 	 *  
-	 * 
+	 * @author guillaume
+	 * @package nutshell
 	 * @static
 	 */
 	class String

@@ -1,10 +1,20 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+ */
 namespace nutshell\plugin\logger\writer
 {
 	use nutshell\core\config\Config; 
 	use nutshell\helper\Object;
 	use nutshell\core\exception\Exception;
 	
+	/**
+	 * 
+	 * Enter description here ...
+	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+	 * @package nutshell-plugin
+	 */
 	abstract class Writer
 	{
 		const CTX_LOG_LEVEL = 'level';

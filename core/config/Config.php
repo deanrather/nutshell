@@ -1,4 +1,8 @@
 <?php
+/**
+* @package nutshell
+* @author Guillaume Bodi <guillaume@spinifexgroup.com>
+*/
 namespace nutshell\core\config
 {
 	use nutshell\core\config\exception\ConfigException;
@@ -8,8 +12,8 @@ namespace nutshell\core\config
 	/**
 	 * Configuration node instance
 	 * 
-	 * @author guillaume
-	 *
+	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+	 * @package nutshell
 	 */
 	class Config extends Component implements Iterator
 	{

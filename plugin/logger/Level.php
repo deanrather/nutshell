@@ -1,8 +1,16 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+ */
 namespace nutshell\plugin\logger
 {
 	use nutshell\core\exception\Exception;
 	
+	/**
+	 * @package nutshell-plugin
+	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+	 */
 	class Level
 	{
 		const DEBUG = 1;

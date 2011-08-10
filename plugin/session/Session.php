@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+ */
 namespace nutshell\plugin\session
 {
 	use nutshell\helper\Object;
@@ -10,6 +14,11 @@ namespace nutshell\plugin\session
 	use nutshell\behaviour\AbstractFactory;
 	use \stdClass;
 	
+	/**
+	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+	 * @package nutshell-plugin
+	 * @abstract
+	 */
 	abstract class Session extends Plugin implements Native, AbstractFactory
 	{
 		protected static $instance = null;

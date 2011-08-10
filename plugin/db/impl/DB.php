@@ -1,4 +1,13 @@
 <?php
+/**
+* @package nutshell-plugin
+* @author guillaume
+*/
+namespace {
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 class DB
 {
 	/**
@@ -407,4 +416,5 @@ class DB
 	{
 		return $this->query('TRUNCATE TABLE '.$table);
 	}
+}
 }

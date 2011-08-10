@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+ */
 namespace nutshell\plugin\session
 {
 	use nutshell\Nutshell;
@@ -12,6 +16,11 @@ namespace nutshell\plugin\session
 	use nutshell\behaviour\Singleton;
 	use nutshell\behaviour\AbstractFactory;
 	
+	/**
+	 * @package nutshell-plugin
+	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+	 * @abstract
+	 */
 	abstract class Handler extends PluginExtension
 	{
 		protected static $instance = null;

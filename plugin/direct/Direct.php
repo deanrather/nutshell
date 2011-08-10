@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
 namespace nutshell\plugin\direct
 {
 	use nutshell\plugin\mvc\Controller;
@@ -7,6 +11,10 @@ namespace nutshell\plugin\direct
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Singleton;
 	
+	/**
+	 * @package nutshell-plugin
+	 * @author guillaume
+	 */
 	class Direct extends Plugin implements Native,Singleton
 	{
 		private $services=array();
