@@ -15,12 +15,13 @@ namespace nutshell\plugin\mvc\model
 	 */
 	abstract class CRUD extends Model
 	{
-		public $name	=null;
-		public $primary	=null;
-		public $columns	=array();
+		public $name	   =null;
+		public $primary	   =null;
+		public $columns	   =array();
+		public $autoCreate =true;
 		
-		private $types	=array();
-		private $db		=null;
+		private $types	   =array();
+		private $db		   =null;
 		
 		public function __construct()
 		{
@@ -30,34 +31,40 @@ namespace nutshell\plugin\mvc\model
 //				print Nutshell::getInstance()->config->prettyPrint();
 				if ($connection=Nutshell::getInstance()->config->plugin->Mvc->connection)
 				{
-					$columns=array();
-					foreach ($this->columns as $name=>$typeDef)
-					{
-						$type=array();
-						preg_match('/^(\w+)\((\d+)\)?$/',$typeDef,$type);
-						$this->types[$type[1]]	=$type[2];
-						if ($name!=$this->primary)
-						{
-							$columns[]			=$name.' '.$typeDef.' NOT NULL AUTO_INCREMENT';
-						}
-						else
-						{
-							$columns[]			=$name.' '.$typeDef.' NULL';
-						}
-					}
-					$columns=implode(',',$columns);
-					//Make a shortcut reference to the 
+					//Make a shortcut reference to the
 					$this->db=Nutshell::getInstance()->plugin->Db->{$connection};
-					//Create the table (if it doesn\'t already exist).
-					$query=<<<SQL
-					CREATE TABLE IF NOT EXISTS {$this->name}
-					(
-						{$columns},
-						PRIMARY KEY ({$this->primary})
-					) ENGINE=INNODB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_bin;
+
+					// only creates the table when $autoCreate is true.
+					if ($this->autoCreate) {
+						$columns=array();
+						foreach ($this->columns as $name=>$typeDef)
+						{
+							$type=array();
+							preg_match('/^(\w+)\((\d+)\)?$/',$typeDef,$type);
+							$this->types[$type[1]]	=$type[2];
+							if ($name==$this->primary)
+							{
+								$columns[]			=$name.' '.$typeDef.' NOT NULL AUTO_INCREMENT';
+							}
+							else
+							{
+								$columns[]			=$name.' '.$typeDef.' NULL';
+							}
+						}
+						$columns=implode(',',$columns);
+						
+						//Create the table (if it doesn\'t already exist).
+						$query=<<<SQL
+												CREATE TABLE IF NOT EXISTS {$this->name}
+												(
+												{$columns},
+													PRIMARY KEY ({$this->primary})
+												) ENGINE=INNODB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_bin
 SQL;
-//					var_dump($query);exit();
-					$this->db->query($query);
+						var_dump($query);//exit();
+						$this->db->query($query);
+						
+					}					
 				}
 				else
 				{
