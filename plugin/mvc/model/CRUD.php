@@ -61,7 +61,7 @@ namespace nutshell\plugin\mvc\model
 													PRIMARY KEY ({$this->primary})
 												) ENGINE=INNODB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_bin
 SQL;
-						var_dump($query);//exit();
+//						var_dump($query);//exit();
 						$this->db->query($query);
 						
 					}					

@@ -17,6 +17,11 @@ class DB
 	private $connection	=null;
 	
 	/**
+	 * When true, throws an exception when a problem is found running a SQL.
+	 */
+	private $throwExceptionOnError =true;
+	
+	/**
 	 * @var array
 	 * @access private
 	 */
@@ -72,6 +77,14 @@ class DB
 	public function __destruct()
 	{
 		$this->disconnect();
+	}
+	
+	/**
+	 * When $pthrowExceptionOnError is true, provokes an exception when there is an error running a SQL.
+	 * @param boolean $pthrowExceptionOnError
+	 */
+	public function setThrowExceptionOnError($pthrowExceptionOnError){
+		$this->throwExceptionOnError = $pthrowExceptionOnError;
 	}
 	
 	/**
@@ -221,6 +234,13 @@ class DB
 			}
 		}
 		@list(,,$this->lastQuery['lastError'])		=$this->lastQuery['statement']->errorInfo();
+		
+		// throws an exception if there is a problem running the query and throwExceptionOnError
+		if (($this->throwExceptionOnError) && ($this->lastQuery['lastError'])){
+			$error_message = $this->lastQuery['lastError'];
+			throw new Exception($error_message);			
+		}
+		
 		return $return;
 	}
 	
@@ -234,7 +254,8 @@ class DB
 	public function query()
 	{
 		$args=func_get_args();
-		return $this->executeStatement('query',$args);
+		$return = $this->executeStatement('query',$args);
+		return $return;
 	}
 	
 	/**
