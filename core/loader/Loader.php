@@ -143,8 +143,10 @@ namespace nutshell\core\loader
 			if (in_array('nutshell\behaviour\Loadable', $interfaces))
 			{
 				#Initiate
-				$this->loaded[$this->container][$key]=$className::getInstance($args);
-				return $this->loaded[$this->container][$key];
+				$localContainer=$this->container;
+				$localInstance=$className::getInstance($args);
+				$this->loaded[$localContainer][$key]=$localInstance;
+				return $localInstance;
 			}
 			else
 			{
