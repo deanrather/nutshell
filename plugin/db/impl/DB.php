@@ -276,13 +276,14 @@ class DB
 	public function getResultFromQuery()
 	{
 		$this->executeStatement('query',func_get_args());
-		return $this->result();
+		return $this->result('assoc');
 	}
 	
 	/**
 	 * This function returns all tables in the connected MySQL schema (database).
 	 */
-	public function getTablesFromMysqlSchema(){
+	public function getTablesFromMysqlSchema()
+	{
 		$sql =
 			"select ".
 				"TABLE_NAME, TABLE_TYPE, ENGINE, VERSION, TABLE_ROWS, AVG_ROW_LENGTH, DATA_LENGTH, MAX_DATA_LENGTH, ".
@@ -292,6 +293,20 @@ class DB
 			"order by TABLE_NAME ASC";
 		
 		return $this->getResultFromQuery($sql);
+	}
+	
+	/**
+	 * This method is very similar to getTablesFromMysqlSchema. But this method has an additional column called COLUMNS that has an
+	 * array with column information.
+	 */
+	public function getTablesFromMysqlSchemaWithColumnInfo()
+	{
+		$tables = $this->getTablesFromMysqlSchema();
+		foreach($tables as &$table_data)
+		{
+			$table_data['COLUMNS'] = $this->getColumnsFromMysqlTable($table_data['TABLE_NAME']);
+		}
+		return $tables;
 	}
 	
 	/**
