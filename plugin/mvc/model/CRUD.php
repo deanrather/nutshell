@@ -21,7 +21,8 @@ namespace nutshell\plugin\mvc\model
 		public $autoCreate =true;
 		
 		private $types	   =array();
-		private $db		   =null;
+		
+		protected $db	   =null;
 		
 		public function __construct()
 		{
