@@ -18,8 +18,15 @@ class DB
 	
 	/**
 	 * When true, throws an exception when a problem is found running a SQL.
+	 * @var boolean
 	 */
 	private $throwExceptionOnError =true;
+	
+	/**
+	 * MySQL schema (database)
+	 * @var string
+	 */
+	private $dbSchema = ''; 
 	
 	/**
 	 * @var array
@@ -53,6 +60,7 @@ class DB
 			if ($host=='localhost')$host='127.0.0.1';
 			try
 			{
+				$this->dbSchema=$database;
 				$this->connection=new PDO('mysql:host='.$host.';port='.$port.';dbname='.$database,$username,$password);
 			}
 			catch(PDOException $exception)
@@ -256,6 +264,53 @@ class DB
 		$args=func_get_args();
 		$return = $this->executeStatement('query',$args);
 		return $return;
+	}
+	
+	/**
+	 * This function executes a query and returns its result.
+	 * 
+	 * @access public
+	 * @param  Query plus Parameters to bind.
+	 * @return array
+	 */
+	public function getResultFromQuery()
+	{
+		$this->executeStatement('query',func_get_args());
+		return $this->result();
+	}
+	
+	/**
+	 * This function returns all tables in the connected MySQL schema (database).
+	 */
+	public function getTablesFromMysqlSchema(){
+		$sql =
+			"select ".
+				"TABLE_NAME, TABLE_TYPE, ENGINE, VERSION, TABLE_ROWS, AVG_ROW_LENGTH, DATA_LENGTH, MAX_DATA_LENGTH, ".
+				"INDEX_LENGTH, DATA_FREE, AUTO_INCREMENT, CREATE_TIME, UPDATE_TIME, CHECK_TIME, TABLE_COLLATION, TABLE_COMMENT ".
+			"from information_schema.tables ".
+			"where table_schema = '{$this->dbSchema}' ".
+			"order by TABLE_NAME ASC";
+		
+		return $this->getResultFromQuery($sql);
+	}
+	
+	/**
+	 * This function returns all columns in the table $table_name from the connected MySQL schema.
+	 */
+	public function getColumnsFromMysqlTable($table_name)
+	{
+		$sql =
+			"select ".
+				"COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, ".
+				"CHARACTER_MAXIMUM_LENGTH, CHARACTER_OCTET_LENGTH, NUMERIC_PRECISION, NUMERIC_SCALE, ".
+				"CHARACTER_SET_NAME, COLLATION_NAME, COLUMN_TYPE, COLUMN_KEY, EXTRA, COLUMN_COMMENT ".
+			"from information_schema.columns ".
+			"where ".
+				"table_schema = '{$this->dbSchema}' and ".
+				"table_name = ? ".
+			"order by ORDINAL_POSITION ASC ";
+		
+		return $this->getResultFromQuery($sql, $table_name);
 	}
 	
 	/**
