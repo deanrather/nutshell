@@ -104,8 +104,10 @@ namespace nutshell\core\loader
 			{
 				//No, so we need to load all of it's dependancies and initiate it.
 				
-				#Load TODO: Fully load everything.
 				$dirBase=$this->containers[$this->container]['path'];
+				$namespaceBase=$this->containers[$this->container]['namespace'];
+
+				#Load TODO: Fully load everything.
 				if (is_file($file=$dirBase.lcfirst($key)._DS_.$key.'.php'))
 				{
 					require($file);
@@ -118,7 +120,16 @@ namespace nutshell\core\loader
 					//Construct the class name.
 					$className=$this->getClassName($key);
 				}
-				else
+				// is it a folder with other components?
+				else if (is_dir($dir=$dirBase.$key))
+				{
+					$localContainer=$this->container;
+					$localInstance = new Loader;
+					$localInstance->registerContainer($key,$dir._DS_,$namespaceBase.$key.'\\');
+					$localInstance->setContainer($key);
+					$this->loaded[$localContainer][$key]=$localInstance;
+					return $localInstance;
+				} else
 				{
 					throw new Exception('Loader failed to load "'.$key.'" from container "'.$this->container.'".');
 				}
@@ -177,8 +188,13 @@ namespace nutshell\core\loader
 			}
 			else
 			{
-				throw new Exception('Invalid container. Containre "'.$container.'" has not been registered.');
+				throw new Exception('Invalid container. Container "'.$container.'" has not been registered.');
 			}
+		}
+		
+		public function setContainer($pContainer)
+		{
+			$this->container=$pContainer;
 		}
 		
 		public function __get($key)
