@@ -1,6 +1,9 @@
 <?php
 /**
- * ModelGenerator is used to generate table models.
+ * ModelGenerator is used to generate table models. Follows an usage example:
+ * $mg = $this->plugin->ModelGenerator;
+ * $modelcode = $mg->getModelStrFromTable('tbl_formats', 'tbl\\', 'format');
+ * 
  * @package nutshell-plugin
  * @author joao
  */
@@ -21,11 +24,7 @@ namespace nutshell\plugin\modelGenerator
 		
 		public static function loadDependencies()
 		{
-			/* if(!self::$dependenciesLoaded)
-			{
-				//include_once(__DIR__.'../plugin/impl/DB.php');
-			}
-			*/
+
 		}
 		
 		public static function registerBehaviours()
@@ -86,10 +85,10 @@ namespace nutshell\plugin\modelGenerator
 		}
 
 		/**
-		* This function indicates if auto increment is used.
-		* @param array $tableStructure
-		* @return boolean
-		*/
+		 * This function indicates if auto increment is used.
+		 * @param array $tableStructure
+		 * @return boolean
+		 */
 		protected function isAutoIncrement(&$tableStructure)
 		{
 			$result = false;
@@ -118,18 +117,18 @@ namespace nutshell\plugin\modelGenerator
 			
 			$code = 
 "<?php
-namespace application\model\\$folder
+namespace application\model$folder
 {
 	use nutshell\plugin\mvc\model\CRUD;
 	
 	class $model_name extends CRUD
 	{
-		public \$name       ='$table_name';
-		public \$primary    =$pk_array_str;
-		public \$primary_ai =$primary_ai_str;
-		public \$autoCreate =$autoCreate_str;
+		public \$name       = '$table_name';
+		public \$primary    = $pk_array_str;
+		public \$primary_ai = $primary_ai_str;
+		public \$autoCreate = $autoCreate_str;
 		
-		public \$columns    =$column_definition;
+		public \$columns    = $column_definition;
 	}
 }
 ?>";
