@@ -285,14 +285,16 @@ class DB
 	public function getTablesFromMysqlSchema()
 	{
 		$sql =
-			"select ".
-				"TABLE_NAME, TABLE_TYPE, ENGINE, VERSION, TABLE_ROWS, AVG_ROW_LENGTH, DATA_LENGTH, MAX_DATA_LENGTH, ".
-				"INDEX_LENGTH, DATA_FREE, AUTO_INCREMENT, CREATE_TIME, UPDATE_TIME, CHECK_TIME, TABLE_COLLATION, TABLE_COMMENT ".
-			"from information_schema.tables ".
-			"where table_schema = '{$this->dbSchema}' ".
-			"order by TABLE_NAME ASC";
+<<<SQL
+			select 
+				TABLE_NAME, TABLE_TYPE, ENGINE, VERSION, TABLE_ROWS, AVG_ROW_LENGTH, DATA_LENGTH, MAX_DATA_LENGTH, 
+				INDEX_LENGTH, DATA_FREE, AUTO_INCREMENT, CREATE_TIME, UPDATE_TIME, CHECK_TIME, TABLE_COLLATION, TABLE_COMMENT 
+			from information_schema.tables 
+			where table_schema = ? 
+			order by TABLE_NAME ASC
+SQL;
 		
-		return $this->getResultFromQuery($sql);
+		return $this->getResultFromQuery($sql, $this->dbSchema);
 	}
 	
 	/**
@@ -315,17 +317,19 @@ class DB
 	public function getColumnsFromMysqlTable($table_name)
 	{
 		$sql =
-			"select ".
-				"COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, ".
-				"CHARACTER_MAXIMUM_LENGTH, CHARACTER_OCTET_LENGTH, NUMERIC_PRECISION, NUMERIC_SCALE, ".
-				"CHARACTER_SET_NAME, COLLATION_NAME, COLUMN_TYPE, COLUMN_KEY, EXTRA, COLUMN_COMMENT ".
-			"from information_schema.columns ".
-			"where ".
-				"table_schema = '{$this->dbSchema}' and ".
-				"table_name = ? ".
-			"order by ORDINAL_POSITION ASC ";
+<<<SQL
+			select 
+				COLUMN_NAME, ORDINAL_POSITION, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, 
+				CHARACTER_MAXIMUM_LENGTH, CHARACTER_OCTET_LENGTH, NUMERIC_PRECISION, NUMERIC_SCALE, 
+				CHARACTER_SET_NAME, COLLATION_NAME, COLUMN_TYPE, COLUMN_KEY, EXTRA, COLUMN_COMMENT 
+			from information_schema.columns 
+			where 
+				table_schema = ? and 
+				table_name = ? 
+			order by ORDINAL_POSITION ASC
+SQL;
 		
-		return $this->getResultFromQuery($sql, $table_name);
+		return $this->getResultFromQuery($sql, $this->dbSchema, $table_name);
 	}
 	
 	/**

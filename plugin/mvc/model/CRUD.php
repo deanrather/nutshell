@@ -1,5 +1,90 @@
 <?php
 /**
+ * CRUD Usage Examples:
+ *
+ **********************************
+ * EXAMPLE 1: Composed Primary Key
+ **********************************
+ * 
+namespace application\model
+{
+	use nutshell\plugin\mvc\model\CRUD;
+	
+	class composedkeyexamplemodel extends CRUD
+	{
+		public $name	   ='composedkeytest';
+		public $primary	   =array('id','id2');
+		public $primary_ai =false;
+		public $autoCreate =true;
+		
+		public $columns=array
+		(
+			'id'		=> 'int',
+			'id2'       => 'int',
+			'name'	    => 'varchar(36)',
+			'i'         => 'int'
+		);
+		
+		public function test(){
+			$pk = array('id'=>2, 'id2'=>'3');
+			$this->delete($pk);
+			
+			$data = $this->read($pk);
+			
+			$this->insert(array(2,3,'test',4));
+			$data = $this->read($pk);	var_dump($data);
+			
+			$this->update(array('name'=>'updated test', 'i' => 400), $pk);
+			$data = $this->read($pk);	var_dump($data);
+			
+			$this->delete($pk);
+		}
+	}
+ }
+ * 
+ * 
+ ***********************************************
+ * EXAMPLE 2: Simple Auto Increment Primary Key
+ ***********************************************
+ *
+namespace application\model
+{
+	use nutshell\plugin\mvc\model\CRUD;
+	
+ 	class simplekeyexamplemodel extends CRUD
+    {
+   		public $name	   ='simplekeytest';
+		public $primary	   =array('id');
+		public $primary_ai =true;
+		public $autoCreate =true;
+	
+		public $columns=array
+		(
+			'id'		=> 'int',
+			'name'	    => 'varchar(36)',
+		);
+		
+		public function testQuery()
+		{
+			$data = $this->read();
+
+			// first record
+			$this->insert(array('foo'));
+			$data = $this->read();	var_dump($data);
+			
+			$pk = $data[0]['id'];
+			
+			$this->update(array('name'=>'bar'), $pk );
+			$data = $this->read();	var_dump($data);
+			
+			$this->delete($pk);
+		}
+	}
+}
+ * 
+ */
+
+/**
  * @package nutshell-plugin
  * @author guillaume
  */
@@ -10,7 +95,7 @@ namespace nutshell\plugin\mvc\model
 	use nutshell\core\exception\Exception;
 	
 	/**
-	 * @author guillaume
+	 * @author guillaume, joao
 	 * @package nutshell-plugin
 	 */
 	abstract class CRUD extends Model
@@ -75,9 +160,6 @@ namespace nutshell\plugin\mvc\model
 						
 						foreach ($this->columns as $name=>$typeDef)
 						{
-							$type=array();
-							preg_match('/^(\w+)\((\d+)\)?$/',$typeDef,$type);
-							$this->types[$type[1]]	=$type[2];
 							if ($this->isPrimaryKey($name))
 							{
 								$columns[]			=$name.' '.$typeDef.' NOT NULL '.$localAutoCreate;
@@ -97,7 +179,7 @@ namespace nutshell\plugin\mvc\model
 							PRIMARY KEY (".implode(',',$this->primary).")
 							) ENGINE=INNODB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_bin
 ";
-//						var_dump($query);//exit();
+
 						$this->db->query($query);
 					}
 				}
@@ -202,7 +284,7 @@ SQL;
 					$where[]=$key.'=?';
 					$whereKeyValues[] = $value;
 				}
-				$whereKeySQL=implode(',',$where);
+				$whereKeySQL=implode(' and ',$where);
 			}
 			else
 			{
