@@ -145,7 +145,16 @@ namespace nutshell\core\loader
 			}
 			else
 			{
-				$className=$this->getClassName($key);
+				$localObj = &$this->loaded[$this->container][$key];
+				if ( get_class($localObj) == get_class($this) )
+				{
+					return $localObj;
+				} 
+				else 
+				{
+					$className=$this->getClassName($key);
+				}
+				
 			}
 			if (!isset($interfaces))
 			{
