@@ -511,5 +511,29 @@ SQL;
 	{
 		return $this->query('TRUNCATE TABLE '.$table);
 	}
-}
-}
+	
+	/**
+	 * Starts a new transaction.
+	 */
+	public function beginTransaction()
+	{
+		$this->connection->beginTransaction();
+	}
+	
+	/**
+     * Commits a transaction.
+	 */
+	public function commit()
+	{
+		$this->connection->commit();
+	}
+	
+	/**
+     * Rolls back a transaction.
+	 */
+	public function rollBack()
+	{
+		$this->connection->rollBack();
+	}
+} // of class
+} // of namespace
