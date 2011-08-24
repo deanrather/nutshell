@@ -115,8 +115,6 @@ namespace nutshell\plugin\mvc\model
 		private $defaultInsertColumnsStr   = '';
 		private $defaultInsertPlaceHolders ='';       // part of an insert statement.		
 		
-		protected $db	   =null;
-		
 		public function __construct()
 		{
 			parent::__construct();
@@ -141,12 +139,8 @@ namespace nutshell\plugin\mvc\model
 			
 			if (!empty($this->name) && (count($this->primary)>0) && !empty($this->columns))
 			{
-//				print Nutshell::getInstance()->config->prettyPrint();
-				if ($connection=Nutshell::getInstance()->config->plugin->Mvc->connection)
+				if (isset($this->db))
 				{
-					//Make a shortcut reference to the
-					$this->db=Nutshell::getInstance()->plugin->Db->{$connection};
-
 					// only creates the table when $autoCreate is true.
 					if ($this->autoCreate) 
 					{
@@ -210,7 +204,7 @@ namespace nutshell\plugin\mvc\model
 				$keys			=&$this->defaultInsertColumnsStr;
 			} else {
 				$placeholders = rtrim(str_repeat('?,',count($this->columnNames)),',');
-				$keys         = implode(',',fields);
+				$keys         = implode(',',$fields);
 			}
 			$query=
 <<<SQL

@@ -19,12 +19,18 @@ namespace nutshell\plugin\mvc
 		/**
 		 * Stores a local pointer to Nutshell
 		 */ 
-		public $nutshell = null;
+		protected $nutshell = null;
 		
 		/**
 		 * Stores a local pointer to plugin loader. 
 		 */
-		public $plugin	 = null;
+		protected $plugin	 = null;
+		
+		/**
+		 * Defautl DB connection
+		 * @var DB object
+		 */
+		protected $db	   =null;
 		
 		public function __construct()
 		{
@@ -33,6 +39,11 @@ namespace nutshell\plugin\mvc
 			{
 				$this->plugin = $this->nutshell->plugin;
 				$loader=$this->nutshell->getLoader();
+				if ($connection=Nutshell::getInstance()->config->plugin->Mvc->connection)
+				{
+					//Make a shortcut reference to the
+					$this->db=$this->plugin->Db->{$connection};
+				}		
 			}
 		}
 
