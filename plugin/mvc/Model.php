@@ -26,11 +26,6 @@ namespace nutshell\plugin\mvc
 		 */
 		public $plugin	 = null;
 		
-		/**
-		 * Stores a local pointer to model loader.
-		 */
-		public $model    = null;
-		
 		public function __construct()
 		{
 			$this->nutshell = Nutshell::getInstance();
@@ -38,10 +33,31 @@ namespace nutshell\plugin\mvc
 			{
 				$this->plugin = $this->nutshell->plugin;
 				$loader=$this->nutshell->getLoader();
+			}
+		}
+
+		/**
+		 * returns a model loader
+		 */
+		public function model()
+		{
+			$result = null;
+			if (isset($this->nutshell))
+			{
+				$loader=$this->nutshell->getLoader();
 				if (isset($loader))
 				{
-					$this->model = $loader('model');
+					$result = $loader('model');
 				}
+			}
+			return $result;
+		}
+		
+		public function __get($key)
+		{
+			if ($key=='model') 
+			{
+				return $this->model(); // returns a model loader
 			}
 		}
 		
