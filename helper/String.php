@@ -70,6 +70,26 @@ namespace nutshell\helper
 			//Return the randomly generated string.
 			return $string;
 		}
+		
+		/**
+		 * This function returns an array with strings tokenized by a separator.
+		 * @param string $str
+		 * @param string $separator
+		 */
+		public static function strTokenizer($str, $separator = ",")
+		{
+			$result = explode($separator, $str);
+			
+			// removes all empty words
+			foreach($result as $key => $word)
+			{
+				if (strlen($word)==0)
+				{
+					unset($result[$key]);
+				}
+			}
+			return $result;
+		}
 	}
 }
 ?>
