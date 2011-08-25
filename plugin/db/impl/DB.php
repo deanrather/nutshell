@@ -535,5 +535,14 @@ SQL;
 	{
 		$this->connection->rollBack();
 	}
+	
+	/**
+	 * Quotes and escapes a string for DB usage.
+	 * @param string $str
+	 */
+	public function quote($str)
+	{
+		return $this->connection->quote($str);
+	}
 } // of class
 } // of namespace
