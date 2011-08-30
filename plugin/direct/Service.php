@@ -124,7 +124,8 @@ namespace nutshell\plugin\direct
 		{
 			if ($this->moduleExists($provider,$request->action))
 			{
-				include_once(APP_HOME.$this->config->{$this->ref}->dir.$provider._DS_.$request->action.'.php');
+				$file = APP_HOME.$this->config->{$this->ref}->dir.$provider._DS_.ucfirst($request->action).'.php';
+				include_once($file);
 				$moduleName	='application\controller\provider\\'.$provider.'\\'.$request->action;
 				$module		=new $moduleName($this->responder,$request);
 				if (method_exists($module,$request->method))
@@ -146,7 +147,8 @@ namespace nutshell\plugin\direct
 		
 		private function handlePollingRequest($provider)
 		{
-			include_once(APP_HOME.$this->config->{$this->ref}->dir.$provider.'.php');
+			$file = APP_HOME.$this->config->{$this->ref}->dir.$provider.'.php';
+			include_once($file);
 			$providerName	='application\controller\provider\\'.ucfirst($provider);
 			$provider		=new $providerName($this->responder);
 			if ($provider instanceof Pollable)
@@ -158,10 +160,12 @@ namespace nutshell\plugin\direct
 		
 		public function providerExists($provider=false)
 		{
+			$dir = APP_HOME.$this->config->{$this->ref}->dir.$provider;
+			$file = APP_HOME.$this->config->{$this->ref}->dir.$provider.'.php';
 			//Remoting Provider
-			if (is_dir(APP_HOME.$this->config->{$this->ref}->dir.$provider)
+			if (is_dir($dir)
 			//Polling Provider
-			|| is_file(APP_HOME.$this->config->{$this->ref}->dir.$provider.'.php'))
+			|| is_file($file))
 			{
 				return true;
 			}
@@ -170,7 +174,8 @@ namespace nutshell\plugin\direct
 		
 		private function moduleExists($provider,$module)
 		{
-			 return is_file(APP_HOME.$this->config->{$this->ref}->dir.$provider._DS_.$module.'.php');
+			$file = APP_HOME.$this->config->{$this->ref}->dir.$provider._DS_.ucfirst($module).'.php';
+			return is_file($file);
 		}
 	}
 }
