@@ -90,6 +90,17 @@ namespace nutshell\helper
 			}
 			return $result;
 		}
+		
+		/**
+		 * This function removes CR and LF from a string. 
+		 * @param string $str
+		 */
+		public static function removeCrLf($str)
+		{
+			$str = str_replace("\r", '', $str);
+			$str = str_replace("\n", '', $str);
+			return $str;
+		}
 	}
 }
 ?>

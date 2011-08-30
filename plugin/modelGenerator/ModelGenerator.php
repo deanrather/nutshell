@@ -13,6 +13,7 @@ namespace nutshell\plugin\modelGenerator
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Singleton;
 	use nutshell\Nutshell;
+	use nutshell\helper\String;
 
 	/**
 	 * @author joao
@@ -70,15 +71,21 @@ namespace nutshell\plugin\modelGenerator
 			$rows = array();
 			foreach($tableStructure as &$column)
 			{
-				$column_name = $column['COLUMN_NAME'];
-				$column_type = $column['COLUMN_TYPE'];
+				$column_name    = $column['COLUMN_NAME'];
+				$column_type    = $column['COLUMN_TYPE'];
+				$column_comment = trim(String::removeCrLf($column['COLUMN_COMMENT']));
+				
+				if (strlen($column_comment)>0)
+				{
+					$column_comment = ' /* '.$column_comment.' */ ' ;
+				}
 				
 				if ($column['IS_NULLABLE']=='NO')
 				{
 					$column_type = $column_type.' NOT NULL ';
 				}
 				
-				$rows[] = "				'$column_name' => '$column_type' ";
+				$rows[] = "				'$column_name' => '$column_type'{$column_comment} ";
 			}
 
 			return "array(\n".implode(",\n", $rows).')';
@@ -107,7 +114,7 @@ namespace nutshell\plugin\modelGenerator
  		 * @param array $autoCreate  Indicates if tables should be created when missing. In most cases this value should be false.
 		 * @return string
 		 */
-		public function getModelStrFromTable($table_name, $folder, $model_name, $autoCreate = false)
+		public function getModelStrFromTable($table_name, $folder, $model_name, $autoCreate = false, $table_comment='')
 		{
 			$tableStructure    = $this->db->getColumnsFromMysqlTable($table_name);
 			$pk_array_str      = $this->getPKArray($tableStructure);
@@ -115,13 +122,20 @@ namespace nutshell\plugin\modelGenerator
 			$autoCreate_str    = $autoCreate ? "true" : "false";
 			$column_definition = $this->getColumnDefinition($tableStructure);
 			
+			$table_comment = trim(String::removeCrLf($table_comment));
+			
+			if (strlen($table_comment)>0)
+			{
+				$table_comment = '// '.$table_comment."\n	";
+			}
+			
 			$code = 
 "<?php
 namespace application\model$folder
 {
 	use nutshell\plugin\mvc\model\CRUD;
 	
-	class $model_name extends CRUD
+	{$table_comment}class $model_name extends CRUD
 	{
 		public \$name       = '$table_name';
 		public \$primary    = $pk_array_str;
