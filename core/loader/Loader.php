@@ -108,15 +108,15 @@ namespace nutshell\core\loader
 				$namespaceBase=$this->containers[$this->container]['namespace'];
 
 				#Load TODO: Fully load everything.
-				if (is_file($file=$dirBase.lcfirst($key)._DS_.$key.'.php'))
+				if (is_file($dirBaseFolderFile=$dirBase.lcfirst($key)._DS_.$key.'.php'))
 				{
-					require($file);
+					require($dirBaseFolderFile);
 					//Construct the class name.
 					$className=$this->getClassName($key);
 				}
-				else if (is_file($file=$dirBase.$key.'.php'))
+				else if (is_file($dirBaseFile=$dirBase.$key.'.php'))
 				{
-					require($file);
+					require($dirBaseFile);
 					//Construct the class name.
 					$className=$this->getClassName($key);
 				}
