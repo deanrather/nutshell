@@ -119,6 +119,31 @@ namespace nutshell\plugin\direct
 			unset($this->response['tid']);
 			unset($this->response['where']);
 		}
+		
+		/**
+		* returns a model loader
+		*/
+		public function model()
+		{
+			$result = null;
+			if (isset($this->core))
+			{
+				$loader=$this->core->getLoader();
+				if (isset($loader))
+				{
+					$result = $loader('model');
+				}
+			}
+			return $result;
+		}
+		
+		public function __get($key)
+		{
+			if ($key=='model')
+			{
+				return $this->model(); // returns a model loader
+			}
+		}
 	}
 }
 ?>
