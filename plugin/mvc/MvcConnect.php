@@ -70,11 +70,11 @@ namespace nutshell\plugin\mvc
 		 */
 		private function logger()
 		{
-			if (!isset($this->vLogger))
+			if (!isset(self::$vLogger))
 			{
-				$this->vLogger = $this->plugin->Logger();
+				self::$vLogger = $this->plugin->Logger();
 			}
-			return $this->vLogger;
+			return self::$vLogger;
 		}
 
 		public function __get($key)

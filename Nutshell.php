@@ -318,6 +318,14 @@ namespace nutshell
 		{
 			throw new Exception('Sorry, nutshell core is read only!');
 		}
+		
+		/**
+		 * This function returns true in the case a loader exists.
+		 */
+		public function hasLoader()
+		{
+			return (isset($this->loader));
+		}
 	}
 	
 	/**
