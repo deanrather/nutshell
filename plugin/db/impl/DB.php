@@ -278,6 +278,34 @@ class DB
 		$this->executeStatement('query',func_get_args());
 		return $this->result('assoc');
 	}
+
+	/**
+	 * This function executes a query and returns the first field value of the first row.
+	 * In the case that no data is returned from the query, this function returns NULL.
+	 * 
+	 * @access public
+	 * @param  Query plus Parameters to bind.
+	 * @return array
+	 */
+	public function getFirstFieldFromQuery()
+	{
+		$result = null;
+		$this->executeStatement('query',func_get_args());
+		$resultset = $this->result('assoc');
+		// do we have a resultset?
+		if (count($resultset)>0)
+		{
+			$firstRow = $resultset[0];
+			// do we have a first row?
+			if (count($firstRow)>0)
+			{
+				reset($firstRow);
+				$result = current($firstRow);
+			}
+		}
+		
+		return $result;
+	}
 	
 	/**
 	 * This function returns all tables in the connected MySQL schema (database).
