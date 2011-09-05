@@ -203,7 +203,7 @@ namespace nutshell\plugin\mvc\model
 				$placeholders	=&$this->defaultInsertPlaceHolders;
 				$keys			=&$this->defaultInsertColumnsStr;
 			} else {
-				$placeholders = rtrim(str_repeat('?,',count($this->columnNames)),',');
+				$placeholders = rtrim(str_repeat('?,',count($record)),',');
 				$keys         = implode(',',$fields);
 			}
 			$query=
