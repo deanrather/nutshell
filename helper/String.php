@@ -101,6 +101,15 @@ namespace nutshell\helper
 			$str = str_replace("\n", '', $str);
 			return $str;
 		}
+		
+		/**
+		 * This function is used to format class names. It is used by the model generator.
+		 * @param string $classname
+		 */
+		public static function formatClassName($classname)
+		{
+			return ucfirst(strtolower($classname));
+		}
 	}
 }
 ?>
