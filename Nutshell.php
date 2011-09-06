@@ -78,6 +78,7 @@ namespace nutshell
 			else
 			{
 				define('NS_INTERFACE', self::INTERFACE_HTTP);
+				define('NS_APP_WEB_HOME', dirname($_SERVER['SCRIPT_NAME']));
 			}
 			
 			//Load the behaviours first.

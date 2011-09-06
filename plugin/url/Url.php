@@ -29,7 +29,12 @@ namespace nutshell\plugin\url
 		
 		public function init()
 		{
-			$nodes=explode('/',parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+			$baseURL = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+			if(defined('NS_APP_WEB_HOME')) 
+			{
+				$baseURL = preg_replace('/^' . preg_quote(NS_APP_WEB_HOME, '/') . '/', '', $baseURL);
+			}
+			$nodes=explode('/', $baseURL);
 			if (!reset($nodes))	array_shift($nodes);
 			if (!end($nodes))	array_pop($nodes);
 			if (!isset($nodes[0]))
