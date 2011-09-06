@@ -91,7 +91,8 @@ class DB
 	 * When $pthrowExceptionOnError is true, provokes an exception when there is an error running a SQL.
 	 * @param boolean $pthrowExceptionOnError
 	 */
-	public function setThrowExceptionOnError($pthrowExceptionOnError){
+	public function setThrowExceptionOnError($pthrowExceptionOnError)
+	{
 		$this->throwExceptionOnError = $pthrowExceptionOnError;
 	}
 	
@@ -244,7 +245,8 @@ class DB
 		@list(,,$this->lastQuery['lastError'])		=$this->lastQuery['statement']->errorInfo();
 		
 		// throws an exception if there is a problem running the query and throwExceptionOnError
-		if (($this->throwExceptionOnError) && ($this->lastQuery['lastError'])){
+		if (($this->throwExceptionOnError) && ($this->lastQuery['lastError']))
+		{
 			$error_message = $this->lastQuery['lastError'];
 			throw new Exception($error_message);			
 		}

@@ -191,8 +191,10 @@ namespace nutshell\plugin\mvc\model
 		/**
 		 * Inserts a record into the database.
 		 * When $fields are defined, this is the list of fields to be used when inserting.
+		 * This function returns the assigned PK when using auto increment.
 		 * @param array $record
 		 * @param array $fields
+		 * @return int
 		 */
 		public function insert(Array $record, Array $fields=array())
 		{
@@ -217,12 +219,24 @@ SQL;
 		}
 		
 		/**
+		 * This function inserts a record such as ( 'key' => 'value', 'key2' => 'value2', ... );
+		 * This function returns the assigned PK when using auto increment.
+		 * @param array $record
+		 * @return int
+		 */
+		public function insertAssoc(Array $record)
+		{
+			return $this->insert(array_values($record), array_keys($record));
+		}
+		
+		/**
 		 * Reads rows from the database.
 		 * If $whereKeyVals isn't given, reads all rows.
 		 * If $readColumns isn't given, read all columns.
 		 * @param array  $whereKeyVals
 		 * @param array  $readColumns
 		 * @param string $additionalPartSQL
+		 * @return Array
 		 */
 		public function read($whereKeyVals = array(), $readColumns = array(), $additionalPartSQL='')
 		{
@@ -257,6 +271,7 @@ SQL;
 		 * @param array $whereKeyVals
 		 * @param string $whereKeySQL
 		 * @param array $whereKeyValues
+		 * @return string
 		 */
 		protected function getWhereSQL($whereKeyVals, &$whereKeySQL, &$whereKeyValues)
 		{
@@ -308,6 +323,10 @@ SQL;
 			return $this->db->update($query,array_merge(array_values($updateKeyVals),$whereKeyValues));
 		}
 		
+		/**
+		 * Deletes records filtering by $whereKeyVals.
+		 * @param mixed $whereKeyVals
+		 */
 		public function delete($whereKeyVals)
 		{
 			$whereKeySQL = '';
@@ -321,6 +340,8 @@ SQL;
 	
 		/**
 		 * This function returns TRUE if $field_name is a primary key.
+ 		 * @param string $field_name
+		 * @return bool
 		 */
 		public function isPrimaryKey($field_name)
 		{
