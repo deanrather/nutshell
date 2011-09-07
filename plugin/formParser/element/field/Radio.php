@@ -36,14 +36,12 @@ namespace nutshell\plugin\formParser\element\field
 		public function render()
 		{
 			$this->setTemplateVar('CHECKED',$this->checked);
-			if (!$this->parentIsType('InputGroup'))
+//			return parent::render();
+			if ($this->parentIsType('InputGroup'))
 			{
-				return parent::render();
+				$this->setTemplateName('GroupedRadio');
 			}
-			else
-			{
-				
-			}
+			return parent::render();
 		}
 	}
 }

@@ -25,6 +25,7 @@ namespace nutshell\plugin\formParser\element
 		private $id				=null;
 		private $children		=array();
 		private $templateVars	=array();
+		private $templateName	=null;
 		
 		public function __construct($parent,stdClass $elementDef)
 		{
@@ -53,7 +54,8 @@ namespace nutshell\plugin\formParser\element
 		
 		private function compileTemplate()
 		{
-			$elementTpl=self::getTemplateFile();
+			$elementTpl=self::getTemplateFile($this);
+			
 			if ($elementTpl)
 			{
 				//Now handle any visual inheritence.
@@ -66,7 +68,7 @@ namespace nutshell\plugin\formParser\element
 				{
 					$templateDir	=Object::getClassPath($parentClass).self::TEMPLATE_DIR._DS_;
 					$file			=$templateDir.Object::getBaseClassName($parentName).'.tpl';
-					$parentTpl		=$parentClass::getTemplateFile();
+					$parentTpl		=$parentClass::getTemplateFile($this);
 					
 					//This will place the child template inside of the parent template.
 					$elementTpl		=$this->plugin->Template($elementTpl);
@@ -103,10 +105,18 @@ namespace nutshell\plugin\formParser\element
 			return '';
 		}
 		
-		public static function getTemplateFile()
+		public static function getTemplateFile($scope)
 		{
 			$class	=get_called_class();
-			$file	=Object::getClassPath($class).self::TEMPLATE_DIR._DS_.Object::getBaseClassName($class).'.tpl';
+//			var_dump($scope->getTemplateName());
+			if (is_null($scope->getTemplateName()))
+			{
+				$file=Object::getClassPath($class).self::TEMPLATE_DIR._DS_.Object::getBaseClassName($class).'.tpl';
+			}
+			else
+			{
+				$file=Object::getClassPath($class).self::TEMPLATE_DIR._DS_.$scope->getTemplateName().'.tpl';
+			}
 			if (file_exists($file))
 			{
 				return $file;
@@ -116,7 +126,7 @@ namespace nutshell\plugin\formParser\element
 				$parent=get_parent_class($class);
 				if (method_exists($parent,'getTemplateFile'))
 				{
-					return $parent::getTemplateFile();
+					return $parent::getTemplateFile($scope);
 				}
 			}
 			return null;
@@ -165,6 +175,17 @@ namespace nutshell\plugin\formParser\element
 		{
 			$this->templateVars[$key]=$val;
 			return $this;
+		}
+		
+		public function setTemplateName($templateName)
+		{
+			$this->templateName=$templateName;
+			return $this;
+		}
+		
+		public function getTemplateName()
+		{
+			return $this->templateName;
 		}
 		
 		public function parentIsType($type,$strict=false)
