@@ -36,7 +36,7 @@ namespace
 		 */
 		private static $dontShowErrors = array
 		(
-			2048 => 1
+			E_STRICT => 1
 		);
 
 		/**
