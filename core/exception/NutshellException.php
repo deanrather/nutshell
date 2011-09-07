@@ -69,8 +69,12 @@ namespace nutshell\core\exception
 				{
 					$log = $nutInst->plugin->Logger();
 					$log->fatal($message);
+				} 
+				else 
+				{
+					throw new NutshellException('Failed to write to default log: no loader active');
 				}
-			}			
+			}
 		}
 		
 		/**
@@ -87,18 +91,20 @@ namespace nutshell\core\exception
 			{
 				self::$blockRecursion = true;
 			
+				$message =
+					"ERROR $errno. ".
+					( (strlen($errstr)>0)  ? "Message: $errstr. " : "").
+					( (strlen($errfile)>0) ? "File: $errfile. " : "").
+					( ($errline>0) ? "Line: $errline. " : "") ;
+				
 				try // to log
 				{
-					$message =
-						"ERROR $errno. ".
-						( (strlen($errstr)>0)  ? "Message: $errstr. " : "").
-						( (strlen($errfile)>0) ? "File: $errfile. " : "").
-						( ($errline>0) ? "Line: $errline. " : "") ;
-						self::echoError($errno, $message);
+					self::echoError($errno, $message);
 					self::logMessage($message);		
 				} catch (Exception $e) 
 				{
-					// nothing can be done if log fails here.
+					//falling back to the system logger
+					error_log($message);
 				}
 				self::$blockRecursion = false;
 			}
@@ -115,15 +121,15 @@ namespace nutshell\core\exception
 			{
 				self::$blockRecursion = true;
 			
+				$message =
+					( ($exception->code>0)             ? "ERROR {$exception->code}. " : "" ).
+					( "Exception class:".get_class($exception).". ").
+					( (strlen($exception->message)>0)  ? "Message: {$exception->message}. " : "").
+					( (strlen($exception->file)>0)     ? "File: {$exception->file}. " : "").
+					( ($exception->line>0)             ? "Line: {$exception->line}. " : "") ;
+				
 				try // to log
 				{
-					$message =
-						( ($exception->code>0)             ? "ERROR {$exception->code}. " : "" ).
-						( "Exception class:".get_class($exception).". ").
-						( (strlen($exception->message)>0)  ? "Message: {$exception->message}. " : "").
-						( (strlen($exception->file)>0)     ? "File: {$exception->file}. " : "").
-						( ($exception->line>0)             ? "Line: {$exception->line}. " : "") ;
-						
 					if (self::$echoErrors) 
 					{
 						echo $message;
@@ -131,7 +137,8 @@ namespace nutshell\core\exception
 					self::logMessage($message);		
 				} catch (Exception $e) 
 				{
-					// nothing can be done if log fails here.
+					//falling back to the system logger
+					error_log($message);
 				}
 				self::$blockRecursion = false;
 			}
