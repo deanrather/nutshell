@@ -61,7 +61,7 @@ namespace
 			if (strlen($message)>0)
 			{
 				$nutInst = Nutshell::getInstance();
-				if ($nutInst->hasLoader())
+				if ($nutInst->hasPluginLoader())
 				{
 					$log = $nutInst->plugin->Logger();
 					$log->fatal($message);

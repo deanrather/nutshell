@@ -40,6 +40,8 @@ namespace nutshell
 		
 		public $config 				=	null;
 		private $loader				=	null;
+		private $pluginLoader       =   null;
+		private $modelLoader        =   null;
 		
 		/**
 		 * Configures all special constants and libraries linking.
@@ -98,7 +100,8 @@ namespace nutshell
 			$this->initLoader();
 			
 			//Register the plugin container.
-			$this->loader->registerContainer('plugin',NS_HOME.'plugin'._DS_,'nutshell\plugin\\');
+			$this->pluginLoader->registerContainer('plugin',NS_HOME.'plugin'._DS_,'nutshell\plugin\\');
+			$this->pluginLoader->registerContainer('appplugin',APP_HOME.'plugin'._DS_,'application\plugin\\');
 		}
 		
 		/**
@@ -187,11 +190,13 @@ namespace nutshell
 		{
 			if (!$this->config->core->hiphop)
 			{
-				$this->loader=new Loader();
+				$this->pluginLoader = new Loader();
+				$this->modelLoader  = new Loader();
 			}
 			else
 			{
-				$this->loader=new HipHopLoader();
+				$this->pluginLoader = new HipHopLoader();
+				$this->modelLoader  = new HipHopLoader();
 			}
 			return $this;
 		}
@@ -255,7 +260,6 @@ namespace nutshell
 			define('APP_HOME', $path . DIRECTORY_SEPARATOR);
 		}
 		
-		
 		/**
 		 * Returns the nutshell instance.
 		 * 
@@ -278,9 +282,20 @@ namespace nutshell
 		 * @access public
 		 * @return nutshell\core\loader\Loader
 		 */
-		public function getLoader()
+		public function getPluginLoader()
 		{
-			return $this->loader;
+			return $this->pluginLoader;
+		}
+		
+		/**
+		* Returns the core loader instance.
+		*
+		* @access public
+		* @return nutshell\core\loader\Loader
+		*/
+		public function getModelLoader()
+		{
+			return $this->modelLoader;
 		}
 		
 		/*** OVERLOADING ***/
@@ -298,8 +313,7 @@ namespace nutshell
 		{
 			if ($key=='plugin')
 			{
-				$loader=$this->loader;
-				return $loader('plugin');
+				return $this->pluginLoader;
 			}
 			else
 			{
@@ -322,11 +336,11 @@ namespace nutshell
 		}
 		
 		/**
-		 * This function returns true in the case a loader exists.
+		 * This function returns true in the case a plugin loader exists.
 		 */
-		public function hasLoader()
+		public function hasPluginLoader()
 		{
-			return (isset($this->loader));
+			return (isset($this->pluginLoader));
 		}
 	}
 	

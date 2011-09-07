@@ -39,7 +39,6 @@ namespace nutshell\plugin\mvc
 			if (isset($this->nutshell))
 			{
 				$this->plugin = $this->nutshell->plugin;
-				$loader=$this->nutshell->getLoader();
 				if ($connection=$this->nutshell->config->plugin->Mvc->connection)
 				{
 					//Make a shortcut reference to the
@@ -56,11 +55,7 @@ namespace nutshell\plugin\mvc
 			$result = null;
 			if (isset($this->nutshell))
 			{
-				$loader=$this->nutshell->getLoader();
-				if (isset($loader))
-				{
-					$result = $loader('model');
-				}
+				$result = $this->nutshell->getModelLoader();
 			}
 			return $result;
 		}

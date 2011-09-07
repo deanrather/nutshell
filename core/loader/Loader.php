@@ -30,14 +30,15 @@ namespace nutshell\core\loader
 		private $containers=array();
 		
 		/**
-		 * The current container.
-		 * 
-		 * This is a pointer to the active container.
-		 * 
-		 * @access private
-		 * @var String
+		 * Class name of a given key.
+		 * @var Array
 		 */
-		private $container	='plugin';
+		private $classNames=array();
+		
+		/**
+		 * Interface of a given key.
+		 */
+		private $interfaces=array();
 		
 		/**
 		 * A container of loaded classes.
@@ -87,7 +88,6 @@ namespace nutshell\core\loader
 			spl_autoload_register(__NAMESPACE__ .'\Loader::autoload');
 		}
 		
-		
 		public function registerContainer($name,$path,$namespace)
 		{
 			$this->containers[$name]=array
@@ -97,75 +97,77 @@ namespace nutshell\core\loader
 			);
 		}
 		
+		private function loadClassDependencies($classname)
+		{
+			if($interfaces = class_implements($classname, false))
+			{
+				//Load class dependencies
+				if (in_array('nutshell\behaviour\Native', $interfaces))
+				{
+					$classname::loadDependencies();
+					$classname::registerBehaviours();
+				}	
+			}
+			return $interfaces;
+		}
+		
 		private function doLoad($key,Array $args=array())
 		{
-			//Is the {$this->container} object loaded?
-			if (!isset($this->loaded[$this->container][$key]))
+			//Is the object not loaded?
+			if (!isset($this->loaded[$key]))
 			{
-				//No, so we need to load all of it's dependancies and initiate it.
-				
-				$dirBase=$this->containers[$this->container]['path'];
-				$namespaceBase=$this->containers[$this->container]['namespace'];
-
-				#Load TODO: Fully load everything.
-				if (is_file($dirBaseFolderFile=$dirBase.lcfirst($key)._DS_.$key.'.php'))
+				foreach($this->containers as $containerKey => &$container)
 				{
-					require($dirBaseFolderFile);
-					//Construct the class name.
-					$className=$this->getClassName($key);
-				}
-				else if (is_file($dirBaseFile=$dirBase.$key.'.php'))
-				{
-					require($dirBaseFile);
-					//Construct the class name.
-					$className=$this->getClassName($key);
-				}
-				// is it a folder with other components?
-				else if (is_dir($dir=$dirBase.$key))
-				{
-					$localContainer=$this->container;
-					$localInstance = new Loader;
-					$localInstance->registerContainer($key,$dir._DS_,$namespaceBase.$key.'\\');
-					$localInstance->setContainer($key);
-					$this->loaded[$localContainer][$key]=$localInstance;
-					return $localInstance;
-				} else
-				{
-					throw new Exception('Loader failed to load "'.$key.'" from container "'.$this->container.'".');
-				}
-				if($interfaces = class_implements($className, false))
-				{
-					//Load class dependencies
-					if (in_array('nutshell\behaviour\Native', $interfaces))
+					//No, so we need to load all of it's dependancies and initiate it.
+					$dirBase=$container['path'];
+					$namespaceBase=$container['namespace'];
+					
+					if (is_file($dirBaseFolderFile=$dirBase.lcfirst($key)._DS_.$key.'.php'))
 					{
-						$className::loadDependencies();
-						$className::registerBehaviours();
+						require($dirBaseFolderFile);
+						$this->classNames[$key] = $namespaceBase.lcfirst($key).'\\'.$key;
+						$this->interfaces[$key] = $this->loadClassDependencies($this->classNames[$key]);
+						break;
 					}
-				}
-			}
-			else
-			{
-				$localObj = &$this->loaded[$this->container][$key];
-				if ( get_class($localObj) == get_class($this) )
-				{
-					return $localObj;
-				} 
-				else 
-				{
-					$className=$this->getClassName($key);
-				}
+					else if (is_file($dirBaseFile=$dirBase.$key.'.php'))
+					{
+						require($dirBaseFile);
+						$this->classNames[$key] = $namespaceBase.$key;
+						$this->interfaces[$key] = $this->loadClassDependencies($this->classNames[$key]);
+						break;
+					}
+					// is it a folder with other components?
+					else if (is_dir($dir=$dirBase.$key))
+					{
+						$localInstance = new Loader;
+						$localInstance->registerContainer($key,$dir._DS_,$namespaceBase.$key.'\\');
+						$this->classNames[$key] = get_class($this);
+						$this->loaded[$key]=$localInstance;
+						break;
+					}
+				}// end of foreach
 				
+				if(!isset($this->classNames[$key]))
+				{
+					throw new Exception("Loader can't load key {$key}.");
+				}
 			}
-			if (!isset($interfaces))
+
+			// is it a loader?
+			if ( $this->classNames[$key] == get_class($this) )
 			{
-				$interfaces=class_implements($className, false);
+				//returns the loader
+				return $this->loaded[$key];
 			}
+						
+			$className  = $this->classNames[$key];
+			$interfaces = $this->interfaces[$key];
+			
 			if (in_array('nutshell\behaviour\Loadable', $interfaces))
 			{
 				#Initiate
-				$localContainer=$this->container;
-				$localInstance=$className::getInstance($args);
-				$this->loaded[$localContainer][$key]=$localInstance;
+				$localInstance      = $className::getInstance($args);
+				$this->loaded[$key] = $localInstance;
 				return $localInstance;
 			}
 			else
@@ -174,38 +176,7 @@ namespace nutshell\core\loader
 									.'handle you\'re using to handle the loading with doesn\'t impement the "Loadable" behaviour.');
 			}
 		}
-		
-		private function getClassName($key)
-		{
-			$dirBase=$this->containers[$this->container]['path'];
-			if (is_file($dirBase.lcfirst($key)._DS_.$key.'.php'))
-			{
-				return $this->containers[$this->container]['namespace'].lcfirst($key).'\\'.$key;
-			}
-			else if (is_file($dirBase.$key.'.php'))
-			{
-				return $this->containers[$this->container]['namespace'].$key;
-			}
-		}
-		
-		public function __invoke($container)
-		{
-			if (isset($this->containers[$container]))
-			{
-				$this->container=$container;
-				return $this;
-			}
-			else
-			{
-				throw new Exception('Invalid container. Container "'.$container.'" has not been registered.');
-			}
-		}
-		
-		public function setContainer($pContainer)
-		{
-			$this->container=$pContainer;
-		}
-		
+
 		public function __get($key)
 		{
 			return $this->doLoad($key);
