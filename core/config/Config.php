@@ -93,7 +93,7 @@ namespace nutshell\core\config
 				
 				foreach($array as $k => $v) 
 				{
-					$this->data[$k] = self::parse($v, null, null);
+					$this->data[$k] = self::parse($v);
 				}
 				
 				return $this;
@@ -112,7 +112,7 @@ namespace nutshell\core\config
 		 * @param mixed $obj
 		 * @return mixed the value to be associated to a property
 		 */
-		public static function parse($obj, $extendHandler, &$extended)
+		public static function parse($obj)
 		{
 			if (is_object($obj)) 
 			{
@@ -123,7 +123,7 @@ namespace nutshell\core\config
 				$res = array();
 				foreach($obj as $k => $v)
 				{
-					$res[$k] = self::parse($v, null, null);
+					$res[$k] = self::parse($v);
 				}
 				return $res;
 			}
