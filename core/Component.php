@@ -24,7 +24,7 @@ namespace nutshell\core
 		 * @access public
 		 * @return void
 		 */
-		abstract public static function register();
+		public static function register() {}
 		
 		/**
 		 * This is a helper method for loading a child class.
