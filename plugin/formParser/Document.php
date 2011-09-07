@@ -77,7 +77,7 @@ namespace nutshell\plugin\formParser
 					{
 						case 'page':		$class.='Page';			break;
 						case 'group':		$class.='Group';		break;
-//						case 'inputgroup':	$class.='InputGroup';	break;
+						case 'inputgroup':	$class.='InputGroup';	break;
 						case 'radiogroup':	$class.='RadioGroup';	break;
 						default:			$class=null;
 					}
@@ -92,6 +92,11 @@ namespace nutshell\plugin\formParser
 						case 'radio':	$class.='Radio';	break;
 						default:		$class=null;
 					}
+					break;
+				}
+				case 'header':
+				{
+					$class=__NAMESPACE__.'\element\\Header';
 					break;
 				}
 			}

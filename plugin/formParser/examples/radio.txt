@@ -1,0 +1,9 @@
+{
+	"type":			"field.radio",
+	"id":			"fb-field-foo",
+	"ref":			"foo",
+	"label":		"Foo",
+	"helper":		null,
+	"class":		null,
+	"style":		null
+}

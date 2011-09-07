@@ -7,9 +7,9 @@
 		<!-- CSS -->
 		
 <!--		<link rel="stylesheet" type="text/css" media="screen" href="css/reset.css" />-->
-		<link rel="stylesheet" type="text/css" media="screen" href="build/css/flex.css" />
-		<link rel="stylesheet" type="text/css" media="screen" href="build/css/theme/default.css" />
-		<link rel="stylesheet" type="text/css" media="screen" href="build/css/theme/custom.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="/form/css/flex.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="/form/css/theme/default.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="/form/css/theme/custom.css" />
 	</head>
 	<body>
 		
@@ -29,29 +29,12 @@
 		
 		<!-- Libraries -->
 		
-		<script type="text/javascript" src="js/thirdparty/PWT/PWT-lite-mini.js"></script>
-		<script type="text/javascript" src="js/thirdparty/PWT/PWT-When.js"></script>
-		<script type="text/javascript" src="js/thirdparty/jquery/jquery.1.6.1.min.js"></script>
+		<script type="text/javascript" src="/form/js/thirdparty/PWT/PWT-lite-mini.js"></script>
+		<script type="text/javascript" src="/form/js/thirdparty/PWT/PWT-When.js"></script>
+		<script type="text/javascript" src="/form/js/thirdparty/jquery/jquery.1.6.1.min.js"></script>
 		
 		<!-- Main Script -->
 		
-		<script type="text/javascript" src="js/fb/Application.js"></script>
-		
-		<!-- Compiled Bindings -->
-		
-		<script type="text/javascript">
-		$PWT.when(window,'application').isDefined
-		(
-			function()
-			{
-				window.application.addBindings
-				(
-					[
-						
-					]
-				);
-			}
-		);
-		</script>
+		<script type="text/javascript" src="form/js/fb/Application.js"></script>
 	</body>
 </html>

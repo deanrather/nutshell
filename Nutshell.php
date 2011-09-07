@@ -159,6 +159,7 @@ namespace nutshell
 		private function loadCoreComponents()
 		{
 			require(NS_HOME.'core'._DS_.'Component.php');
+			require(NS_HOME.'core'._DS_.'exception'._DS_.'NutshellException.php');
 			require(NS_HOME.'core'._DS_.'exception'._DS_.'Exception.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'exception'._DS_.'ConfigException.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'Config.php');

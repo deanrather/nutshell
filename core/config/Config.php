@@ -110,7 +110,6 @@ namespace nutshell\core\config
 		 * Generic method to transform a random block of data into a config object or value. 
 		 * 
 		 * @param mixed $obj
-		 * @param boolean $isRoot
 		 * @return mixed the value to be associated to a property
 		 */
 		public static function parse($obj)
