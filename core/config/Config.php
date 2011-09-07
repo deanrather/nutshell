@@ -93,7 +93,7 @@ namespace nutshell\core\config
 				
 				foreach($array as $k => $v) 
 				{
-					$this->data[$k] = self::parse($v);
+					$this->data[$k] = self::parse($v, null, null);
 				}
 				
 				return $this;
@@ -110,10 +110,9 @@ namespace nutshell\core\config
 		 * Generic method to transform a random block of data into a config object or value. 
 		 * 
 		 * @param mixed $obj
-		 * @param boolean $isRoot
 		 * @return mixed the value to be associated to a property
 		 */
-		public static function parse($obj)
+		public static function parse($obj, $extendHandler, &$extended)
 		{
 			if (is_object($obj)) 
 			{
@@ -124,7 +123,7 @@ namespace nutshell\core\config
 				$res = array();
 				foreach($obj as $k => $v)
 				{
-					$res[$k] = self::parse($v);
+					$res[$k] = self::parse($v, null, null);
 				}
 				return $res;
 			}
