@@ -10,7 +10,7 @@ namespace nutshell\core\exception
 	/**
 	 * @package nutshell
 	 */
-	class Exception extends \NutshellException
+	class Exception extends NutshellException
 	{			
 		public static function register() 
 		{

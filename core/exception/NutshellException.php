@@ -2,9 +2,10 @@
 /**
  * @package nutshell
  */
-namespace
+namespace nutshell\core\exception
 {
 	use nutshell\Nutshell;
+	use \Exception;
 
 	/**
 	 * @package nutshell
@@ -138,8 +139,8 @@ namespace
 		
 		public static function setHandlers()
 		{
-			set_exception_handler('NutshellException::treatException');
-			self::$oldErrorHandler = set_error_handler('NutshellException::treatError');
+			set_exception_handler('nutshell\core\exception\NutshellException::treatException');
+			self::$oldErrorHandler = set_error_handler('nutshell\core\exception\NutshellException::treatError');
 			self::$echoErrors = ((getenv('NS_ENV')=='dev') || (apache_getenv("NS_ENV") == 'dev'));
 		}
 	}
