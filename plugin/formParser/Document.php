@@ -90,6 +90,7 @@ namespace nutshell\plugin\formParser
 					{
 						case 'text':	$class.='Text';		break;
 						case 'radio':	$class.='Radio';	break;
+						case 'checkbox':$class.='Checkbox';	break;
 						default:		$class=null;
 					}
 					break;

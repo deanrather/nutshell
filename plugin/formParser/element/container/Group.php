@@ -13,14 +13,30 @@ namespace nutshell\plugin\formParser\element\container
 	 */
 	class Group extends Element
 	{
-		private $label='';
+		private $questionNumber	=false;
+		private $label			='';
 		
 		public function init($elementDef)
 		{
+			if (isset($elementDef->questionNumber))
+			{
+				$this->setQuestionNumber($elementDef->questionNumber);
+			}
 			if (isset($elementDef->label))
 			{
 				$this->setLabel($elementDef->label);
 			}
+		}
+		
+		public function setQuestionNumber($questionNumber)
+		{
+			$this->questionNumber=$questionNumber;
+			return $this;
+		}
+		
+		public function getQuestionNumber()
+		{
+			return $this->questionNumber;
 		}
 		
 		public function setLabel($label)
@@ -36,7 +52,11 @@ namespace nutshell\plugin\formParser\element\container
 		
 		public function render()
 		{
-			$this->setTemplateVar('LABEL',$this->label);
+			if ($this->questionNumber)
+			{
+				$this->setTemplateVar('QUESTIONNUMBER',	$this->questionNumber.'.');
+			}
+			$this->setTemplateVar('LABEL',			$this->label);
 			return parent::render();
 		}
 	}

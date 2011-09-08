@@ -9,9 +9,9 @@ namespace nutshell\plugin\formParser\element\field
 	 * @package nutshell-plugin
 	 * @author guillaume
 	 */
-	class Radio extends Checkable
+	class Checkbox extends Checkable
 	{
-		public $type='radio';
+		public $type='checkbox';
 	}
 }
 ?>

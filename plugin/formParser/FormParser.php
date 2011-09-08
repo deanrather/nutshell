@@ -37,6 +37,8 @@ namespace nutshell\plugin\formParser
 			require(__DIR__.'/element/container/InputGroup.php');
 			require(__DIR__.'/element/container/RadioGroup.php');
 			require(__DIR__.'/element/field/Text.php');
+			require(__DIR__.'/element/field/Checkable.php');
+			require(__DIR__.'/element/field/Checkbox.php');
 			require(__DIR__.'/element/field/Radio.php');
 			require(__DIR__.'/element/rule/Required.php');
 		}

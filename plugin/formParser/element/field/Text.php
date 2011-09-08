@@ -36,6 +36,11 @@ namespace nutshell\plugin\formParser\element\field
 		public function render()
 		{
 			$this->setTemplateVar('MULTILINE',$this->multiline);
+			if ($this->parentIsType('InputGroup'))
+			{
+				$this->setTemplateVar('GROUPED',true);
+				$this->setTemplateName('Text');
+			}
 			return parent::render();
 		}
 	}

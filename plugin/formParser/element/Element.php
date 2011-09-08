@@ -108,7 +108,6 @@ namespace nutshell\plugin\formParser\element
 		public static function getTemplateFile($scope)
 		{
 			$class	=get_called_class();
-//			var_dump($scope->getTemplateName());
 			if (is_null($scope->getTemplateName()))
 			{
 				$file=Object::getClassPath($class).self::TEMPLATE_DIR._DS_.Object::getBaseClassName($class).'.tpl';
@@ -177,6 +176,16 @@ namespace nutshell\plugin\formParser\element
 			return $this;
 		}
 		
+		/**
+		 * Sets the name of the template to use.
+		 * 
+		 * !!IMPORTANT: Using this will force the renderer to NOT use
+		 * any visual inheritance.
+		 * 
+		 * @access public
+		 * @param String $templateName - The name of the template to use.
+		 * @return nutshell\plugin\formParser\element\Element
+		 */
 		public function setTemplateName($templateName)
 		{
 			$this->templateName=$templateName;
