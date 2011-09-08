@@ -39,7 +39,6 @@ namespace nutshell
 		const INTERFACE_PHPUNIT		= 	'PHPUNIT';
 		
 		public $config 				=	null;
-		private $loader				=	null;
 		private $pluginLoader       =   null;
 		private $modelLoader        =   null;
 		
@@ -315,6 +314,10 @@ namespace nutshell
 			if ($key=='plugin')
 			{
 				return $this->pluginLoader;
+			}
+			elseif ($key=='model')
+			{
+				return $this->modelLoader;
 			}
 			else
 			{

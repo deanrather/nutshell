@@ -219,7 +219,11 @@ namespace nutshell\core\plugin
 		 */
 		public function __get($key)
 		{
-			if (($this instanceof Singleton && $this instanceof AbstractFactory)
+			if (($key=='core') || ($key=='model') || ($key=='plugin') || ($key=='config'))
+			{
+				return parent::__get($key);
+			}
+			elseif (($this instanceof Singleton && $this instanceof AbstractFactory)
 			&& $result=static::runFactory($key))
 			{
 				return $result;

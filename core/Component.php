@@ -63,6 +63,7 @@ namespace nutshell\core
 				case 'config':	return Nutshell::getInstance()->config;
 				case 'core':	return Nutshell::getInstance();
 				case 'plugin':	return Nutshell::getInstance()->plugin;
+				case 'model':   return Nutshell::getInstance()->model; 
 			}
 		}
 	}
