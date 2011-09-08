@@ -128,13 +128,9 @@ namespace nutshell\plugin\direct
 			$result = null;
 			if (isset($this->core))
 			{
-				$loader=$this->core->getLoader();
-				if (isset($loader))
-				{
-					$result = $loader('model');
-				}
+				$loader=$this->core->getModelLoader();
 			}
-			return $result;
+			return $loader;
 		}
 		
 		public function __get($key)
