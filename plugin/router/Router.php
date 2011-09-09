@@ -17,8 +17,9 @@ namespace nutshell\plugin\router
 	 */
 	class Router extends Plugin implements Native,Singleton
 	{
-		const MODE_SIMPLE	='simple';
-		const MODE_ADVANCED	='advanced';
+		const MODE_SIMPLE		='simple';
+		const MODE_SIMPLE_REST	='simpleRest';
+		const MODE_ADVANCED		='advanced';
 		
 		private $handler=null;
 		
@@ -26,6 +27,7 @@ namespace nutshell\plugin\router
 		{
 			require(__DIR__.'/Route.php');
 			require(__DIR__.'/handler/Simple.php');
+			require(__DIR__.'/handler/SimpleRest.php');
 			require(__DIR__.'/handler/Advanced.php');
 		}
 		
@@ -40,6 +42,11 @@ namespace nutshell\plugin\router
 			if ($this->config->mode==self::MODE_SIMPLE)
 			{
 				$this->handler=new Simple();
+			}
+			//Handle simple rest routing.
+			elseif ($this->config->mode==self::MODE_SIMPLE_REST)
+			{
+				$this->handler=new SimpleRest();
 			}
 			//Handle advanced routing.
 			elseif ($this->config->mode==self::MODE_ADVANCED)
