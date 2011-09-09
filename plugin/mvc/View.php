@@ -15,12 +15,16 @@ namespace nutshell\plugin\mvc
 	{
 		const DEFAULT_MIME_TYPE	= 'text/html';
 		
+		const DEFAULT_STATUS 	= Http::SUCCESS_200_OK;
+		
 		private $MVC			=null;
 		private $templateVars	=array();
 		private $viewFile		=null;
 		public $templateContext	=null;
 		
 		private $mimeType		= self::DEFAULT_MIME_TYPE;
+		
+		private $status			= self::DEFAULT_STATUS;
 		
 		public function __construct(Mvc $MVC)
 		{
@@ -42,6 +46,45 @@ namespace nutshell\plugin\mvc
 			$this->mimeType = $type;
 		}
 		
+		public function getMimeType()
+		{
+			return $this->mimeType;
+		}
+		
+		/**
+		 * Sets the HTTP status header to use
+		 * @param String $status the content of the status header to use
+		 * @access public
+		 */
+		public function setStatus($status = null) 
+		{
+			if(empty($status))
+			{
+				$status = self::DEFAULT_STATUS;
+			}
+			$this->status = $status;
+		}
+		
+		/**
+		 * Gets the HTTP status header that will be used for rendering the view
+		 * @return String the status
+		 * @access public
+		 */
+		public function getStatus()
+		{
+			return $this->status;
+		}
+		
+		protected function getProtocol() 
+		{
+			if($this->config->fastcgi)
+			{
+				return Http::FASTCGI_PROTOCOL;
+			}
+			
+			return Http::DEFAULT_PROTOCOL;
+		}
+		
 		public function buildViewPath($viewName)
 		{
 			return APP_HOME.$this->MVC->config->dir->views.$viewName.'.php';
@@ -50,6 +93,7 @@ namespace nutshell\plugin\mvc
 		public function render()
 		{
 			header(sprintf('Content-Type: %s', $this->mimeType));
+			header(sprintf('%s %s', $this->getProtocol(), $this->status));
 			
 			$template=$this->plugin->Template($this->viewFile);
 			$template->setKeyVal

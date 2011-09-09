@@ -20,6 +20,7 @@ namespace nutshell\plugin\mvc
 		
 		public static function loadDependencies()
 		{
+			require(__DIR__.'/Http.php');
 			require(__DIR__.'/MvcConnect.php');
 			require(__DIR__.'/Model.php');
 			require(__DIR__.'/View.php');
