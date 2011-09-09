@@ -9,6 +9,7 @@ namespace nutshell\plugin\router
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Singleton;
 	use nutshell\plugin\router\handler\Simple;
+	use nutshell\plugin\router\handler\SimpleRest;
 	use nutshell\plugin\router\handler\Advanced;
 	
 	/**
