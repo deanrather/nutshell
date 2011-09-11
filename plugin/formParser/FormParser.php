@@ -31,6 +31,7 @@ namespace nutshell\plugin\formParser
 			require(__DIR__.'/Document.php');
 			require(__DIR__.'/element/Element.php');
 			require(__DIR__.'/element/Header.php');
+			require(__DIR__.'/element/Line.php');
 			require(__DIR__.'/element/field/Field.php');
 			require(__DIR__.'/element/container/Page.php');
 			require(__DIR__.'/element/container/Group.php');
@@ -40,6 +41,12 @@ namespace nutshell\plugin\formParser
 			require(__DIR__.'/element/field/Checkable.php');
 			require(__DIR__.'/element/field/Checkbox.php');
 			require(__DIR__.'/element/field/Radio.php');
+			require(__DIR__.'/element/textblock/Textblock.php');
+			require(__DIR__.'/element/textblock/Text1.php');
+			require(__DIR__.'/element/textblock/Text2.php');
+			require(__DIR__.'/element/textblock/Text3.php');
+			require(__DIR__.'/element/textblock/Text4.php');
+			require(__DIR__.'/element/textblock/Text5.php');
 			require(__DIR__.'/element/rule/Required.php');
 		}
 		

@@ -95,9 +95,28 @@ namespace nutshell\plugin\formParser
 					}
 					break;
 				}
+				case 'textblock':
+				{
+					$class=__NAMESPACE__.'\element\textblock\\';
+					switch ($parts[1])
+					{
+						case 'text1':	$class.='Text1';	break;
+						case 'text2':	$class.='Text2';	break;
+						case 'text3':	$class.='Text3';	break;
+						case 'text4':	$class.='Text4';	break;
+						case 'text5':	$class.='Text5';	break;
+						default:		$class=null;
+					}
+					break;
+				}
 				case 'header':
 				{
 					$class=__NAMESPACE__.'\element\\Header';
+					break;
+				}
+				case 'line':
+				{
+					$class=__NAMESPACE__.'\element\\Line';
 					break;
 				}
 			}

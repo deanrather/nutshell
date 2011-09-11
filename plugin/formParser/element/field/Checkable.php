@@ -21,6 +21,10 @@ namespace nutshell\plugin\formParser\element\field
 			{
 				$this->setChecked($elementDef->checked);
 			}
+			if (!isset($elementDef->value))
+			{
+				$this->setValue($elementDef->label);
+			}
 		}
 		
 		public function getType()

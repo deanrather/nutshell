@@ -16,6 +16,7 @@ namespace nutshell\plugin\formParser\element\field
 	{
 		private $ref			='';
 		private $label			='';
+		private $value			='';
 		private $helper			='';
 		private $class			='';
 		private $style			='';
@@ -30,6 +31,10 @@ namespace nutshell\plugin\formParser\element\field
 			if (isset($elementDef->label))
 			{
 				$this->setLabel($elementDef->label);
+			}
+			if (isset($elementDef->value))
+			{
+				$this->setValue($elementDef->value);
 			}
 			if (isset($elementDef->helper))
 			{
@@ -69,6 +74,17 @@ namespace nutshell\plugin\formParser\element\field
 		public function getLabel()
 		{
 			return $this->label;
+		}
+		
+		public function setValue($value)
+		{
+			$this->value=$value;
+			return $this;
+		}
+		
+		public function getValue()
+		{
+			return $this->value;
 		}
 		
 		public function setHelper($helper)
@@ -141,6 +157,7 @@ namespace nutshell\plugin\formParser\element\field
 		{
 			$this	->setTemplateVar('REF',				$this->ref)
 					->setTemplateVar('LABEL',			$this->label)
+					->setTemplateVar('VALUE',			$this->value)
 					->setTemplateVar('HELPER',			$this->helper)
 					->setTemplateVar('CLASS',			$this->class)
 					->setTemplateVar('STYLE',			$this->style)

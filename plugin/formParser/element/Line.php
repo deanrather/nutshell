@@ -11,7 +11,7 @@ namespace nutshell\plugin\formParser\element
 	 * @package nutshell-plugin
 	 * @author Timothy Chandler
 	 */
-	class Header extends Element
+	class Line extends Element
 	{
 		public function init($elementDef)
 		{
