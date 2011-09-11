@@ -63,6 +63,8 @@ namespace nutshell\plugin\formParser\element
 				$parentClass	=get_parent_class($thisClass);
 				$parentName		=Object::getBaseClassName($parentClass);
 				
+//				var_dump(Object::getBaseClassName($thisClass));
+//				var_dump($parentName);
 				//If the parent class is not Element, then fetch the template for that class.
 				if ($parentName!='Element')
 				{
@@ -70,6 +72,22 @@ namespace nutshell\plugin\formParser\element
 					$file			=$templateDir.Object::getBaseClassName($parentName).'.tpl';
 					$parentTpl		=$parentClass::getTemplateFile($this);
 					
+//					var_dump($elementTpl);
+//					var_dump($parentTpl);
+					if (is_null($this->getTemplateName()))
+					{
+						$limit=5;	//In case of any major developer screw-ups :)
+						while ($elementTpl==$parentTpl && --$limit)
+						{
+							$parentClass	=get_parent_class($parentClass);
+							$parentName		=Object::getBaseClassName($parentClass);
+							$parentTpl		=$parentClass::getTemplateFile($this);
+//							var_dump($parentName);
+						}
+					}
+					
+//					var_dump($elementTpl);
+//					var_dump($parentTpl);
 					//This will place the child template inside of the parent template.
 					$elementTpl		=$this->plugin->Template($elementTpl);
 					$template		=$this->plugin->Template($parentTpl);
@@ -108,6 +126,7 @@ namespace nutshell\plugin\formParser\element
 		public static function getTemplateFile($scope)
 		{
 			$class	=get_called_class();
+			$file	=null;
 			if (is_null($scope->getTemplateName()))
 			{
 				$file=Object::getClassPath($class).self::TEMPLATE_DIR._DS_.Object::getBaseClassName($class).'.tpl';
@@ -116,19 +135,27 @@ namespace nutshell\plugin\formParser\element
 			{
 				$file=Object::getClassPath($class).self::TEMPLATE_DIR._DS_.$scope->getTemplateName().'.tpl';
 			}
-			if (file_exists($file))
+//			var_dump(Object::getBaseClassName($class));
+//			var_dump($file);
+			$limit=5;	//In case of any major developer screw-ups :)
+			while (!file_exists($file) && --$limit)
 			{
-				return $file;
+//				var_dump($limit);
+				$class	=get_parent_class($class);
+				$file	=Object::getClassPath($class).self::TEMPLATE_DIR._DS_.Object::getBaseClassName($class).'.tpl';
+//				var_dump(Object::getBaseClassName($class));
+//				var_dump($file);
+//				if (Object::getBaseClassName($class)!='Element')
+//				{
+//					$class=get_parent_class($class);
+//				}
+//				else
+//				{
+//					return '!~!INVALID ELEMENT!~!!~!MISSING FALLBACK TEMPLATE!~!';
+//					break;
+//				}
 			}
-			else
-			{
-				$parent=get_parent_class($class);
-				if (method_exists($parent,'getTemplateFile'))
-				{
-					return $parent::getTemplateFile($scope);
-				}
-			}
-			return null;
+			return $file;
 		}
 		
 		private function generateID()

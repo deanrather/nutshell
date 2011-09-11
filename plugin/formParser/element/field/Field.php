@@ -14,11 +14,12 @@ namespace nutshell\plugin\formParser\element\field
 	 */
 	class Field extends Element
 	{
-		private $ref		='';
-		private $label		='';
-		private $helper		='';
-		private $class		='';
-		private $style		='';
+		private $ref			='';
+		private $label			='';
+		private $helper			='';
+		private $class			='';
+		private $style			='';
+		private $labelPosition	='left';
 		
 		public function init($elementDef)
 		{
@@ -41,6 +42,10 @@ namespace nutshell\plugin\formParser\element\field
 			if (isset($elementDef->style))
 			{
 				$this->setStyle($elementDef->style);
+			}
+			if (isset($elementDef->labelPosition))
+			{
+				$this->setLabelPosition($elementDef->labelPosition);
 			}
 		}
 		
@@ -121,13 +126,25 @@ namespace nutshell\plugin\formParser\element\field
 			return $this->style;
 		}
 		
+		public function setLabelPosition($labelPosition)
+		{
+			$this->labelPosition=$labelPosition;
+			return $this;
+		}
+		
+		public function getLabelPosition()
+		{
+			return $this->labelPosition;
+		}
+		
 		public function render()
 		{
-			$this	->setTemplateVar('REF',			$this->ref)
-					->setTemplateVar('LABEL',		$this->label)
-					->setTemplateVar('HELPER',		$this->helper)
-					->setTemplateVar('CLASS',		$this->class)
-					->setTemplateVar('STYLE',		$this->style);
+			$this	->setTemplateVar('REF',				$this->ref)
+					->setTemplateVar('LABEL',			$this->label)
+					->setTemplateVar('HELPER',			$this->helper)
+					->setTemplateVar('CLASS',			$this->class)
+					->setTemplateVar('STYLE',			$this->style)
+					->setTemplateVar('LABELPOSITION',	$this->labelPosition);
 			return parent::render();
 		}
 	}
