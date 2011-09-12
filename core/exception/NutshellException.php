@@ -19,9 +19,9 @@ namespace nutshell\core\exception
 		*/
 		private static $blockRecursion = false;
 		
-		
 		/**
 		 * Error handler used before the class is created.
+		 * @var bool
 		 */
 		private static $oldErrorHandler = false;
 		
@@ -33,7 +33,7 @@ namespace nutshell\core\exception
 		
 		/**
 		 * All errors that shouldn't be shown in the user interface.
-		 * @param unknown_type $message
+		 * @var Array
 		 */
 		private static $dontShowErrors = array
 		(
@@ -144,6 +144,10 @@ namespace nutshell\core\exception
 			}
 		}
 		
+		/**
+		 * This function sets exception/error handlers. Before this call, no error is treated by this class.
+		 * Errors are shown in the user interface only if NS_ENV (environment variable) is set to "dev". So, errors won't be shown in production but will be logged.
+		 */
 		public static function setHandlers()
 		{
 			set_exception_handler('nutshell\core\exception\NutshellException::treatException');
