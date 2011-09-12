@@ -539,7 +539,7 @@ namespace nutshell\core\config
 					{
 						throw new ConfigException(sprintf('Invalid JSON document: %s', $file), ConfigException::CODE_INVALID_JSON);
 					}
-					return ConfigRoot::parse($decodedJSON, $extendHandler, $extended);
+					return ConfigRoot::parseRoot($decodedJSON, $extendHandler, $extended);
 				} 
 				else
 				{

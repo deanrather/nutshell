@@ -20,7 +20,7 @@ namespace nutshell\core\config
 		 * @param Object $obj
 		 * @param function $extendHandler
 		 */
-		public static function parse($obj, $extendHandler, &$extended)
+		public static function parseRoot($obj, $extendHandler, &$extended)
 		{
 			if (is_null($extended)) 
 			{
