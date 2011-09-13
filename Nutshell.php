@@ -68,7 +68,7 @@ namespace nutshell
 			define('_DS_',DIRECTORY_SEPARATOR);
 			define('NS_HOME',__DIR__._DS_);
 			
-			if (isset($_SERVER['argv']))
+			if (isset($_SERVER['argc']) && $_SERVER['argc'] > 0)
 			{
 				define('NS_INTERFACE', self::INTERFACE_CLI);
 			}
