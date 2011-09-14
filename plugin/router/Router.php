@@ -8,6 +8,7 @@ namespace nutshell\plugin\router
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Singleton;
+	use nutshell\plugin\router\handler\Cli;
 	use nutshell\plugin\router\handler\Simple;
 	use nutshell\plugin\router\handler\SimpleRest;
 	use nutshell\plugin\router\handler\Advanced;
@@ -18,6 +19,7 @@ namespace nutshell\plugin\router
 	 */
 	class Router extends Plugin implements Native,Singleton
 	{
+		const MODE_CLI			='cli';
 		const MODE_SIMPLE		='simple';
 		const MODE_SIMPLE_REST	='simpleRest';
 		const MODE_ADVANCED		='advanced';
@@ -27,6 +29,7 @@ namespace nutshell\plugin\router
 		public static function loadDependencies()
 		{
 			require(__DIR__.'/Route.php');
+			require(__DIR__.'/handler/Cli.php');
 			require(__DIR__.'/handler/Simple.php');
 			require(__DIR__.'/handler/SimpleRest.php');
 			require(__DIR__.'/handler/Advanced.php');
@@ -39,20 +42,24 @@ namespace nutshell\plugin\router
 		
 		public function init()
 		{
-			//Handle simple routing.
-			if ($this->config->mode==self::MODE_SIMPLE)
+			switch($this->config->mode) 
 			{
-				$this->handler=new Simple();
-			}
-			//Handle simple rest routing.
-			elseif ($this->config->mode==self::MODE_SIMPLE_REST)
-			{
-				$this->handler=new SimpleRest();
-			}
-			//Handle advanced routing.
-			elseif ($this->config->mode==self::MODE_ADVANCED)
-			{
-				$this->handler=new Advanced();
+				case self::MODE_SIMPLE:
+					//Handle simple routing.
+					$this->handler=new Simple();
+					break;
+				case self::MODE_SIMPLE_REST:
+					//Handle simple rest routing.
+					$this->handler=new SimpleRest();
+					break;
+				case self::MODE_ADVANCED:
+					//Handle advanced routing.
+					$this->handler=new Advanced();
+					break;
+				case self::MODE_CLI:
+					//Handle command line interface routing
+					$this->handler=new Cli();
+					break;
 			}
 		}
 		
