@@ -152,7 +152,7 @@ namespace nutshell\core\exception
 		{
 			set_exception_handler('nutshell\core\exception\NutshellException::treatException');
 			self::$oldErrorHandler = set_error_handler('nutshell\core\exception\NutshellException::treatError');
-			self::$echoErrors = ((getenv('NS_ENV')=='dev') || (apache_getenv("NS_ENV") == 'dev'));
+			self::$echoErrors = ((getenv('NS_ENV')=='dev') || (function_exists('apache_getenv') && apache_getenv("NS_ENV") == 'dev'));
 		}
 	}
 
