@@ -351,6 +351,11 @@ namespace nutshell\core\config
 			return $out;
 		}
 		
+		public function toArray()
+		{
+			return json_decode($this->__toString(), true);
+		}
+		
 		/**
 		 * Pretty prints the subtree starting from this config node
 		 * 
