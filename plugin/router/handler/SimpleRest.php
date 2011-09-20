@@ -18,7 +18,7 @@ namespace nutshell\plugin\router\handler
 		
 		public function __construct()
 		{
-			if ($this->plugin->Url->nodeEmpty(0))
+			if (is_null($this->plugin->Url->nodeEmpty(0)))
 			{
 				$this->route=new Route('index','index',array());
 			}
@@ -32,13 +32,21 @@ namespace nutshell\plugin\router\handler
 				$args	=array();
 				
 				//Check for action.
-				if ($this->plugin->Url->node(1))
+				if (!is_null($this->plugin->Url->node(1)))
 				{
 					//Set args to nodes 2 onwards.
 					$node=1;
-					while ($arg=$this->plugin->Url->node($node))
+					while (true)
 					{
-						$args[]=$this->plugin->Url->node($node++);
+						//grab the next node
+						$arg = $this->plugin->Url->node($node++);
+						
+						if(is_null($arg)) 
+						{
+							break;
+						}
+						//append to the args array 
+						$args[] = $arg;
 					}
 				}
 				$this->route=new Route($control,$action,$args);
