@@ -85,6 +85,8 @@ namespace nutshell\plugin\modelGenerator
 					$column_type = $column_type.' NOT NULL ';
 				}
 				
+				$column_type = str_replace("'", "\'", $column_type);
+				
 				$rows[] = "				'$column_name' => '$column_type'{$column_comment} ";
 			}
 
