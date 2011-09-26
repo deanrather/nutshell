@@ -18,7 +18,7 @@ namespace nutshell\plugin\router\handler
 		
 		public function __construct()
 		{
-			if (is_null($this->plugin->Url->nodeEmpty(0)))
+			if ($this->plugin->Url->nodeEmpty(0))
 			{
 				$this->route=new Route('index','index',array());
 			}
