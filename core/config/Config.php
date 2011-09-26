@@ -224,12 +224,26 @@ namespace nutshell\core\config
 		
 		/**
 		 * Derives the config file base name from the environment. 
-		 * @param String $environment
-		 * @return String the config file base name
+		 * @param mixed $environment environment string or array of environments
+		 * @return mixed the config file base name  (string or array, depending on the input)
 		 */
 		public static function makeConfigFileName($environment)
 		{
-			return sprintf("%s.%s", $environment, self::CONFIG_FILE_EXTENSION);
+			if(is_array($environment)) 
+			{
+				$response = array();
+				foreach($environment as $alt) 
+				{
+					$response[] = sprintf("%s.%s", $alt, self::CONFIG_FILE_EXTENSION);
+				}
+				
+				return $response;
+			}
+			else
+			{
+				return sprintf("%s.%s", $environment, self::CONFIG_FILE_EXTENSION);
+			}
+			 
 		}
 		
 		/**
@@ -484,26 +498,34 @@ namespace nutshell\core\config
 		
 		/*** Loader part ***/
 		
-		public static function loadConfigFile($alternatives, $basename, $extendHandler = null, &$extended = null)
+		public static function loadConfigFile($pathAlternatives, $basenames, $extendHandler = null, &$extended = null)
 		{ 
-			if (!is_array($alternatives))
+			if (!is_array($pathAlternatives))
 			{
-				$alternatives = array($alternatives);
+				$pathAlternatives = array($pathAlternatives);
 			}
 			
-			if($alternatives)
+			if(!is_array($basenames)) 
 			{
-				foreach($alternatives as $pathAlternative)
+				$basenames = array($basenames);
+			}
+			
+			if($pathAlternatives && $basenames)
+			{
+				foreach($pathAlternatives as $pathAlternative)
 				{
-					$file = $pathAlternative . _DS_ . $basename;
-					if(is_file($file) && is_readable($file)) 
+					foreach($basenames as $basename)
 					{
-						return self::doLoadConfigFile($alternatives, $file);
+						$file = $pathAlternative . _DS_ . $basename;
+						if(is_file($file) && is_readable($file)) 
+						{
+							return self::doLoadConfigFile($pathAlternatives, $file);
+						}
 					}
 				}
 			}
 			
-			throw new ConfigException(sprintf("Failed to find a suitable config file named %s", $basename), ConfigException::CODE_CONFIG_FILE_NOT_FOUND);
+			throw new ConfigException(sprintf("Failed to find a suitable config file named any of [%s] in any path alternatives [%s]", implode(', ', $basenames), implode(', ', $pathAlternatives),ConfigException::CODE_CONFIG_FILE_NOT_FOUND));
 		}
 		
 		/**
@@ -513,15 +535,15 @@ namespace nutshell\core\config
 		 * @throws Exception if the file could not be found/read
 		 * @return nutshell\config\Config an instance of the config
 		 */
-		protected static function doLoadConfigFile($alternatives, $file, $extendHandler = null, &$extended = null) 
+		protected static function doLoadConfigFile($pathAlternatives, $file, $extendHandler = null, &$extended = null) 
 		{
 			if(is_null($extendHandler)) 
 			{
 				$scope=get_called_class();
-				$extendHandler = function($environment, &$extended) use ($scope, $alternatives)
+				$extendHandler = function($environment, &$extended) use ($scope, $pathAlternatives)
 				{
 					return $scope::loadConfigFile(
-						$alternatives,
+						$pathAlternatives,
 						$scope::makeConfigFileName($environment),
 						null,
 						$extended
