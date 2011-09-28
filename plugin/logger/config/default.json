@@ -6,13 +6,7 @@
 			"rootLog": 
 			{
 				"class":			"DailyFileWriter",
-				"output":			"{APP_HOME}/log/root-{DATE}.log"
-			},
-			"dbLog":
-			{
-				"class":			"DbWriter",
-				"connector":		"mysql",
-				"table":			"log"
+				"output":			"{APP_HOME}/logs/root-{DATE}.log"
 			}
 		},
 		"loggers": 
