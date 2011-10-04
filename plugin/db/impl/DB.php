@@ -4,6 +4,8 @@
 * @author guillaume
 */
 namespace {
+use nutshell\Nutshell;
+
 /**
  * @package nutshell-plugin
  * @author guillaume
@@ -248,6 +250,16 @@ class DB
 		if (($this->throwExceptionOnError) && ($this->lastQuery['lastError']))
 		{
 			$error_message = $this->lastQuery['lastError'];
+			try 
+			{
+				$faulty_sql = $this->lastQuery['statement']->queryString;
+				if (strlen($faulty_sql)>0)
+				{
+					Nutshell::getInstance()->plugin->Logger('nutshell.plugin.db')->error($error_message.":".$faulty_sql);
+				}
+			} catch (Exception $e) {
+				// nothing can be done if the error treatment fails.
+			}
 			throw new Exception($error_message);			
 		}
 		
