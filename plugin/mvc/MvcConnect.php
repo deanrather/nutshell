@@ -55,7 +55,8 @@ namespace nutshell\plugin\mvc
 			$result = null;
 			if (isset($this->nutshell))
 			{
-				$result = $this->nutshell->getModelLoader();
+				$mvc = $this->nutshell->plugin->Mvc();
+				$result = $mvc->getModelLoader();
 			}
 			return $result;
 		}
