@@ -22,6 +22,7 @@ namespace nutshell\plugin\direct
 		public static function loadDependencies()
 		{
 			require(__DIR__.'/ProviderController.php');
+			require(__DIR__.'/MvcProviderController.php');
 			require(__DIR__.'/Responder.php');
 			require(__DIR__.'/Service.php');;
 			require(__DIR__.'/behaviour/Pollable.php');

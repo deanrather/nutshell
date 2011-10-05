@@ -6,12 +6,13 @@
 namespace nutshell\plugin\direct
 {
 	use nutshell\Nutshell;
+	use nutshell\plugin\mvc\Controller;
 
 	/**
 	 * @author guillaume
 	 * @package nutshell-plugin
 	 */
-	class ProviderController
+	class MvcProviderController extends Controller
 	{
 		const CODE_FAIL		=0;
 		const CODE_SUCCESS	=1;
