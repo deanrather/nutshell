@@ -26,7 +26,7 @@ namespace nutshell
 	 */
 	class Nutshell
 	{
-		const VERSION				=	'1.0.0-dev-4';
+		const VERSION				=	'1.0.0-dev-5';
 		const VERSION_MAJOR			=	1;
 		const VERSION_MINOR			=	0;
 		const VERSION_MICRO			=	0;
@@ -40,7 +40,6 @@ namespace nutshell
 		
 		public $config 				=	null;
 		private $pluginLoader       =   null;
-		private $modelLoader        =   null;
 		
 		/**
 		 * Configures all special constants and libraries linking.
@@ -191,12 +190,10 @@ namespace nutshell
 			if (!$this->config->core->hiphop)
 			{
 				$this->pluginLoader = new Loader();
-				$this->modelLoader  = new Loader();
 			}
 			else
 			{
 				$this->pluginLoader = new HipHopLoader();
-				$this->modelLoader  = new HipHopLoader();
 			}
 			return $this;
 		}
@@ -287,17 +284,6 @@ namespace nutshell
 			return $this->pluginLoader;
 		}
 		
-		/**
-		* Returns the core loader instance.
-		*
-		* @access public
-		* @return nutshell\core\loader\Loader
-		*/
-		public function getModelLoader()
-		{
-			return $this->modelLoader;
-		}
-		
 		/*** OVERLOADING ***/
 		
 		/**
@@ -314,10 +300,6 @@ namespace nutshell
 			if ($key=='plugin')
 			{
 				return $this->pluginLoader;
-			}
-			elseif ($key=='model')
-			{
-				return $this->modelLoader;
 			}
 			else
 			{

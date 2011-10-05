@@ -8,6 +8,7 @@ namespace nutshell\plugin\mvc
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Singleton;
+	use nutshell\core\loader\Loader;
 	use nutshell\plugin\router\Router;
 	use nutshell\core\exception\NutshellException;
 	
@@ -17,9 +18,10 @@ namespace nutshell\plugin\mvc
 	 */
 	class Mvc extends Plugin implements Native,Singleton
 	{
-		private $controller	=null;
-		private $router		=null;
-		private $route		=null;
+		private $modelLoader	=null;
+		private $controller		=null;
+		private $router			=null;
+		private $route			=null;
 		
 		public static function loadDependencies()
 		{
@@ -38,6 +40,9 @@ namespace nutshell\plugin\mvc
 		
 		public function init()
 		{
+			//Setup a model loader.
+			$this->modelLoader=new Loader();
+			
 			//Get the router handler.
 			$this->router	=$this->plugin->Router->getRouter();
 			//Get the route from the rotuer.
@@ -97,6 +102,11 @@ namespace nutshell\plugin\mvc
 				}
 			}
 			include($file);
+		}
+		
+		public function getModelLoader()
+		{
+			return $this->modelLoader;
 		}
 	}
 }

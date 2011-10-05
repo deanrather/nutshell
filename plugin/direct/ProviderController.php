@@ -6,6 +6,7 @@
 namespace nutshell\plugin\direct
 {
 	use nutshell\Nutshell;
+	use nutshell\plugin\mvc\Controller;
 
 	/**
 	 * @author guillaume
@@ -133,13 +134,13 @@ namespace nutshell\plugin\direct
 			return $loader;
 		}
 		
-		public function __get($key)
-		{
-			if ($key=='model')
-			{
-				return $this->model(); // returns a model loader
-			}
-		}
+// 		public function __get($key)
+// 		{
+// 			if ($key=='model')
+// 			{
+// 				return $this->model(); // returns a model loader
+// 			}
+// 		}
 	}
 }
 ?>

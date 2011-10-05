@@ -219,7 +219,7 @@ namespace nutshell\core\plugin
 		 */
 		public function __get($key)
 		{
-			if (($key=='core') || ($key=='model') || ($key=='plugin') || ($key=='config'))
+			if (in_array($key,array('core','plugin','config')))
 			{
 				return parent::__get($key);
 			}

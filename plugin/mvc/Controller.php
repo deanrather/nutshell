@@ -5,39 +5,37 @@
  */
 namespace nutshell\plugin\mvc
 {
+	use nutshell\core\plugin\PluginExtension;
 	use nutshell\core\exception\Exception;
 	use nutshell\Nutshell;
+	use nutshell\plugin\mvc\Mvc;
 
 	/**
 	 * @author guillaume
 	 * @package nutshell-plugin
 	 * @abstract
 	 */
-	abstract class Controller
+	abstract class Controller extends PluginExtension
 	{
-		public $core	=null;
-		public $plugin	=null;
 		public $MVC		=null;
 		public $view	=null;
 		
 		public function __construct(Mvc $MVC)
 		{
-			$this->core		=Nutshell::getInstance();
-			$this->plugin	=$this->core->plugin;
 			$this->MVC		=$MVC;
 			$this->view		=new View($this->MVC);
-			$this->core->getModelLoader()->registerContainer('model',APP_HOME.'model'._DS_,'application\model\\');
+			$this->MVC->getModelLoader()->registerContainer('model',APP_HOME.'model'._DS_,'application\model\\');
 		}
 		
 		public function __get($key)
 		{
 			if ($key=='model')
 			{
-				return $this->core->getModelLoader();
+				return $this->MVC->getModelLoader();
 			}
 			else
 			{
-				throw new Exception('Attempted to get invalid property "'.$key.'" from controller.');
+				return parent::__get($key);
 			}
 		}
 	}
