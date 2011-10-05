@@ -61,6 +61,7 @@ namespace nutshell\plugin\direct
 			$this->response['timestamp']=time();
 			//Link the response result to result.
 			$this->response['result']=&$this->result;
+			parent::__construct($this->plugin->Mvc);
 		}
 		
 		public function respond(Array $response=array())
@@ -119,19 +120,6 @@ namespace nutshell\plugin\direct
 			unset($this->response['action']);
 			unset($this->response['tid']);
 			unset($this->response['where']);
-		}
-		
-		/**
-		* returns a model loader
-		*/
-		public function model()
-		{
-			$result = null;
-			if (isset($this->core))
-			{
-				$loader=$this->core->getModelLoader();
-			}
-			return $loader;
 		}
 	}
 }
