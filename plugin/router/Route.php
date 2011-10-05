@@ -41,7 +41,7 @@ namespace nutshell\plugin\router
 			$pointer	=-1;
 			$thisNode	=$this->plugin->Url->node($pointer);
 			$namespace	='';
-			if (!is_null($thisNode))
+			if (!is_null($this->plugin->Url->node(0)))
 			{
 				while (($thisNode=$this->plugin->Url->node(++$pointer))!=$this->control)
 				{
