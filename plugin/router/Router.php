@@ -72,6 +72,11 @@ namespace nutshell\plugin\router
 		{
 			return $this->handler->getRoute();
 		}
+		
+		public function getRouter()
+		{
+			return $this->handler;
+		}
 	}
 }
 ?>

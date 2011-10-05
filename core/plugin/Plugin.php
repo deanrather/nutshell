@@ -185,7 +185,7 @@ namespace nutshell\core\plugin
 		
 		/**
 		 * This is an internal method which is responsible for applying a custom behaviour
-		 * to a plugin which has implemented said behavior by executing the registered 
+		 * to a plugin which has implemented said behaviour by executing the registered 
 		 * behaviour's callback method and passing through the instance of the plugin.
 		 * 
 		 * @internal
