@@ -11,6 +11,7 @@
 namespace nutshell
 {
 	use nutshell\core\Component;
+	use nutshell\core\HookManager;
 	use nutshell\core\config\Config;
 	use nutshell\core\config\Framework;
 	use nutshell\core\loader\Loader;
@@ -157,6 +158,7 @@ namespace nutshell
 		private function loadCoreComponents()
 		{
 			require(NS_HOME.'core'._DS_.'Component.php');
+			require(NS_HOME.'core'._DS_.'HookManager.php');
 			require(NS_HOME.'core'._DS_.'exception'._DS_.'NutshellException.php');
 			require(NS_HOME.'core'._DS_.'exception'._DS_.'Exception.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'exception'._DS_.'ConfigException.php');
@@ -218,8 +220,9 @@ namespace nutshell
 				}
 				define(self::NUTSHELL_ENVIRONMENT, $env);
 			}
-			
+			HookManager::execute('core','onBeforeConfigLoad');
 			$this->config = Framework::loadConfig(APP_HOME . Config::CONFIG_FOLDER, NS_ENV);
+			HookManager::execute('core','onAfterConfigLoad');
 			return $this;
 		}
 		
