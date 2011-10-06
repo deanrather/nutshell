@@ -132,6 +132,7 @@ namespace nutshell\core\exception
 				{
 					if (self::$echoErrors) 
 					{
+						header('HTTP/1.1 500 Application Error');
 						echo $message;
 					}
 					self::logMessage($message);		
