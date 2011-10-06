@@ -76,7 +76,17 @@ namespace nutshell\plugin\url
 				$URL=trim($prefix,'/');
 				$URL.=(empty($prefix)?'?':'/?').$suffix;
 			}
-			return $protocol.$_SERVER['HTTP_HOST'].'/'.$URL.'/';
+			$return=$protocol.$_SERVER['HTTP_HOST'].'/'.$URL;
+			if (!empty($URL))
+			{
+				$return.='/';
+			}
+			return $return;
+		}
+		
+		public function getCurrentURL()
+		{
+			return $this->makeURL().implode('/',$this->nodes);
 		}
 	}
 }
