@@ -38,7 +38,9 @@ namespace nutshell\plugin\modelGenerator
 			if ($connection=Nutshell::getInstance()->config->plugin->Mvc->connection)
 			{
 				$this->db=Nutshell::getInstance()->plugin->Db->{$connection};
-			} else {
+			}
+			else
+			{
 				throw new Exception('Model generator can\'t find a db connection.');
 			} 
 		}
