@@ -12,6 +12,7 @@ namespace nutshell\core\plugin
 	use nutshell\core\exception\Exception;
 	use nutshell\core\Component;
 	use nutshell\core\config\Config;
+	use nutshell\core\HookManager;
 	use nutshell\helper\Object;
 	
 	/**
@@ -67,6 +68,7 @@ namespace nutshell\core\plugin
 			$this->core=	Nutshell::getInstance();
 			$this->config=	$this->core->config->plugin->{Object::getBaseClassName($this)};
 			$this->plugin=	Nutshell::getInstance()->plugin;
+			HookManager::execute('core\plugin',Object::getBaseClassName($this).'OnAfterConstruct');
 		}
 		
 		/**
