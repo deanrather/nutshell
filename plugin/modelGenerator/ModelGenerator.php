@@ -25,7 +25,7 @@ namespace nutshell\plugin\modelGenerator
 		
 		public static function loadDependencies()
 		{
-
+			
 		}
 		
 		public static function registerBehaviours()
