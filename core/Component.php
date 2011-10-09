@@ -17,6 +17,14 @@ namespace nutshell\core
 	abstract class Component
 	{
 		/**
+		 * Class Constructor. 
+		 */
+		public function __construct()
+		{
+			HookManager::execute('core\plugin',Object::getBaseClassName($this).'OnConstruct');
+		}
+		
+		/**
 		 * Registers child classes to be loaded by the core loader.
 		 * 
 		 * @abstract

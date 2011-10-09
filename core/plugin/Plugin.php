@@ -65,10 +65,10 @@ namespace nutshell\core\plugin
 		 */
 		public function __construct()
 		{
+			parent::__construct();
 			$this->core=	Nutshell::getInstance();
 			$this->config=	$this->core->config->plugin->{Object::getBaseClassName($this)};
 			$this->plugin=	Nutshell::getInstance()->plugin;
-			HookManager::execute('core\plugin',Object::getBaseClassName($this).'OnAfterConstruct');
 		}
 		
 		/**

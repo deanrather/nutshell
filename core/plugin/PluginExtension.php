@@ -20,6 +20,7 @@ namespace nutshell\core\plugin
 		
 		public function __construct()
 		{
+			parent::__construct();
 			$this->config=Nutshell::getInstance()->config->plugin->{Object::getBaseClassName($this->getParentPlugin())};
 		}
 		
