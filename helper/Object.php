@@ -84,12 +84,15 @@ namespace nutshell\helper
 			{
 				$className=get_class($className);
 			}
-			return NS_HOME . str_replace(
+			$root=(strstr($className,'nutshell'))?NS_HOME:APP_HOME;
+			return $root . str_replace(
 				array(
+					'application\\',
 					'nutshell\\', 
 					'\\'
 				), 
 				array(
+					'',
 					'', 
 					_DS_
 				),  
