@@ -38,6 +38,15 @@ namespace nutshell\plugin\twiki
 			return $this->wiki->transform($text);
 		}
 		
+		/**
+		 * This method runs a test that shows an example.
+		 * You can create an action inside of a controller for testing as follows:
+		 * public function testWiki()
+		   {
+			$w = $this->plugin->Twiki();
+			echo $w->test();		
+		   }
+		 */
 		public function test()
 		{
 			/**
@@ -46,6 +55,8 @@ namespace nutshell\plugin\twiki
 			 */
 			$text =
 '
+Shows the index:
+
 [[toc]]
 ----
 //emphasis text// 
@@ -56,6 +67,7 @@ namespace nutshell\plugin\twiki
 @@--- delete only @@
 @@+++ insert only @@
 ----
+Headings:
 			
 +++  Level 3 Heading
 	
@@ -92,6 +104,21 @@ Shows a link: [http://pear.php.net PEAR]
 			
 Shows an image: http://c2.com/sig/wiki.gif
 
+highlight php code: 
+<code type="php">
+echo "hello"; 
+</code>
+
+<code>
+echo "Just some code"; 
+</code>
+----
+Shows a table:
+
+|| cell one || cell two ||
+|||| big ol line ||
+|| cell four || cell five ||
+|| cell six || here\'s a very long cell ||
 ';
 			// returns the HTML
 			return $this->transform($text);
