@@ -4,8 +4,6 @@ namespace nutshell\plugin\twiki
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Singleton;
-	use nutshell\Nutshell;
-	use nutshell\helper\String;
 
 	/**
 	 * Twiki means TEXTUAL Wiki. This plugin is based on the PEAR textual wiki.
