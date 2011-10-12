@@ -16,7 +16,7 @@
 /**
  * The wikilink render class.
  */
-require_once 'Text/Wiki/Render/Xhtml/Wikilink.php';
+require_once __DIR__.'/Wikilink.php';
 
 /**
  * This class renders free links in XHTML.

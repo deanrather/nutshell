@@ -16,12 +16,12 @@
 /**
  * The baseline abstract parser class.
  */
-require_once 'Text/Wiki/Parse.php';
+require_once __DIR__.'/Wiki/Parse.php';
 
 /**
  * The baseline abstract render class.
  */
-require_once 'Text/Wiki/Render.php';
+require_once __DIR__.'/Wiki/Render.php';
 
 /**
  * Parse structured wiki text and render into arbitrary formats such as XHTML.
