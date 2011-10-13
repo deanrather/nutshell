@@ -8,16 +8,17 @@ namespace nutshell\plugin\cache
 		 * @param string $cacheKey
 		 * @param mixed  $data
 		 * @param int    $expiryTime
-		 * @param string $folder
+		 * @param string $subFolder
 		 * @return mixed
 		 */
-		abstract public function store($cacheKey, &$data, $expiryTime, $folder='');
+		abstract public function store($cacheKey, &$data, $expiryTime, $subFolder='');
 		
 		/**
 		 * Retrieves data from cache. It returns NULL when no data is found. 
 		 * @param string $cacheKey
+		 * @param string $subFolder
 		 * @return mixed
 		 */
-		abstract public function retrieve($cacheKey);
+		abstract public function retrieve($cacheKey, $subFolder='');
 	}
 }

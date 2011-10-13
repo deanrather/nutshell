@@ -4,34 +4,46 @@ namespace nutshell\plugin\cache
 	class NutshellFileCache extends NutshellCache
 	{
 		/**
+		 * File system cache folder
+		 * @var string
+		 */
+		protected $cacheFolder = '';
+		
+		/**
+		 * Defines the global file system cache folder.
+		 * @param unknown_type $folder
+		 */
+		public function setCacheFolder($folder)
+		{
+			$this->cacheFolder = $folder;
+		}
+
+		/**
 		 * Stores data in to the cache for the $key. 
 		 * @param string $cacheKey
 		 * @param mixed  $data
 		 * @param int    $expiryTime
-		 * @param string $folder
+		 * @param string $subFolder
 		 * @return boolean Returns true when storing works correctly.
 		 */
-		public function store($cacheKey, &$data, $expiryTime, $folder='')
+		public function store($cacheKey, &$data, $expiryTime, $subFolder='')
 		{
-			//TODO: code here
-			$cacheFolder   = '';
-			
 			$keyMD5 = md5($cacheKey);
 			
-			if (strlen($folder)>0)
+			if (strlen($subFolder)>0)
 			{
-				$folder = $folder._DS_;
+				$subFolder = $subFolder._DS_;
 			}
 			
-			$fileName    = $cacheFolder._DS_.$folder.'cache_'.$keyMD5;
-			$tmpFileName = $cacheFolder._DS_.$folder.'tmp_'.$keyMD5;
+			$fileName    = $this->cacheFolder._DS_.$subFolder.'cache_'.$keyMD5;
+			$tmpFileName = $this->cacheFolder._DS_.$subFolder.'tmp_'.$keyMD5;
 			
 			$cacheLiteral = serialize
 			(
 				array
 				(
 					'key'    = $cacheKey,
-					'expiry' = $expiryTime,
+					'expiry' = $expiryTime + time(),
 					'data'   = $data
 				)
 			);
@@ -64,9 +76,42 @@ namespace nutshell\plugin\cache
 		 * @param string $cacheKey
 		 * @return mixed
 		 */
-		public function retrieve($cacheKey)
+		public function retrieve($cacheKey, $subFolder='')
 		{
-			//TODO: code here
+			$keyMD5 = md5($cacheKey);
+			$now = time();
+			
+			if (strlen($subFolder)>0)
+			{
+				$subFolder = $subFolder._DS_;
+			}
+			
+			$fileName = $this->cacheFolder._DS_.$subFolder.'cache_'.$keyMD5;
+			
+			try 
+			{				
+				if ($handle = fopen($fileName, "rb"))
+				{
+					$unserializedData = fread($handle, filesize($fileName));
+					$data = unserialize($unserializedData);
+					
+					// is it the same key?
+					if ($data['key'] == $cacheKey)
+					{
+						// is the cached value still valid?
+						if ($now < $data['expiry'])
+						{
+							return $data['data'];
+						}
+					}
+				}
+			} catch (Exception $e) 
+			{
+				// nothing can be done when a cache load fails.
+				// no exception should be provoked
+			}
+
+			return null;
 		}
 	}
 }

@@ -21,7 +21,7 @@ namespace nutshell\plugin\cache
 		 * @param string $cacheKey
 		 * @return mixed
 		 */
-		public function retrieve($cacheKey)
+		public function retrieve($cacheKey, $subFolder='')
 		{
 			//TODO: code here
 		}

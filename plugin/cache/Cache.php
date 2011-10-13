@@ -8,6 +8,7 @@ namespace nutshell\plugin\cache
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Factory;
+	use nutshell\Nutshell;
 	
 	/**
 	 * @package nutshell-plugin
@@ -38,6 +39,14 @@ namespace nutshell\plugin\cache
 			if ($type=='file')
 			{
 				$this->oCacheManager = new NutshellFileCache();
+				$configCacheFolder = $this->nutshell->config->plugin->cache->folder;
+				
+				// in the case that no folder has been provided, give a default
+				if strlen($configCacheFolder)==0
+				{
+					$configCacheFolder = APP_HOME.'cache';
+				}
+				$this->oCacheManager->setCacheFolder();
 			}	
 			else if ($type=='mem')
 			{
@@ -67,9 +76,9 @@ namespace nutshell\plugin\cache
 		 * @param string $cacheKey
 		 * @return mixed
 		 */
-		public function retrieve($cacheKey)
+		public function retrieve($cacheKey, $subFolder='')
 		{
-			return $this->oCacheManager->retrieve($cacheKey);
+			return $this->oCacheManager->retrieve($cacheKey, $subFolder);
 		}		
 	}
 }
