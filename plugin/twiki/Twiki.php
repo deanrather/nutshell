@@ -7,6 +7,9 @@ namespace nutshell\plugin\twiki
 
 	/**
 	 * Twiki means TEXTUAL Wiki. This plugin is based on the PEAR textual wiki.
+	 * You can have a look at the public method test() to see how to use this class.
+	 * Known bugs:
+	 *    '<code>' and '</code> can't be placed in the very same line such as '<code> ... </code>'. The wiki crashes in this case. 
 	 */
 	class Twiki extends Plugin implements Native,Singleton
 	{
@@ -117,6 +120,8 @@ Shows a table:
 |||| big ol line ||
 || cell four || cell five ||
 || cell six || here\'s a very long cell ||
+----
+<html> oi </html>
 ';
 			// returns the HTML
 			return $this->transform($text);
