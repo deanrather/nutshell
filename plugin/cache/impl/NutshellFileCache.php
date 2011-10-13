@@ -35,16 +35,16 @@ namespace nutshell\plugin\cache
 				$subFolder = $subFolder._DS_;
 			}
 			
-			$fileName    = $this->cacheFolder._DS_.$subFolder.'cache_'.$keyMD5;
-			$tmpFileName = $this->cacheFolder._DS_.$subFolder.'tmp_'.$keyMD5;
+			$fileName    = $this->cacheFolder.$subFolder.'cache_'.$keyMD5;
+			$tmpFileName = $this->cacheFolder.$subFolder.'tmp_'.$keyMD5;
 			
 			$cacheLiteral = serialize
 			(
 				array
 				(
-					'key'    = $cacheKey,
-					'expiry' = $expiryTime + time(),
-					'data'   = $data
+					'key'    => $cacheKey,
+					'expiry' => $expiryTime + time(),
+					'data'   => $data
 				)
 			);
 			
@@ -89,19 +89,23 @@ namespace nutshell\plugin\cache
 			$fileName = $this->cacheFolder._DS_.$subFolder.'cache_'.$keyMD5;
 			
 			try 
-			{				
-				if ($handle = fopen($fileName, "rb"))
-				{
-					$unserializedData = fread($handle, filesize($fileName));
-					$data = unserialize($unserializedData);
+			{	
+				if (file_exists($fileName))
+				{	
 					
-					// is it the same key?
-					if ($data['key'] == $cacheKey)
+					if ($handle = fopen($fileName, "rb"))
 					{
-						// is the cached value still valid?
-						if ($now < $data['expiry'])
+						$unserializedData = fread($handle, filesize($fileName));
+						$data = unserialize($unserializedData);
+						
+						// is it the same key?
+						if ($data['key'] == $cacheKey)
 						{
-							return $data['data'];
+							// is the cached value still valid?
+							if ($now < $data['expiry'])
+							{
+								return $data['data'];
+							}
 						}
 					}
 				}

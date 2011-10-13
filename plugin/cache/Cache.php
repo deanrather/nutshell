@@ -7,7 +7,7 @@ namespace nutshell\plugin\cache
 {
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
-	use nutshell\behaviour\Factory;
+	use nutshell\behaviour\Singleton;
 	use nutshell\Nutshell;
 	
 	/**
@@ -39,22 +39,30 @@ namespace nutshell\plugin\cache
 			if ($type=='file')
 			{
 				$this->oCacheManager = new NutshellFileCache();
-				$configCacheFolder = $this->nutshell->config->plugin->cache->folder;
+				
+				try 
+				{
+					$configCacheFolder = '';//$configCacheFolder = $this->config->plugin->cache->absolutePath;
+				} catch (Exception $e) 
+				{
+					$configCacheFolder = '';
+				}
 				
 				// in the case that no folder has been provided, give a default
-				if strlen($configCacheFolder)==0
+				if (strlen($configCacheFolder)==0)
 				{
-					$configCacheFolder = APP_HOME.'cache';
+					$configCacheFolder = APP_HOME.'cache'._DS_;
 				}
-				$this->oCacheManager->setCacheFolder();
+				
+				$this->oCacheManager->setCacheFolder($configCacheFolder);
 			}	
-			else if ($type=='mem')
+			else if ($type=='memory')
 			{
 				$this->oCacheManager = new NutshellMemCache();
 			}
 			else
 			{
-				//TODO: code error here
+				throw new Exception("'$type' is not a valid cache type.");
 			}
 		}
 		
@@ -66,7 +74,7 @@ namespace nutshell\plugin\cache
 		 * @param string $folder
 		 * @return mixed
 		 */
-		public function store($cacheKey, &$data, $expiryTime, $folder='')
+		public function store($cacheKey, &$data, $expiryTime = 1200, $folder='')
 		{
 			$this->oCacheManager->store($cacheKey, $data, $expiryTime, $folder);
 		}
