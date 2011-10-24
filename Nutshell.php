@@ -95,6 +95,15 @@ namespace nutshell
 			//Load the core config.
 			$this->loadCoreConfig();
 			
+			//Parse php.ini config settings.
+			HookManager::execute('core','onBeforeSetPHPIni');
+			foreach ($this->config->php as $key=>$val)
+			{
+				ini_set($key,$val);
+				HookManager::execute('core','onSetPHPIni',array($key,$val));
+			}
+			HookManager::execute('core','onAfterSetPHPIni');
+			
 			//init loader.
 			$this->initLoader();
 			
