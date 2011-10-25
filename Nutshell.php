@@ -223,7 +223,12 @@ namespace nutshell
 		{
 			if (!defined(self::NUTSHELL_ENVIRONMENT))
 			{
-				if(!$env = getenv('NS_ENV')) 
+				$env=getenv('NS_ENV');
+				if (!$env && function_exists('apache_getenv'))
+				{
+					$env=apache_getenv("NS_ENV");
+				}
+				if (!$env)
 				{
 					$env = self::DEFAULT_ENVIRONMENT;
 				}
