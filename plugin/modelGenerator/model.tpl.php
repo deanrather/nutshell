@@ -1,4 +1,4 @@
-<?php print '<?php' ?>
+<?php print "<?php\n" ?>
 /**
  * Database Model for "<?php $tpl->table_name ?>"
  * 
