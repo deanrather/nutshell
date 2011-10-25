@@ -14,28 +14,33 @@ namespace nutshell\plugin\router\handler
 	 */
 	class SimpleRest extends PluginExtension
 	{
-		private $route	=null;
+		private $route = null;
+		private $pointer = 0;
 		
-		public function __construct()
+		public function __construct() {
+			$this->calculateRoute();
+		}
+		
+		public function calculateRoute()
 		{
-			if ($this->plugin->Url->nodeEmpty(0))
+			if ($this->plugin->Url->nodeEmpty($this->pointer))
 			{
-				$this->route=new Route('index','index',array());
+				$this->route = new Route('index','index',array());
 			}
 			else
 			{
-				//Set the controler to node 0.
-				$control=$this->plugin->Url->node(0);
+				//Set the controller to node @pointer.
+				$control = $this->plugin->Url->node($this->pointer);
 				
 				//Set some defaults.
-				$action	='index';
-				$args	=array();
+				$action	= 'index';
+				$args	= array();
 				
 				//Check for action.
-				if (!is_null($this->plugin->Url->node(1)))
+				if (!is_null($this->plugin->Url->node($this->pointer + 1)))
 				{
-					//Set args to nodes 2 onwards.
-					$node=1;
+					//Set args to nodes @pointer + 1 onwards.
+					$node = $this->pointer + 1;
 					while (true)
 					{
 						//grab the next node
@@ -49,8 +54,20 @@ namespace nutshell\plugin\router\handler
 						$args[] = $arg;
 					}
 				}
-				$this->route=new Route($control,$action,$args);
+				$this->route = new Route($control,$action,$args);
 			}
+		}
+		
+		public function advancePointer()
+		{
+			$this->pointer++;
+			$this->calculateRoute();
+		}
+		
+		public function rewindPointer()
+		{
+			$this->pointer--;
+			$this->calculateRoute();
 		}
 		
 		public function getRoute()
