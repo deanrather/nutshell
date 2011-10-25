@@ -144,7 +144,9 @@ namespace nutshell\plugin\modelGenerator
 						->setKeyVal('autoCreate_str',	$autoCreate_str)
 						->setKeyVal('column_definition',$column_definition);
 			
-			return $code;
+			$template->compile();
+			
+			return $template->getCompiled();
 		}
 		
 	}// class

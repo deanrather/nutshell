@@ -43,9 +43,12 @@ namespace nutshell\plugin\session
 				'NamedSession',
 				function($classInstance)
 				{
-					$session											=Nutshell::getInstance()->plugin->Session;
-					$session->{Object::getBaseClassName($classInstance)}=new stdClass();
-					$classInstance->session								=$session->{Object::getBaseClassName($classInstance)};
+					$session	=Nutshell::getInstance()->plugin->Session;
+					if (!isset($session->{Object::getBaseClassName($classInstance)}))
+					{
+						$session->{Object::getBaseClassName($classInstance)}=new stdClass();
+					}
+					$classInstance->session=$session->{Object::getBaseClassName($classInstance)};
 				}
 			);
 		}
