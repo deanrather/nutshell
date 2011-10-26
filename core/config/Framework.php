@@ -91,9 +91,7 @@ namespace nutshell\core\config
 		
 		protected static function forceRebuild()
 		{
-			return 
-				(NS_INTERFACE == Nutshell::INTERFACE_CLI && in_array('--' . self::CONFIG_REBUILD_KEY, $_SERVER['argv']))
-				|| (NS_INTERFACE == Nutshell::INTERFACE_HTTP && Nutshell::getInstance()->request->get(self::CONFIG_REBUILD_KEY));
+			return Nutshell::getInstance()->request->get(self::CONFIG_REBUILD_KEY);
 		}
 		
 		protected static function rebuild($configPath, $environment)
