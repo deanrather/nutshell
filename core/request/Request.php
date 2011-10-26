@@ -38,7 +38,7 @@ namespace nutshell\core\request
 		}
 		
 		
-		public function &get($key)
+		public function get($key)
 		{
 			return $this->handler->get($key);
 		}
