@@ -99,7 +99,6 @@ namespace nutshell\core\config
 		protected static function rebuild($configPath, $environment)
 		{
 			$configFile = new Config();
-			header('Content-Type:text/plain');
 			
 			//loads the framework default
 			$config = Config::loadConfigFile(NS_HOME . Config::CONFIG_FOLDER, Config::makeConfigFileName(Config::DEFAULT_ENVIRONMENT));
