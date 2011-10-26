@@ -66,9 +66,9 @@ namespace nutshell\core\plugin
 		public function __construct()
 		{
 			parent::__construct();
-			$this->core=	Nutshell::getInstance();
+// 			$this->core=	Nutshell::getInstance();
 			$this->config=	$this->core->config->plugin->{Object::getBaseClassName($this)};
-			$this->plugin=	Nutshell::getInstance()->plugin;
+// 			$this->plugin=	Nutshell::getInstance()->plugin;
 		}
 		
 		/**
@@ -221,11 +221,7 @@ namespace nutshell\core\plugin
 		 */
 		public function __get($key)
 		{
-			if (in_array($key,array('core','plugin','config')))
-			{
-				return parent::__get($key);
-			}
-			elseif (($this instanceof Singleton && $this instanceof AbstractFactory)
+			if (($this instanceof Singleton && $this instanceof AbstractFactory)
 			&& $result=static::runFactory($key))
 			{
 				return $result;

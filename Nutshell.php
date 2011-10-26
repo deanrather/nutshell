@@ -40,6 +40,7 @@ namespace nutshell
 		const INTERFACE_PHPUNIT		= 	'PHPUNIT';
 		
 		public $config 				=	null;
+		public $request				=	null;
 		private $pluginLoader       =   null;
 		
 		/**
@@ -170,6 +171,7 @@ namespace nutshell
 			require(NS_HOME.'core'._DS_.'HookManager.php');
 			require(NS_HOME.'core'._DS_.'exception'._DS_.'NutshellException.php');
 			require(NS_HOME.'core'._DS_.'exception'._DS_.'Exception.php');
+// 			require(NS_HOME.'core'._DS_.'request'._DS_.'Request.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'exception'._DS_.'ConfigException.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'Config.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'Framework.php');

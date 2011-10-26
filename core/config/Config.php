@@ -72,6 +72,7 @@ namespace nutshell\core\config
 		 */
 		public function __construct($obj = null) 
 		{
+			parent::__construct();
 			$this->loadObject($obj);
 		}
 		

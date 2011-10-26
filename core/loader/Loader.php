@@ -85,6 +85,7 @@ namespace nutshell\core\loader
 		
 		public function __construct()
 		{
+			parent::__construct();
 			spl_autoload_register(__NAMESPACE__ .'\Loader::autoload');
 		}
 		
