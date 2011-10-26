@@ -7,12 +7,13 @@ namespace nutshell\plugin\router\handler
 {
 	use nutshell\core\plugin\PluginExtension;
 	use nutshell\plugin\router\Route;
+	use nutshell\plugin\router\handler\Http;
 	
 	/**
 	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
 	 * @package nutshell-plugin
 	 */
-	class SimpleRest extends PluginExtension
+	class SimpleRest extends Http
 	{
 		private $route = null;
 		private $pointer = 0;
@@ -25,7 +26,7 @@ namespace nutshell\plugin\router\handler
 		{
 			if ($this->request->nodeEmpty($this->pointer))
 			{
-				$this->route = new Route('index','index',array());
+				$this->route = $this->createRoute('index','index',array());
 			}
 			else
 			{
@@ -54,7 +55,8 @@ namespace nutshell\plugin\router\handler
 						$args[] = $arg;
 					}
 				}
-				$this->route = new Route($control,$action,$args);
+				
+				$this->route = $this->createRoute($control, $action, $args);
 			}
 		}
 		

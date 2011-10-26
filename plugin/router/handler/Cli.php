@@ -58,8 +58,7 @@ namespace nutshell\plugin\router\handler
 			if(is_null($args)) {
 				$args = array();
 			}
-			
-			$this->route=new Route($controller, $action, $args);
+			$this->route = new Route('', $controller, $action, $args);
 		}
 		
 		public function getRoute()

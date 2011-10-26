@@ -13,16 +13,18 @@ namespace nutshell\plugin\router
 	 */
 	class Route extends PluginExtension
 	{
-		private $control=null;
-		private $action	=null;
-		private $args	=array();
+		private $controlNamespace 	= null;
+		private $control			=null;
+		private $action				=null;
+		private $args				=array();
 		
-		public function __construct($control,$action,$args)
+		public function __construct($controlNamespace,$control,$action,$args)
 		{
 			parent::__construct();
-			$this->control	=$control;
-			$this->action	=$action;
-			$this->args		=$args;
+			$this->controlNamespace	=$controlNamespace;
+			$this->control			=$control;
+			$this->action			=$action;
+			$this->args				=$args;
 		}
 		
 		public function setControl($control)
@@ -38,18 +40,13 @@ namespace nutshell\plugin\router
 		
 		public function getControlNamespace()
 		{
-			$pointer	=-1;
-			$thisNode	=$this->plugin->Url->node($pointer);
-			$namespace	='';
-			$firstNode	=$this->plugin->Url->node(0);
-			if (!empty($firstNode))
-			{
-				while (($thisNode=$this->plugin->Url->node(++$pointer))!=$this->control)
-				{
-					$namespace.=$thisNode.'\\';
-				}
-			}
-			return $namespace;
+			return $this->controlNamespace;
+		}
+		
+		public function setControlNamespace($controlNamespace)
+		{
+			$this->controlNamespace = $controlNamespace;
+			return $this;
 		}
 		
 		public function setAction($action)

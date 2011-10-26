@@ -29,6 +29,7 @@ namespace nutshell\plugin\router
 		public static function loadDependencies()
 		{
 			require(__DIR__.'/Route.php');
+			require(__DIR__.'/handler/abstract/Http.php');
 			require(__DIR__.'/handler/Cli.php');
 			require(__DIR__.'/handler/Simple.php');
 			require(__DIR__.'/handler/SimpleRest.php');

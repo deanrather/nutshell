@@ -6,13 +6,14 @@
 namespace nutshell\plugin\router\handler
 {
 	use nutshell\core\plugin\PluginExtension;
+	use nutshell\plugin\router\handler\Http;
 	use nutshell\plugin\router\Route;
 	
 	/**
 	 * @author guillaume
 	 * @package nutshell-plugin
 	 */
-	class Simple extends PluginExtension
+	class Simple extends Http
 	{
 		private $route		=null;
 		private $pointer	=0;
@@ -26,7 +27,7 @@ namespace nutshell\plugin\router\handler
 		{
 			if ($this->request->nodeEmpty($this->pointer))
 			{
-				$this->route=new Route('index','index',array());
+				$this->route = $this->createRoute('index','index',array());
 			}
 			else
 			{
@@ -61,16 +62,8 @@ namespace nutshell\plugin\router\handler
 						}
 					}
 				}
-				if (is_null($this->route))
-				{
-					$this->route=new Route($control,$action,$args);
-				}
-				else
-				{
-					$this->route->setControl($control)
-								->setAction($action)
-								->setArgs($args);
-				}
+				
+				$this->route = $this->createRoute($control, $action, $args);
 			}
 		}
 		

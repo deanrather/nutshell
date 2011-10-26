@@ -1,0 +1,48 @@
+<?php
+/**
+ * @package nutshell-plugin
+ * @author guillaume
+ */
+namespace nutshell\plugin\router\handler
+{
+	use nutshell\plugin\router\Route;
+
+	use nutshell\core\plugin\PluginExtension;
+
+	/**
+	 * 
+	 * @author guillaume
+	 * @package nutshell-plugin
+	 */
+	abstract class Http extends PluginExtension
+	{
+		protected function getControlNamespace($controller)
+		{
+			$pointer	=-1;
+			$thisNode	=$this->plugin->Url->node($pointer);
+			$namespace	='';
+			$firstNode	=$this->plugin->Url->node(0);
+			if (!empty($firstNode))
+			{
+				while (($thisNode=$this->plugin->Url->node(++$pointer))!=$controller)
+				{
+					$namespace.=$thisNode.'\\';
+				}
+			}
+			return $namespace;
+		}
+		
+		/**
+		 * Generates the Route
+		 * 
+		 * @param String $controller
+		 * @param String $action
+		 * @param Array $args
+		 * @return the nutshell\plugin\router\Route
+		 */
+		protected function createRoute($controller, $action, $args) {
+			return new Route($this->getControlNamespace($controller), $controller, $action, $args);
+		}
+	}
+}
+?>
