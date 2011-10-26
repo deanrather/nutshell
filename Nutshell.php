@@ -94,6 +94,9 @@ namespace nutshell
 			//Load the core components.
 			$this->loadCoreComponents();
 			
+			//Init the request object.
+			$this->request=new Request;
+			
 			//Load the core config.
 			$this->loadCoreConfig();
 			
