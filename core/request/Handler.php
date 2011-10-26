@@ -18,9 +18,9 @@ namespace nutshell\core\request
 			$this->setupData();
 		}
 		
-		public function &get($key)
+		public function get($key)
 		{
-			return $this->data[$key];
+			return (isset($this->data[$key]))?$this->data[$key]:null;
 		}
 		
 		public function set()
