@@ -5,7 +5,7 @@ namespace nutshell\core\request\handler
 	
 	class Http extends Handler
 	{
-		public function setupNodes()
+		protected function setupNodes()
 		{
 			$baseURL = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 			if(defined('NS_APP_WEB_HOME'))
@@ -26,7 +26,7 @@ namespace nutshell\core\request\handler
 			$this->nodes=$nodes;
 		}
 		
-		public function setupData()
+		protected function setupData()
 		{
 			$this->data =&$_REQUEST;
 			$this->raw	=&$GLOBALS['HTTP_RAW_POST_DATA'];

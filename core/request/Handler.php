@@ -9,9 +9,9 @@ namespace nutshell\core\request
 		public $raw		=null;
 		public $nodes	=array();
 		
-		abstract function setupNodes();
-		abstract function setupData();
+		abstract protected function setupNodes();
 		
+		abstract protected function setupData();
 		
 		public function __construct()
 		{
@@ -22,6 +22,11 @@ namespace nutshell\core\request
 		public function get($key)
 		{
 			return (isset($this->data[$key]))?$this->data[$key]:null;
+		}
+		
+		public function getAll() 
+		{
+			return $this->data;
 		}
 		
 		public function getRaw()

@@ -42,6 +42,10 @@ namespace nutshell\core\request
 			return $this->handler->get($key);
 		}
 		
+		public function getAll() {
+			return $this->handler->getAll();
+		}
+		
 		/**
 		 * 
 		 * @access public
