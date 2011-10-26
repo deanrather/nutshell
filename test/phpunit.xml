@@ -1,0 +1,17 @@
+<phpunit verbose="true" colors="false" backupGlobals="false" processIsolation="false">
+	<testsuite name="nutshell.core">
+		<directory>./*.php</directory>
+		<file>./Diagnostics.php</file>
+		<file>./Nutshell.php</file>
+	</testsuite>
+	<php>
+		<const name="DIR_BASE"		value="../" />
+		<const name="DIR_TESTS"		value="./" />
+		<!--
+		<const name="DIR_HAL"		value="../_HAL/" />
+		<const name="DIR_DATA"		value="../data/" />
+		<const name="DIR_DB"		value="../data/database/" />
+		<const name="DIR_MOCK"		value="./mock/" />
+		-->
+	</php>
+</phpunit>
