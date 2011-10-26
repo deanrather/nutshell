@@ -24,21 +24,21 @@ namespace nutshell\plugin\router\handler
 		
 		private function calculateRoute()
 		{
-			if ($this->plugin->Url->nodeEmpty($this->pointer))
+			if ($this->request->nodeEmpty($this->pointer))
 			{
 				$this->route=new Route('index','index',array());
 			}
 			else
 			{
 				//Set the controler to node 0.
-				$control=$this->plugin->Url->node($this->pointer);
+				$control=$this->request->node($this->pointer);
 			
 				//Set some defaults.
 				$action	='index';
 				$args	=array();
 			
 				//Check for action.
-				$node=$this->plugin->Url->node($this->pointer+1);
+				$node=$this->request->node($this->pointer+1);
 				if (!is_null($node))
 				{
 					//Set action to node 1.
@@ -50,7 +50,7 @@ namespace nutshell\plugin\router\handler
 						while (true)
 						{
 							//grab the next node
-							$arg = $this->plugin->Url->node($node++);
+							$arg = $this->request->node($node++);
 							
 							if(is_null($arg))
 							{
