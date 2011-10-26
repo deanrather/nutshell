@@ -5,11 +5,14 @@ namespace nutshell\core\request\handler
 	
 	class Cli extends Handler
 	{
-		public function __construct()
+		public function setupNodes()
 		{
 			
+		}
+		
+		public function setupData()
+		{
 			
-			parent::__construct();
 		}
 	}
 }

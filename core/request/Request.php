@@ -62,6 +62,25 @@ namespace nutshell\core\request
 			return $this;
 		}
 		
+		public function node($num)
+		{
+			if (isset($this->handler->nodes[$num]))
+			{
+				return $this->handler->nodes[$num];
+			}
+			return null;
+		}
+		
+		public function nodeEmpty($num)
+		{
+			return (isset($this->handler->nodes[$num]) && empty($this->handler->nodes[$num]));
+		}
+		
+		public function getNodes()
+		{
+			return $this->handler->nodes;
+		}
+		
 		private function resetIndex($exclude=null)
 		{
 			$newIndex=array();

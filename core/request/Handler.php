@@ -5,11 +5,17 @@ namespace nutshell\core\request
 	
 	abstract class Handler
 	{
-		public $data=null;
+		public $data	=null;
+		public $nodes	=array();
+		
+		abstract function setupNodes();
+		abstract function setupData();
+		
 		
 		public function __construct()
 		{
-			
+			$this->setupNodes();
+			$this->setupData();
 		}
 		
 		public function &get($key)
