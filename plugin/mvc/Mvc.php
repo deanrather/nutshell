@@ -67,7 +67,8 @@ namespace nutshell\plugin\mvc
 			 * Note that the default action cannot accept any args.
 			 * So nothing is passed to the constructor.
 			 */
-			if (method_exists($this->controller,$this->route->getAction()))
+			if (method_exists($this->controller,$this->route->getAction())
+			|| method_exists($this->controller,'__call'))
 			{
 				if (version_compare(PHP_VERSION,'5.3.3','>='))
 				{
