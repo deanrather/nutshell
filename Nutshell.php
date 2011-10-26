@@ -12,6 +12,7 @@ namespace nutshell
 {
 	use nutshell\core\Component;
 	use nutshell\core\HookManager;
+	use nutshell\core\request\Request;
 	use nutshell\core\config\Config;
 	use nutshell\core\config\Framework;
 	use nutshell\core\loader\Loader;
@@ -31,7 +32,7 @@ namespace nutshell
 		const VERSION_MAJOR			=	1;
 		const VERSION_MINOR			=	0;
 		const VERSION_MICRO			=	0;
-		const VERSION_DEV			=	3;
+		const VERSION_DEV			=	6;
 		const NUTSHELL_ENVIRONMENT	=	'NS_ENV';
 		const DEFAULT_ENVIRONMENT	= 	'production';
 		
@@ -171,7 +172,7 @@ namespace nutshell
 			require(NS_HOME.'core'._DS_.'HookManager.php');
 			require(NS_HOME.'core'._DS_.'exception'._DS_.'NutshellException.php');
 			require(NS_HOME.'core'._DS_.'exception'._DS_.'Exception.php');
-// 			require(NS_HOME.'core'._DS_.'request'._DS_.'Request.php');
+			require(NS_HOME.'core'._DS_.'request'._DS_.'Request.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'exception'._DS_.'ConfigException.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'Config.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'Framework.php');
@@ -181,6 +182,7 @@ namespace nutshell
 			require(NS_HOME.'core'._DS_.'plugin'._DS_.'PluginExtension.php');
 			
 			Exception::register();
+			Request::register();
 			Config::register();
 			Loader::register();
 			Plugin::register();
