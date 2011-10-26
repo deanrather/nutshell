@@ -67,14 +67,21 @@ namespace nutshell\plugin\mvc
 			 * Note that the default action cannot accept any args.
 			 * So nothing is passed to the constructor.
 			 */
-			if (version_compare(PHP_VERSION,'5.3.3','>='))
+			if (method_exists($this->controller,$this->route->getAction()))
 			{
-				//Call the controller action.
-				call_user_func_array(array($this->controller,$this->route->getAction()),$this->route->getArgs());
+				if (version_compare(PHP_VERSION,'5.3.3','>='))
+				{
+					//Call the controller action.
+					call_user_func_array(array($this->controller,$this->route->getAction()),$this->route->getArgs());
+				}
+				else if ($this->route->getControl()!=$this->route->getAction())
+				{
+					call_user_func_array(array($this->controller,$this->route->getAction()),$this->route->getArgs());
+				}
 			}
-			else if ($this->route->getControl()!=$this->route->getAction())
+			else
 			{
-				call_user_func_array(array($this->controller,$this->route->getAction()),$this->route->getArgs());
+				throw new NutshellException('MVC Exception. Unable to execute action. The action "'.$this->route->getAction().'" is not defined or is not a public method.');
 			}
 		}
 		
@@ -98,7 +105,7 @@ namespace nutshell\plugin\mvc
 				}
 				else
 				{
-					throw new NutshellException('Unable to load controller. The controller "'.$this->route->getControl().'" was not found.');
+					throw new NutshellException('MVC Exception. Unable to load controller. The controller "'.$this->route->getControl().'" was not found.');
 				}
 			}
 			include($file);
