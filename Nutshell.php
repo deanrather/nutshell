@@ -72,11 +72,14 @@ namespace nutshell
 			
 			if (isset($_SERVER['argc']) && $_SERVER['argc'] > 0)
 			{
-				define('NS_INTERFACE', self::INTERFACE_CLI);
-			}
-			else if (strstr($_SERVER['PHP_SELF'],'phpunit'))
-			{
-				define('NS_INTERFACE', self::INTERFACE_PHPUNIT);
+				if (strstr($_SERVER['PHP_SELF'],'phpunit'))
+				{
+					define('NS_INTERFACE', self::INTERFACE_PHPUNIT);
+				} 
+				else 
+				{
+					define('NS_INTERFACE', self::INTERFACE_CLI);
+				}
 			}
 			else
 			{
