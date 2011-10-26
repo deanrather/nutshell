@@ -37,7 +37,6 @@ namespace nutshell\core\request
 			static::load(array('Handler.php'));
 		}
 		
-		
 		public function get($key)
 		{
 			return $this->handler->get($key);
@@ -60,6 +59,11 @@ namespace nutshell\core\request
 				throw new NutshellException('Invalid request set. No args given.');
 			}
 			return $this;
+		}
+		
+		public function getRaw()
+		{
+			return $this->handler->getRaw();
 		}
 		
 		public function node($num)

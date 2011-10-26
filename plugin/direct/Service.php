@@ -91,9 +91,9 @@ namespace nutshell\plugin\direct
 		
 		public function processRequest($provider)
 		{
-			if (isset($GLOBALS['HTTP_RAW_POST_DATA']))
+			if (!is_null($this->request->getRaw()))
 			{
-				$request=json_decode($GLOBALS['HTTP_RAW_POST_DATA']);
+				$request=json_decode($this->request->getRaw());
 			}
 			//Remoting Request
 			if (!empty($request))

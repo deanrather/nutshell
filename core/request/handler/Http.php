@@ -28,7 +28,8 @@ namespace nutshell\core\request\handler
 		
 		public function setupData()
 		{
-			$this->data=&$_REQUEST;
+			$this->data =&$_REQUEST;
+			$this->raw	=&$GLOBALS['HTTP_RAW_POST_DATA'];
 		}
 	}
 }

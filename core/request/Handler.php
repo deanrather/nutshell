@@ -6,6 +6,7 @@ namespace nutshell\core\request
 	abstract class Handler
 	{
 		public $data	=null;
+		public $raw		=null;
 		public $nodes	=array();
 		
 		abstract function setupNodes();
@@ -21,6 +22,11 @@ namespace nutshell\core\request
 		public function get($key)
 		{
 			return (isset($this->data[$key]))?$this->data[$key]:null;
+		}
+		
+		public function getRaw()
+		{
+			return $this->raw;
 		}
 		
 		public function set()
