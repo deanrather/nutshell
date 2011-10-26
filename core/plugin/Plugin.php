@@ -66,9 +66,9 @@ namespace nutshell\core\plugin
 		public function __construct()
 		{
 			parent::__construct();
-// 			$this->core=	Nutshell::getInstance();
+			$this->core=	Nutshell::getInstance();
 			$this->config=	$this->core->config->plugin->{Object::getBaseClassName($this)};
-// 			$this->plugin=	Nutshell::getInstance()->plugin;
+			$this->plugin=	Nutshell::getInstance()->plugin;
 		}
 		
 		/**

@@ -16,11 +16,20 @@ namespace nutshell\core
 	 */
 	abstract class Component
 	{
+// 		public $config	=null;
+// 		public $core	=null;
+// 		public $plugin	=null;
+// 		public $request	=null;
+		
 		/**
 		 * Class Constructor. 
 		 */
 		public function __construct()
 		{
+// 			$this->config		=Nutshell::getInstance()->config;
+// 			$this->core			=Nutshell::getInstance();
+// 			$this->plugin		=Nutshell::getInstance()->plugin;
+// 			$this->request		=Nutshell::getInstance()->request;
 			HookManager::execute('core\plugin',Object::getBaseClassName($this).'OnConstruct');
 		}
 		
@@ -63,6 +72,7 @@ namespace nutshell\core
 		 * framework.
 		 * 
 		 * @param String $key - The shortcut.
+		 * @deprecated
 		 */
 		public function __get($key)
 		{
@@ -71,6 +81,7 @@ namespace nutshell\core
 				case 'config':	return Nutshell::getInstance()->config;
 				case 'core':	return Nutshell::getInstance();
 				case 'plugin':	return Nutshell::getInstance()->plugin;
+				case 'request':	return Nutshell::getInstance()->request;
 			}
 		}
 	}
