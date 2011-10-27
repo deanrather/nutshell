@@ -5,6 +5,8 @@
  */
 namespace nutshell\plugin\router\handler
 {
+	use nutshell\plugin\router\Router;
+
 	use nutshell\core\plugin\PluginExtension;
 	use nutshell\plugin\router\Route;
 	
@@ -66,5 +68,8 @@ namespace nutshell\plugin\router\handler
 			return $this->route;
 		}
 	}
+	
+	//register the handler
+	Router::registerHandler('cli', __NAMESPACE__ . '\Cli');
 }
 ?>

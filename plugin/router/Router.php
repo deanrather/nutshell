@@ -26,9 +26,12 @@ namespace nutshell\plugin\router
 		
 		private $handler=null;
 		
+		private static $handlers = array();
+		
 		public static function loadDependencies()
 		{
 			require(__DIR__.'/Route.php');
+			require(__DIR__.'/exception/RouterException.php');
 			require(__DIR__.'/handler/abstract/Http.php');
 			require(__DIR__.'/handler/Cli.php');
 			require(__DIR__.'/handler/Simple.php');
@@ -41,27 +44,34 @@ namespace nutshell\plugin\router
 			
 		}
 		
+		public static function registerHandler($key, $class) {
+			if(!isset(self::$handlers[$key])) 
+			{
+				self::$handlers[$key] = $class;
+			}
+			else 
+			{
+				throw new RouterException(sprintf("A handler is already registered for the key: %s (%s)", $key, self::$handlers[$key]));
+			}
+		}
+		
 		public function init()
 		{
-			switch($this->config->mode) 
-			{
-				case self::MODE_SIMPLE:
-					//Handle simple routing.
-					$this->handler=new Simple();
-					break;
-				case self::MODE_SIMPLE_REST:
-					//Handle simple rest routing.
-					$this->handler=new SimpleRest();
-					break;
-				case self::MODE_ADVANCED:
-					//Handle advanced routing.
-					$this->handler=new Advanced();
-					break;
-				case self::MODE_CLI:
-					//Handle command line interface routing
-					$this->handler=new Cli();
-					break;
+			//reads the mode from the config file and try to mach
+			if(!isset(self::$handlers[$this->config->mode])) {
+				throw new RouterException(sprintf('No router mode configuration could be found or the selected mode does not match any of the available handlers: %s', $this->config->mode));
 			}
+			
+			//loads the class name
+			$handlerClass = self::$handlers[$this->config->mode];
+			
+			//checks that a class suitably named has been loaded
+			if(!class_exists($handlerClass)) {
+				throw new RouterException(sprintf('No implementation could be found for Router handler class: %s', $handlerClass));
+			}
+			
+			//initialise the handler
+			$this->handler = new $handlerClass();
 		}
 		
 		public function getMode()
