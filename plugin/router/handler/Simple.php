@@ -5,7 +5,8 @@
  */
 namespace nutshell\plugin\router\handler
 {
-	use nutshell\core\plugin\PluginExtension;
+	use nutshell\plugin\router\Router;
+	
 	use nutshell\plugin\router\handler\Http;
 	use nutshell\plugin\router\Route;
 	
