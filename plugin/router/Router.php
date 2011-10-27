@@ -8,6 +8,7 @@ namespace nutshell\plugin\router
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Singleton;
+	use nutshell\plugin\router\exception\RouterException;
 	use nutshell\plugin\router\handler\Cli;
 	use nutshell\plugin\router\handler\Simple;
 	use nutshell\plugin\router\handler\SimpleRest;
