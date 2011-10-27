@@ -38,6 +38,16 @@ namespace nutshell\plugin\router
 			require(__DIR__.'/handler/Simple.php');
 			require(__DIR__.'/handler/SimpleRest.php');
 			require(__DIR__.'/handler/Advanced.php');
+			
+			//try to load user handlers
+			$userHandlerDir = APP_HOME . 'plugin' . _DS_ . 'router' . _DS_ . 'handler'; 
+			if(is_dir($userHandlerDir)) {
+				if($userHandlers = glob($userHandlerDir . _DS_ . '*.php')){
+					foreach($userHandlers as $userHandler) {
+						require_once($userHandler);
+					}
+				}
+			}
 		}
 		
 		public static function registerBehaviours()
