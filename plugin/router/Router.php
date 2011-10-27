@@ -44,7 +44,9 @@ namespace nutshell\plugin\router
 			if(is_dir($userHandlerDir)) {
 				if($userHandlers = glob($userHandlerDir . _DS_ . '*.php')){
 					foreach($userHandlers as $userHandler) {
-						require_once($userHandler);
+						if(is_file($userHandler)) {
+							require_once($userHandler);
+						}
 					}
 				}
 			}
