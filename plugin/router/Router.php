@@ -57,7 +57,8 @@ namespace nutshell\plugin\router
 			
 		}
 		
-		public static function registerHandler($key, $class) {
+		public static function registerHandler($key, $class) 
+		{
 			if(!isset(self::$handlers[$key])) 
 			{
 				self::$handlers[$key] = $class;
@@ -70,21 +71,71 @@ namespace nutshell\plugin\router
 		
 		public function init()
 		{
+			$mode = null;
+			$globalMode = $this->config->mode;
+			if(!$globalMode) 
+			{
+				throw new RouterException('No router mode configuration could be found');
+			}
+			
+			if(is_array($globalMode)) 
+			{
+				foreach($globalMode as $modeOption) 
+				{
+					if($mode = $this->satisfiesOption($modeOption)) 
+					{
+						//interrupt the detection process since we found one matching.
+						break;
+					}
+				}
+				if(!$mode) 
+				{
+					throw new RouterException('No router mode configuration option could satisfy the request');
+				}
+			} 
+			else 
+			{
+				$mode = $globalMode;
+			}
+			
 			//reads the mode from the config file and try to mach
-			if(!isset(self::$handlers[$this->config->mode])) {
-				throw new RouterException(sprintf('No router mode configuration could be found or the selected mode does not match any of the available handlers: %s', $this->config->mode));
+			if(!isset(self::$handlers[$mode])) 
+			{
+				throw new RouterException(sprintf('No router mode configuration could be found or the selected mode does not match any of the available handlers: %s', $mode));
 			}
 			
 			//loads the class name
-			$handlerClass = self::$handlers[$this->config->mode];
+			$handlerClass = self::$handlers[$mode];
 			
 			//checks that a class suitably named has been loaded
-			if(!class_exists($handlerClass)) {
+			if(!class_exists($handlerClass)) 
+			{
 				throw new RouterException(sprintf('No implementation could be found for Router handler class: %s', $handlerClass));
 			}
 			
 			//initialise the handler
 			$this->handler = new $handlerClass();
+		}
+		
+		protected function satisfiesOption($option) 
+		{
+			//boolean flag on whether to return the option's mode or not.
+			$valid = true;
+			
+			if(isset($option->cond)) 
+			{
+				//validate interface condition
+				//test only if there is a reason to keep testing
+				if($valid && $interface = $option->cond->interface)
+				{
+					//test only if there is a reason to keep testing
+					if($valid && strcasecmp(NS_INTERFACE, $interface) !== 0) {
+						$valid = false;
+					}
+				}
+			}
+			
+			return $valid ? $option->mode : null;
 		}
 		
 		public function getMode()
