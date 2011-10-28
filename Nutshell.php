@@ -72,7 +72,13 @@ namespace nutshell
 			
 			if (isset($_SERVER['argc']) && $_SERVER['argc'] > 0)
 			{
-				if (strstr($_SERVER['PHP_SELF'],'phpunit'))
+				if(isset($_SERVER['GATEWAY_INTERFACE']))
+				{
+					define('NS_INTERFACE', self::INTERFACE_HTTP);
+					define('NS_WEB_HOME', dirname($_SERVER['SCRIPT_FILENAME']));
+					define('NS_APP_WEB_HOME', dirname($_SERVER['SCRIPT_NAME']));
+				}
+				else if (strstr($_SERVER['PHP_SELF'],'phpunit'))
 				{
 					define('NS_INTERFACE', self::INTERFACE_PHPUNIT);
 				} 
