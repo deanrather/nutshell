@@ -87,7 +87,7 @@ namespace nutshell\plugin\logger\writer
 			}
 			else if($mandatory)
 			{
-				throw new Exception("Missing mandatory '%' config option for writer", $optionName);
+				throw new Exception("Missing mandatory '%s' config option for writer", $optionName);
 			}
 		}
 		
