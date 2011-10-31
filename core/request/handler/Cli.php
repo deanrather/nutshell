@@ -35,53 +35,43 @@ namespace nutshell\core\request\handler
 				if(strlen($str) > 2 && substr($str, 0, 2) == '--')
 				{
 					$str = substr($str, 2);
-					$parts = explode('=', $str);
+					$parts = explode('=', $str, 2);
 					$this->data[$parts[0]] = true;
 					
-					// Does not have an =, so choose the next arg as its value
-					if(count($parts) == 1 && isset($arguments[$i + 1]) && preg_match('/^--?.+/', $arguments[$i + 1]) == 0)
-					{
-						$this->data[$parts[0]] = $arguments[$i + 1];
-					}
-					elseif(count($parts) == 2) // Has a =, so pick the second piece
+					if(count($parts) == 2) // Has a =, so pick the second piece
 					{
 						$this->data[$parts[0]] = $parts[1];
 					}
 				}
-				elseif(strlen($str) == 2 && $str[0] == '-') // -a
+				elseif(preg_match('/^-([a-zA-Z]*)([a-zA-Z])(=?)/', $str, $matches)) // -a
 				{
-					$this->data[$str[1]] = true;
-					if(isset($arguments[$i + 1]) && preg_match('/^--?.+/', $arguments[$i + 1]) == 0) 
-					{
-						$this->data[$str[1]] = $arguments[$i + 1];
+					//trim the hyphen
+					$str = substr($str, 1);
+					$parts = explode('=', $str, 2);
+					
+					if($flags = $matches[1]) {
+						for($j = 0; $j < count($flags); $j++) {
+							$this->data[$flags[$j]] = true;
+						}
 					}
-				}
-				elseif(strlen($str) > 1 && $str[0] == '-') // -abcdef
-				{
-					for($j = 1; $j < strlen($str); $j++) 
+					
+					$arg = $matches[2];
+					
+					$this->data[$arg] = true;
+						
+					if(count($parts) == 2) // Has a =, so pick the second piece
 					{
-						$this->data[$str[$j]] = true;
+						$this->data[$arg] = $parts[1];
 					}
 				}
 			}
 			
-			for($i = count($arguments) - 1; $i >= 0; $i--)
+			for($j = 0; $j < count($arguments); $j++)
 			{
-				if(preg_match('/^--?.+/', $arguments[$i]) == 0) 
-				{
-					$this->nodes[] = $arguments[$i];
-				}
-				else 
-				{
-					//detect if we need to remove the previous node
-					if(preg_match('/^--?.=+/', $arguments[$i]) == 0) {
-						@array_pop($this->nodes);
-					}
-					break;
+				if(strpos($arguments[$j], '-') !== 0) {
+					$this->nodes[] = $arguments[$j];
 				}
 			}
-			
-			$this->nodes = array_reverse($this->nodes);
 		}
 	}
 }
