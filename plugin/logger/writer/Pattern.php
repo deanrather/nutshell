@@ -15,6 +15,8 @@ namespace nutshell\plugin\logger\writer
 	{
 		const LOG_LEVEL = '%P';
 		
+		const LOGGER_NAME = '%l';
+		
 		const MESSAGE = '%m';
 		
 		const DATE = '%d';
@@ -29,6 +31,7 @@ namespace nutshell\plugin\logger\writer
 		
 		private static $contextTopatterns = array(
 			Writer::CTX_LOG_LEVEL => self::LOG_LEVEL,
+			Writer::CTX_LOGGER_NAME => self::LOGGER_NAME,
 		);
 		
 		/**
