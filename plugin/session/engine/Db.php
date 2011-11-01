@@ -39,7 +39,7 @@ namespace nutshell\plugin\Session\engine
 				}
 				catch(\Exception $e)
 				{
-					throw new SessionException(sprintf("Could not instantiate %s database connector for session handler", $this->config->connector), 0, $e);
+					throw new SessionException(sprintf("Could not instantiate %s database connector for session handler: %s", $this->config->connector, $e->getMessage()), 0, $e);
 				}
 			}
 			else
