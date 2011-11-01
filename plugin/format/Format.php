@@ -7,7 +7,24 @@ namespace nutshell\plugin\format
 
 	/**
 	 * This plugins has been ported from the "format" model of leadgen 1.
-	 * This plugin is a factory of formating classes. Please have a look at getAvailableFormats for a complete list.
+	 * This plugin is a factory of formating classes. Please have a look at getAvailableFormats() method for a complete list.
+	 * Usage Example:
+
+			$a = array
+			(
+				0 => array ('a'=> 'a1', 'b'=>'b1', 'c'=>'c1'),
+				1 => array ('a'=> 'a2', 'b'=>'b2', 'c'=>'c2'),
+				2 => array ('a'=> 'a3', 'b'=>'b3', 'c'=>'c3')
+			);
+			
+			$oFormat = $this->plugin->Format('CSV');
+
+			$oFormat->new_file();
+			$oFormat->process($a);
+			$oFormat->close_file();
+			echo "The file is here:". $oFormat->getWork_file_name();
+			var_dump($oFormat->read());
+			$oFormat->delete();
 	 */
 	class Format extends Plugin implements AbstractFactory
 	{

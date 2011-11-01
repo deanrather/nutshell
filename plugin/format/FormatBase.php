@@ -6,7 +6,16 @@ namespace nutshell\plugin\format
 	 */
 	class FormatBase
 	{
-		const WORK_FILE_PREFIX = 'nuttmp_';
+		/**
+		 * Prefix used when creating new files.
+		 * @var string
+		 */
+		protected $work_file_prefix = 'nuttmp_';
+		
+		/**
+		 * Folder used to save files when calling new_file() method.
+		 */
+		protected $work_base_dir = '';
 	
 		protected $_format_name;
 	
@@ -33,7 +42,7 @@ namespace nutshell\plugin\format
 		protected static $_formats = null;
 		
 		public function __construct($values = array()) {
-			
+			$this->work_base_dir = APP_HOME . 'cache' . _DS_ ;
 		}
 	
 		public static function getAvailableLineBreaks() {
@@ -164,16 +173,25 @@ namespace nutshell\plugin\format
 			// in the case that there is an open filed, closes it.
 			$this->close_file();
 			
-			$this->file_handle = fopen($this->work_file_name, 'w');
+			$this->file_handle = fopen($this->_work_file_name, 'w');
 			if (!$this->file_handle) {
 				throw new Exception("Can't open the file for edition.");
 			}
 			$this->initHandler();
 		}
+		
+		/**
+		 * This function sets the base (work) directory (folder).
+		 * @param unknown_type $pDir
+		 */
+		public final function set_base_dir($pDir)
+		{
+			$this->work_base_dir = $pDir;
+		}
 		 
 		public final function new_file() 
 		{
-			$this->work_file_name = APP_HOME . 'cache' ._DS_ . self::WORK_FILE_PREFIX . mt_rand() . '.' . $this->file_extension ;
+			$this->_work_file_name = $this->work_base_dir . $this->work_file_prefix . mt_rand() . '.' . $this->file_extension ;
 			$this->open_file();
 		}
 		 
@@ -195,12 +213,26 @@ namespace nutshell\plugin\format
 			}
 		}
 		
+		/**
+		 * This funcion deletes the file from disk.
+		 * If the file is open, it closes first.
+		 */
 		public final function delete()
 		{
 			$this->close_file();
-			unlink($this->work_file_name);
+			unlink($this->_work_file_name);
 		}
 		 
+		/**
+		 * This funcion deletes the file from disk.
+		 * If the file is open, it closes first.
+		 */
+		public final function read()
+		{
+			$this->close_file();
+			return file_get_contents($this->getWork_file_name());
+		}
+		
 		/*
 		 * Methods to override in implementations
 		 */
