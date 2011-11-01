@@ -189,16 +189,32 @@ namespace nutshell\plugin\format
 			$this->work_base_dir = $pDir;
 		}
 		 
-		public final function new_file() 
+		public final function new_file($filename='') 
 		{
-			$this->_work_file_name = $this->work_base_dir . $this->work_file_prefix . mt_rand() . '.' . $this->file_extension ;
+			if (strlen($filename)>0)
+			{
+				$this->_work_file_name = $filename;
+			}
+			else
+			{
+				$this->_work_file_name = $this->work_base_dir . $this->work_file_prefix . mt_rand() . '.' . $this->file_extension ;
+			}
+			
 			$this->open_file();
 		}
 		 
 		public final function process(array $records) {
 			foreach($records as $record) {
-				$this->writeRecord($record);
+				$this->processRecord($record);
 			}
+		}
+
+		/**
+		 * This method processes only one record.
+		 * @param array $record
+		 */
+		public final function processRecord(array $record) {
+			$this->writeRecord($record);
 		}
 		 
 		public final function close_file() {
