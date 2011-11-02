@@ -125,15 +125,21 @@ namespace nutshell\core\loader
 					
 					if (is_file($dirBaseFolderFile=$dirBase.lcfirst($key)._DS_.$key.'.php'))
 					{
-						require($dirBaseFolderFile);
-						$this->classNames[$key] = $namespaceBase.lcfirst($key).'\\'.$key;
+						$className = $namespaceBase.lcfirst($key).'\\'.$key;
+						if(!class_exists($className)) {
+							require($dirBaseFolderFile);
+						}
+						$this->classNames[$key] = $className;
 						$this->interfaces[$key] = $this->loadClassDependencies($this->classNames[$key]);
 						break;
 					}
 					else if (is_file($dirBaseFile=$dirBase.$key.'.php'))
 					{
-						require($dirBaseFile);
-						$this->classNames[$key] = $namespaceBase.$key;
+						$className = $namespaceBase.$key;
+						if(!class_exists($className)) {
+							require($dirBaseFile);
+						}
+						$this->classNames[$key] = $className;
 						$this->interfaces[$key] = $this->loadClassDependencies($this->classNames[$key]);
 						break;
 					}
