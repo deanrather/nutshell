@@ -14,7 +14,7 @@ namespace nutshell\helper
 	 * @package nutshell
 	 * @static
 	 */
-	class ArrayClass
+	class ArrayHelper
 	{
 		/**
 		 * This function adds a column to a 2 dimensional array.

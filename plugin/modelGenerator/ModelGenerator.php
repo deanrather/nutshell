@@ -13,7 +13,7 @@ namespace nutshell\plugin\modelGenerator
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Singleton;
 	use nutshell\Nutshell;
-	use nutshell\helper\String;
+	use nutshell\helper\StringHelper;
 
 	/**
 	 * @author joao
@@ -75,7 +75,7 @@ namespace nutshell\plugin\modelGenerator
 			{
 				$column_name    = $column['COLUMN_NAME'];
 				$column_type    = $column['COLUMN_TYPE'];
-				$column_comment = trim(String::removeCrLf($column['COLUMN_COMMENT']));
+				$column_comment = trim(StringHelper::removeCrLf($column['COLUMN_COMMENT']));
 				
 				if (strlen($column_comment)>0)
 				{
@@ -126,7 +126,7 @@ namespace nutshell\plugin\modelGenerator
 			$autoCreate_str		= $autoCreate ? "true" : "false";
 			$column_definition	= $this->getColumnDefinition($tableStructure);
 			
-			$table_comment = trim(String::removeCrLf($table_comment));
+			$table_comment = trim(StringHelper::removeCrLf($table_comment));
 			
 			if (strlen($table_comment)>0)
 			{

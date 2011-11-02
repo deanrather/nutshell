@@ -15,7 +15,7 @@ namespace nutshell\helper
 	 * @package nutshell
 	 * @static
 	 */
-	class String
+	class StringHelper
 	{
 		/**
 		 * Gernates a random string with or without numeric characters.

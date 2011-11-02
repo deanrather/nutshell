@@ -13,7 +13,7 @@ namespace nutshell\core\plugin
 	use nutshell\core\Component;
 	use nutshell\core\config\Config;
 	use nutshell\core\HookManager;
-	use nutshell\helper\Object;
+	use nutshell\helper\ObjectHelper;
 	
 	/**
 	 * @package nutshell
@@ -67,7 +67,7 @@ namespace nutshell\core\plugin
 		{
 			parent::__construct();
 			$this->core		=Nutshell::getInstance();
-			$this->config	=$this->core->config->plugin->{Object::getBaseClassName($this)};
+			$this->config	=$this->core->config->plugin->{ObjectHelper::getBaseClassName($this)};
 			$this->plugin	=Nutshell::getInstance()->plugin;
 			$this->request	=Nutshell::getInstance()->request;
 		}
@@ -91,7 +91,7 @@ namespace nutshell\core\plugin
 		 */
 		public static function config()
 		{
-			return Nutshell::getInstance()->config->plugin->{Object::getBaseClassName(get_called_class())};
+			return Nutshell::getInstance()->config->plugin->{ObjectHelper::getBaseClassName(get_called_class())};
 		}
 		
 		/**
@@ -113,7 +113,7 @@ namespace nutshell\core\plugin
 		 */
 		protected static function registerBehaviour($plugin,$behaviourName,$callback)
 		{
-			$pluginName	=lcfirst(Object::getBaseClassName($plugin));
+			$pluginName	=lcfirst(ObjectHelper::getBaseClassName($plugin));
 			$behaviour	='nutshell\behaviour\\'.$pluginName.'\\'.$behaviourName;
 			if (!isset(self::$behaviours[$behaviour]))
 			{

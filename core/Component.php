@@ -5,7 +5,7 @@
 namespace nutshell\core
 {
 	use nutshell\Nutshell;
-	use nutshell\helper\Object;
+	use nutshell\helper\ObjectHelper;
 	
 	/**
 	 * This is the base component class which all core
@@ -30,7 +30,7 @@ namespace nutshell\core
 // 			$this->core			=Nutshell::getInstance();
 // 			$this->plugin		=Nutshell::getInstance()->plugin;
 // 			$this->request		=Nutshell::getInstance()->request;
-			HookManager::execute('core\plugin',Object::getBaseClassName($this).'OnConstruct');
+			HookManager::execute('core\plugin',ObjectHelper::getBaseClassName($this).'OnConstruct');
 		}
 		
 		/**
@@ -56,7 +56,7 @@ namespace nutshell\core
 		 */
 		public static function load($files)
 		{
-			$directory = Object::getClassPath(get_called_class());
+			$directory = ObjectHelper::getClassPath(get_called_class());
 			
 			if (!is_array($files))$files=array($files);
 			for ($i=0,$j=count($files); $i<$j; $i++)

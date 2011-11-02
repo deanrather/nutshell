@@ -6,7 +6,7 @@ namespace nutshell\core\loader
 {
 	use nutshell\Nutshell;
 
-	use nutshell\helper\Object;
+	use nutshell\helper\ObjectHelper;
 
 	use nutshell\core\exception\Exception;
 
@@ -52,8 +52,8 @@ namespace nutshell\core\loader
 		
 		public static function autoload($className)
 		{
-			$namespace=Object::getNamespace($className);
-			$className=Object::getBaseClassName($className);
+			$namespace=ObjectHelper::getNamespace($className);
+			$className=ObjectHelper::getBaseClassName($className);
 			//Check for a plugin behaviour.
 			if (strstr($namespace,'behaviour\\'))
 			{

@@ -15,7 +15,7 @@ namespace nutshell\helper
 	 * @package nutshell
 	 * @static
 	 */
-	class Object
+	class ObjectHelper
 	{
 		/**
 		 * @var Integer
@@ -106,9 +106,9 @@ namespace nutshell\helper
 		 * @access public
 		 * @static
 		 * @param String $className the class being investigated
-		 * @param int $options You can specify which elements are returned with optional parameter options. It composes from Object::CLASSINFO_NAMESPACE, Object::CLASSINFO_CLASSNAME. It defaults to return all elements.
+		 * @param int $options You can specify which elements are returned with optional parameter options. It composes from ObjectHelper::CLASSINFO_NAMESPACE, ObjectHelper::CLASSINFO_CLASSNAME. It defaults to return all elements.
 		 * @return array an associative array of information corresponding to the following keys: 
-		 * Object::CLASSINFO_VAL_NAMESPACE, Object::CLASSINFO_VAL_CLASSNAME. 
+		 * ObjectHelper::CLASSINFO_VAL_NAMESPACE, ObjectHelper::CLASSINFO_VAL_CLASSNAME. 
 		 * In case the string cannot be parsed, null is returned.
 		 * 		
 		 */

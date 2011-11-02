@@ -7,7 +7,7 @@ namespace nutshell\core\plugin
 	use nutshell\Nutshell;
 	use nutshell\core\exception\Exception;
 	use nutshell\core\Component;
-	use nutshell\helper\Object;
+	use nutshell\helper\ObjectHelper;
 	
 	/**
 	 * @package nutshell
@@ -21,12 +21,12 @@ namespace nutshell\core\plugin
 		public function __construct()
 		{
 			parent::__construct();
-			$this->config=Nutshell::getInstance()->config->plugin->{Object::getBaseClassName($this->getParentPlugin())};
+			$this->config=Nutshell::getInstance()->config->plugin->{ObjectHelper::getBaseClassName($this->getParentPlugin())};
 		}
 		
 		private function getParentPlugin()
 		{
-			$NS		=Object::getNamespace($this);
+			$NS		=ObjectHelper::getNamespace($this);
 			$NSParts=explode('\\',$NS);
 			if ($NSParts[1]=='plugin')
 			{
