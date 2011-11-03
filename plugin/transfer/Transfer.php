@@ -15,6 +15,35 @@ namespace nutshell\plugin\transfer
 	/**
 	 * @package nutshell-plugin
 	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+	 * <pre>
+	   Usage example:
+	        // creates an FTP object
+ 			$oFtp = $this->plugin->Transfer()->Ftp();
+
+			// connection settings
+			$aSettings = array
+			(
+				'host'     => '127.0.0.1',
+				'port'     => '21',
+				'user'     => 'sroot',
+				'password' => 'mypassword'
+			);
+			
+			// apply settings
+			$oFtp->setOptions($aSettings);
+
+			// local file name
+			$local = "/var/tmp/blablebli";
+			
+			// remote file name
+			$remote = "blablebli";
+			
+			// sends the file (connect if it's not connected).
+			$oFtp->put($local, $remote);
+			
+			// closes the connection.
+			$oFtp->close();
+		</pre>
 	 */
 	class Transfer extends Plugin implements Native, Singleton, ChildFactory
 	{
