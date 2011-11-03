@@ -1,6 +1,8 @@
 <?php
 namespace nutshell\plugin\transfer\engine
 {
+	use nutshell\plugin\transfer\exception\TransferException;
+	
 	class SCP extends SSH
 	{
 		public function put($local, $remote)
