@@ -15,7 +15,23 @@ namespace nutshell\plugin\transfer
 	/**
 	 * @package nutshell-plugin
 	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
+		Settings depend on protocol as follows:
+		FTP: host, port (optional), user, password.
+		FTPS: not yet coded.
+		SCP: (same as SSH).
+		SSH: host, port (optional), user, password, keyfile, pubkeyfile. You can use user/password OR keyfile/pubkeyfile.
+		SFPT: (same as SSH).
+
+		In most cases (most protocols), uploading and downloading a file is done always in the very same way as follows:
+		->put($local, $remote)
+		->fetch($remote, $local)
 	 * <pre>
+	 * In order to make SSH, SFTP and SCP to work, you have to install libssh2. In ubuntu, do this 3 steps: 
+	   1) apt-get install libssh2-1 libssh2-1-dev libssh2-php 
+	   2) pecl install ssh2 channel://pecl.php.net/ssh2-version 
+	   3) /etc/init.d/apache2 restart
+	   Note from Joao: in my Ubuntu 11.04 Natty Narwhal, above instructions for installing libssh2 version 0.11.3 work. You may need installing PECL before. 
+	   
 	   Usage example:
 	        // creates an FTP object
  			$oFtp = $this->plugin->Transfer()->Ftp();
