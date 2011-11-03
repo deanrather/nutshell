@@ -7,6 +7,8 @@ namespace nutshell\plugin\transfer\engine
 
 	abstract class Base extends PluginExtension
 	{
+		const DEFAULT_RETRY_COUNT = 3;
+		
 		protected $host;
 		
 		protected $port;
@@ -54,6 +56,41 @@ namespace nutshell\plugin\transfer\engine
 		public function put($local, $remote)
 		{
 			throw new TransferException('The %s engine does not implement the put method.', get_class($this));
+		}
+		
+		/**
+		 * Copy a file to the server retrying $maxAttemptCount times.
+		 * @param string $local
+		 * @param string $remote
+		 * @param int $maxAttemptCount
+		 * @throws TransferException
+		 */
+		public function putRetrying($local, $remote, $maxAttemptCount = self::DEFAULT_RETRY_COUNT)
+		{
+			$error_message = '';
+			
+			$notSent = true;
+			
+			$attemptCnt = 0;
+			
+			while( $notSent && ($attemptCnt<$maxAttemptCount) )
+			{
+				try 
+				{
+					$attemptCnt++;
+					$this->put($local, $remote);
+					$notSent = false;
+				} catch (TransferException $e) 
+				{
+					$error_message = $error_message. " Attempt $attemptCnt:".$e->getMessage();
+					// sleeps 2 seconds after a failed attempt
+					sleep(2);
+				}
+			}
+			if ($notSent)
+			{
+				throw new TransferException($error_message);
+			}
 		}
 		
 		/**
