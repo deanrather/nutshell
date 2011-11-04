@@ -12,11 +12,33 @@ namespace nutshell\plugin\verylargequery
 	 * It probably won't maky any sense using this class if you think your result sets will never be bigger than 100,000 rows (use DB nutshell plugin instead). This class is intended to be used with very large result sets.
 	 * A common usage is loading data for exporting.
 	   <pre>
-	   Usage Example:
+	   	Usage Example:
+	 	
 	 		$lq = $this->plugin->VeryLargeQuery();
 			$lq->connect('localhost', '3306', 'leadgen2', 'root', 'mypass');
 			$sql = "select * from tbl_accounts";
 			$resultingFiles = $lq->saveResultIntoFile($sql);
+		
+		Another example is sending the query result thru FTP as follows:
+
+			$lq = $this->plugin->VeryLargeQuery();
+			$lq->connect('localhost', '3306', 'leadgen2', 'root', 'rafael');
+			
+			$sql = "select * from tbl_accounts";
+			
+			$baseFilename = 'mytable'; 
+			$remoteFolder = '';
+			
+			$user = 'sroot';
+			$host = 'ftp.remoteserver.com';
+			$password = 'mypassword';
+			$port = 21;
+			
+			$format = 'csv';
+			$protocol = 'ftp';
+			
+			$lq->transmitResult($sql, $baseFilename, $remoteFolder, $format, $protocol, $user, $host, $password, $port);
+ 	
 		</pre>
 	 */
 	class VeryLargeQuery extends Plugin implements Factory
