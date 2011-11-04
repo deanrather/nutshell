@@ -1,6 +1,8 @@
 <?php
 namespace nutshell\plugin\format
 {
+	use nutshell\core\exception\Exception;
+	
 	/** 
 	 * This class is a base for (is extended by) all formating classes.
 	 */
@@ -175,7 +177,7 @@ namespace nutshell\plugin\format
 			
 			$this->file_handle = fopen($this->_work_file_name, 'w');
 			if (!$this->file_handle) {
-				throw new Exception("Can't open the file for edition.");
+				throw new Exception("Can't open the file {$this->_work_file_name} for edition.");
 			}
 			$this->initHandler();
 		}
@@ -193,7 +195,14 @@ namespace nutshell\plugin\format
 		{
 			if (strlen($filename)>0)
 			{
-				$this->_work_file_name = $filename;
+				if ( (strpos($filename,"/")>0) || (strpos($filename,"\\")>0))
+				{
+					$this->_work_file_name = $filename;
+				}
+				else
+				{
+					$this->_work_file_name = $this->work_base_dir.$filename;
+				}				
 			}
 			else
 			{
