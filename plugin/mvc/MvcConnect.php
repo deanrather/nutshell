@@ -2,6 +2,7 @@
 namespace nutshell\plugin\mvc
 {
 	use nutshell\Nutshell;
+	use nutshell\core\plugin\PluginExtension;
 
 	/**
 	 * This class implements methods that can be used as shortcuts to nutshell, plugins and models. 
@@ -9,7 +10,7 @@ namespace nutshell\plugin\mvc
 	 * @package nutshell-plugin
 	 * @abstract
 	 */
-	abstract class MvcConnect
+	abstract class MvcConnect extends PluginExtension 
 	{
 		/**
 		* Stores a local pointer to Nutshell
@@ -82,6 +83,10 @@ namespace nutshell\plugin\mvc
 			elseif ($key=='logger')
 			{
 				return $this->logger(); // returns a logger
+			}
+			else
+			{
+				parent::__get($key);
 			}
 		}
 	}
