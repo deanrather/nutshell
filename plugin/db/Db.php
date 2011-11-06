@@ -80,6 +80,26 @@ namespace nutshell\plugin\db
 			
 			return self::$connections[$connectionName];
 		}
+		
+		public function resetConnections() 
+		{
+			if(self::$connections) 
+			{
+				foreach(self::$connections as $name => $connection) 
+				{
+					try 
+					{
+						$connection->disconnect();
+					}
+					catch(\Exception $e) 
+					{
+						$this->plugin->Logger('root')->error($e->__toString());
+					}
+					
+					unset(self::$connections[$name]);
+				}
+			}
+		}
 	}
 }
 ?>
