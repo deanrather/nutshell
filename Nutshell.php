@@ -92,6 +92,8 @@ namespace nutshell
 				define('NS_INTERFACE', self::INTERFACE_HTTP);
 				define('NS_WEB_HOME', dirname($_SERVER['SCRIPT_FILENAME']));
 				define('NS_APP_WEB_HOME', dirname($_SERVER['SCRIPT_NAME']));
+				header('X-Powered-By: PHP/'.phpversion().' & Nutshell/'.self::VERSION);
+				header('X-Nutshell-Version:'.self::VERSION);
 			}
 			
 			//Load the behaviours first.
@@ -242,13 +244,17 @@ namespace nutshell
 				$env=getenv('NS_ENV');
 				if (!$env && function_exists('apache_getenv'))
 				{
-					$env=apache_getenv("NS_ENV");
+					$env=apache_getenv('NS_ENV');
 				}
 				if (!$env)
 				{
 					$env = self::DEFAULT_ENVIRONMENT;
 				}
 				define(self::NUTSHELL_ENVIRONMENT, $env);
+				if (NS_INTERFACE==self::INTERFACE_HTTP)
+				{
+					header('X-Nutshell-Environment:'.NS_ENV);
+				}
 			}
 			HookManager::execute('core','onBeforeConfigLoad');
 			$this->config = Framework::loadConfig(APP_HOME . Config::CONFIG_FOLDER, NS_ENV);
