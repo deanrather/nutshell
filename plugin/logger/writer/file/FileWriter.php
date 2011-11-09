@@ -63,7 +63,7 @@ namespace nutshell\plugin\logger\writer\file
 				if(!preg_match('/^[0-7]{3}$/', $this->mode)) {
 					throw new Exception(sprintf('Could not apply invalid permissions set (%s) to log file at: %s', $this->mode, $realPath));
 				}
-				@chmod($realpath, 0 . $this->mode);
+				@chmod($realPath, 0 . $this->mode);
 			}
 			else
 			{
