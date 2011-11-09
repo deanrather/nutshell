@@ -17,13 +17,18 @@ namespace nutshell\plugin\logger\writer\file
 	 */
 	class FileWriter extends Writer
 	{
+		const DEFAULT_MODE = 644;
+		
 		protected $output = null;
+		
+		protected $mode = null;
 		
 		protected function parseConfig(Config $config)
 		{
 			parent::parseConfig($config);
 			
 			$this->parseConfigOption($config, 'output');
+			$this->parseConfigOption($config, 'mode', false);
 			$this->validateOutput();
 		}
 		
@@ -55,6 +60,10 @@ namespace nutshell\plugin\logger\writer\file
 				{
 					throw new Exception(sprintf('Could not create log file at: %s', $realPath));
 				}
+				if(!preg_match('/^[0-7]{3}$/', $this->mode)) {
+					throw new Exception(sprintf('Could not apply invalid permissions set (%s) to log file at: %s', $this->mode, $realPath));
+				}
+				@chmod($realpath, 0 . $this->mode);
 			}
 			else
 			{
