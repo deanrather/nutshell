@@ -75,6 +75,7 @@ namespace nutshell
 				if(isset($_SERVER['GATEWAY_INTERFACE']))
 				{
 					define('NS_INTERFACE', self::INTERFACE_HTTP);
+					define('NS_IS_CGI', true);
 					define('NS_WEB_HOME', dirname($_SERVER['SCRIPT_FILENAME']));
 					define('NS_APP_WEB_HOME', dirname($_SERVER['SCRIPT_NAME']));
 				}
@@ -90,6 +91,7 @@ namespace nutshell
 			else
 			{
 				define('NS_INTERFACE', self::INTERFACE_HTTP);
+				define('NS_IS_CGI', false);
 				define('NS_WEB_HOME', dirname($_SERVER['SCRIPT_FILENAME']));
 				define('NS_APP_WEB_HOME', dirname($_SERVER['SCRIPT_NAME']));
 				header('X-Powered-By: PHP/'.phpversion().' & Nutshell/'.self::VERSION);
