@@ -124,7 +124,7 @@ namespace nutshell\plugin\mvc\model
 			}
 			
 			$this->columnNames = array_keys($this->columns);
-			$this->columnNamesListStr = implode(',',$this->columnNames);
+			$this->columnNamesListStr = '`'. implode('`,`', $this->columnNames) . '`';
 			
 			// doesn't make much sense inserting an auto increment column using default settings.
 			if (($this->primary_ai) && (count($this->primary)==1))
@@ -134,7 +134,7 @@ namespace nutshell\plugin\mvc\model
 				$this->defaultInsertColumns = &$this->columnNames;
 			}
 			
-			$this->defaultInsertColumnsStr = implode(',',$this->defaultInsertColumns);
+			$this->defaultInsertColumnsStr = '`' . implode('`,`',$this->defaultInsertColumns) . '`';
 			$this->defaultInsertPlaceHolders = rtrim(str_repeat('?,',count($this->defaultInsertColumns)),',');				
 			
 			if (!empty($this->name) && (count($this->primary)>0) && !empty($this->columns))
@@ -156,11 +156,11 @@ namespace nutshell\plugin\mvc\model
 						{
 							if ($this->isPrimaryKey($name))
 							{
-								$columns[]			=$name.' '.$typeDef.' NOT NULL '.$localAutoCreate;
+								$columns[]			= '`' . $name.'` '.$typeDef.' NOT NULL '.$localAutoCreate;
 							}
 							else
 							{
-								$columns[]			=$name.' '.$typeDef.' NULL';
+								$columns[]			= '`' . $name.'` '.$typeDef.' NULL';
 							}
 						}
 						$columns=implode(',',$columns);
@@ -170,7 +170,7 @@ namespace nutshell\plugin\mvc\model
 							" CREATE TABLE IF NOT EXISTS {$this->name}
 							(
 							{$columns},
-							PRIMARY KEY (".implode(',',$this->primary).")
+							PRIMARY KEY (`".implode('`,`',$this->primary)."`)
 							) ENGINE=INNODB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_bin
 ";
 
@@ -206,11 +206,11 @@ namespace nutshell\plugin\mvc\model
 				$keys			=&$this->defaultInsertColumnsStr;
 			} else {
 				$placeholders = rtrim(str_repeat('?,',count($record)),',');
-				$keys         = implode(',',$fields);
+				$keys         = '`' . implode('`,`',$fields) . '`';
 			}
 			$query=
 <<<SQL
-			INSERT INTO {$this->name}
+			INSERT INTO `{$this->name}`
 				({$keys})
 			VALUES
 				({$placeholders});
@@ -255,13 +255,13 @@ SQL;
 			if (count($readColumns)>0) 
 			{
 				// reads only selected columns
-				$columnsSQL = implode(',',$readColumns);
+				$columnsSQL = '`' . implode('`,`', $readColumns) . '`';
 			} else {
 				// reads all columns
 				$columnsSQL = $this->columnNamesListStr;
 			}
 			
-			$query = " SELECT {$columnsSQL} FROM {$this->name} {$whereKeySQL} {$additionalPartSQL} ";
+			$query = " SELECT {$columnsSQL} FROM `{$this->name}` {$whereKeySQL} {$additionalPartSQL} ";
 			
 			return $this->db->getResultFromQuery($query,$whereKeyValues);
 		}
@@ -281,7 +281,7 @@ SQL;
 			//Quick update is possible if $whereKeyVals is numeric and PK is composed by only one column.
 			if (is_numeric($whereKeyVals) && (count($this->primary)==1))
 			{
-				$whereKeySQL = " {$this->primary[0]} = ? ";
+				$whereKeySQL = " `{$this->primary[0]}` = ? ";
 				$whereKeyValues[] = (int) $whereKeyVals;
 			}
 			//More specific keyval matching.
@@ -293,7 +293,7 @@ SQL;
 					$where[]=$key.'=?';
 					$whereKeyValues[] = $value;
 				}
-				$whereKeySQL=implode(' and ',$where);
+				$whereKeySQL=implode(' AND ',$where);
 			}
 			else
 			{
@@ -307,7 +307,7 @@ SQL;
 			$set=array();
 			foreach (array_keys($updateKeyVals) as $key)
 			{
-				$set[]=$key.'=?';
+				$set[] = '`' . $key . '` = ?';
 			}
 			$set=implode(',',$set);
 
@@ -316,7 +316,7 @@ SQL;
 			$this->getWhereSQL($whereKeyVals, $whereKeySQL, $whereKeyValues);
 	
 			$query=<<<SQL
-			UPDATE {$this->name}
+			UPDATE `{$this->name}`
 			SET {$set}
 			WHERE {$whereKeySQL};
 SQL;
@@ -333,7 +333,7 @@ SQL;
 			$whereKeyValues = array();
 			$this->getWhereSQL($whereKeyVals, $whereKeySQL, $whereKeyValues);
 				
-			$query=" DELETE FROM {$this->name} WHERE {$whereKeySQL} ";
+			$query=" DELETE FROM `{$this->name}` WHERE {$whereKeySQL} ";
 			 
 			return $this->db->delete($query,$whereKeyValues);
 		}
