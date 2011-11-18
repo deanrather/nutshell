@@ -100,6 +100,7 @@ namespace nutshell\plugin\mvc\model
 	 */
 	abstract class CRUD extends Model
 	{
+		public $dbName		=null;	  //dbName
 		public $name	   =null;     // table name
 		public $primary	   =array();  // array with primary keys.
 		public $primary_ai =true;     // is the pk auto increment? Only works if count($primary) == 1
@@ -166,8 +167,9 @@ namespace nutshell\plugin\mvc\model
 						$columns=implode(',',$columns);
 						
 						//Create the table (if it doesn\'t already exist).
+						$dbPrefix = $this->getDbPrefix();
 						$query=
-							" CREATE TABLE IF NOT EXISTS {$this->name}
+							" CREATE TABLE IF NOT EXISTS {$dbPrefix}`{$this->name}`
 							(
 							{$columns},
 							PRIMARY KEY (`".implode('`,`',$this->primary)."`)
@@ -208,9 +210,11 @@ namespace nutshell\plugin\mvc\model
 				$placeholders = rtrim(str_repeat('?,',count($record)),',');
 				$keys         = '`' . implode('`,`',$fields) . '`';
 			}
+			
+			$dbPrefix = $this->getDbPrefix();
 			$query=
 <<<SQL
-			INSERT INTO `{$this->name}`
+			INSERT INTO {$dbPrefix}`{$this->name}`
 				({$keys})
 			VALUES
 				({$placeholders});
@@ -261,9 +265,19 @@ SQL;
 				$columnsSQL = $this->columnNamesListStr;
 			}
 			
-			$query = " SELECT {$columnsSQL} FROM `{$this->name}` {$whereKeySQL} {$additionalPartSQL} ";
+			$dbPrefix = $this->getDbPrefix();
+			$query = " SELECT {$columnsSQL} FROM {$dbPrefix}`{$this->name}` {$whereKeySQL} {$additionalPartSQL} ";
 			
 			return $this->db->getResultFromQuery($query,$whereKeyValues);
+		}
+		
+		/**
+		 * Return a string serving as a prefix for the table name in the query. If the dbName property in the class is set to null or an empty
+		 * value, then no prefix will be generated and the query will run on the currently selected database.
+		 * @return string
+		 */
+		protected function getDbPrefix() {
+			return $this->dbName ? '`' . $this->dbName . '`.' : '';
 		}
 
 		/**
@@ -315,8 +329,9 @@ SQL;
 			$whereKeyValues = array();
 			$this->getWhereSQL($whereKeyVals, $whereKeySQL, $whereKeyValues);
 	
+			$dbPrefix = $this->getDbPrefix();
 			$query=<<<SQL
-			UPDATE `{$this->name}`
+			UPDATE {$dbPrefix}`{$this->name}`
 			SET {$set}
 			WHERE {$whereKeySQL};
 SQL;
@@ -332,8 +347,9 @@ SQL;
 			$whereKeySQL = '';
 			$whereKeyValues = array();
 			$this->getWhereSQL($whereKeyVals, $whereKeySQL, $whereKeyValues);
-				
-			$query=" DELETE FROM `{$this->name}` WHERE {$whereKeySQL} ";
+			
+			$dbPrefix = $this->getDbPrefix();
+			$query=" DELETE FROM {$dbPrefix}`{$this->name}` WHERE {$whereKeySQL} ";
 			 
 			return $this->db->delete($query,$whereKeyValues);
 		}
