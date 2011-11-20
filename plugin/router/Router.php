@@ -41,10 +41,14 @@ namespace nutshell\plugin\router
 			
 			//try to load user handlers
 			$userHandlerDir = APP_HOME . 'plugin' . _DS_ . 'router' . _DS_ . 'handler'; 
-			if(is_dir($userHandlerDir)) {
-				if($userHandlers = glob($userHandlerDir . _DS_ . '*.php')){
-					foreach($userHandlers as $userHandler) {
-						if(is_file($userHandler)) {
+			if(is_dir($userHandlerDir))
+			{
+				if($userHandlers = glob($userHandlerDir . _DS_ . '*.php'))
+				{
+					foreach($userHandlers as $userHandler)
+					{
+						if(is_file($userHandler))
+						{
 							require_once($userHandler);
 						}
 					}
