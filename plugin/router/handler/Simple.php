@@ -28,13 +28,23 @@ namespace nutshell\plugin\router\handler
 		{
 			if ($this->request->nodeEmpty($this->pointer))
 			{
-				$this->route = $this->createRoute('index','index',array());
+				if (is_null($this->route))
+				{
+					$this->route = $this->createRoute('index','index',array());
+				}
+				else
+				{
+					$this->route->setControlNamespace('index');
+					$this->route->setControl('index');
+					$this->route->setAction('index');
+					$this->route->setArgs(array());
+				}
 			}
 			else
 			{
 				//Set the controler to node 0.
 				$control=$this->request->node($this->pointer);
-			
+				
 				//Set some defaults.
 				$action	='index';
 				$args	=array();
@@ -63,8 +73,17 @@ namespace nutshell\plugin\router\handler
 						}
 					}
 				}
-				
-				$this->route = $this->createRoute($control, $action, $args);
+				if (is_null($this->route))
+				{
+					$this->route = $this->createRoute($control, $action, $args);
+				}
+				else
+				{
+					$this->route->setControlNamespace($this->getControlNamespace($control));
+					$this->route->setControl($control);
+					$this->route->setAction($action);
+					$this->route->setArgs($args);
+				}
 			}
 		}
 		
