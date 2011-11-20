@@ -19,12 +19,12 @@ namespace nutshell\plugin\router\handler
 		protected function getControlNamespace($controller)
 		{
 			$pointer	=-1;
-			$thisNode	=$this->plugin->Url->node($pointer);
+			$thisNode	=$this->request->node($pointer);
 			$namespace	='';
-			$firstNode	=$this->plugin->Url->node(0);
+			$firstNode	=$this->request->node(0);
 			if (!empty($firstNode))
 			{
-				while (($thisNode=$this->plugin->Url->node(++$pointer))!=$controller)
+				while (($thisNode=$this->request->node(++$pointer))!=$controller)
 				{
 					$namespace.=$thisNode.'\\';
 				}
