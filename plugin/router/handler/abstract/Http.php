@@ -40,7 +40,8 @@ namespace nutshell\plugin\router\handler
 		 * @param Array $args
 		 * @return the nutshell\plugin\router\Route
 		 */
-		protected function createRoute($controller, $action, $args) {
+		protected function createRoute($controller, $action, $args)
+		{
 			return new Route($this->getControlNamespace($controller), $controller, $action, $args);
 		}
 	}
