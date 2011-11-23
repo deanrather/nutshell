@@ -36,7 +36,7 @@ namespace nutshell\helper
 		 * @param string $old_column_name
 		 * @param string $new_column_name
 		 */		
-		public function renameField(array &$row, $old_field_name, $new_field_name)
+		public static function renameField(array &$row, $old_field_name, $new_field_name)
 		{
 			$row[$new_field_name] = $row[$old_field_name];
 			unset($row[$old_field_name]);
@@ -47,7 +47,7 @@ namespace nutshell\helper
 		 * @param array $row Data to be modified.
 		 * @param array $aRenaming Array with multiple renamings. This parameter is passed as reference because it's faster. This array won't be modified.
 		 */
-		public function renameFields(array &$row, array &$aRenaming)
+		public static function renameFields(array &$row, array &$aRenaming)
 		{
 			foreach($aRenaming as $old_field_name => $new_field_name)
 			{
