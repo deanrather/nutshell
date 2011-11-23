@@ -87,7 +87,16 @@ namespace nutshell\plugin\cache
 		public function retrieve($cacheKey, $subFolder='')
 		{
 			return $this->oCacheManager->retrieve($cacheKey, $subFolder);
-		}		
+		}
+		
+		/**
+		 * Builds a cacke key based in an unlimited amount of parameters.
+		 */
+		public function getCacheKey()
+		{
+			$args = func_get_args();
+			return join('-', $args);
+		}
 	}
 }
 ?>

@@ -17,7 +17,7 @@ namespace nutshell\plugin\cache
 		}
 		
 		/**
-		 * Retrieves data from cache. It returns NULL when no data is found. 
+		 * Retrieves data from cache. It returns FALSE when no data is found. 
 		 * @param string $cacheKey
 		 * @return mixed
 		 */
