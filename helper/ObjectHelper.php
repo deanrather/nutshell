@@ -164,7 +164,7 @@ namespace nutshell\helper
 		 * @param mixed $arrayObject
 		 * @throws Exception
 		 */
-		public function encodeIntoArrayObject($objectOrArray, $maxRecursionLevel = 5, $recursionLevel = 0)
+		public static function encodeIntoArrayObject($objectOrArray, $maxRecursionLevel = 5, $recursionLevel = 0)
 		{
 			// prevents infinite recursion
 			if ($recursionLevel>$maxRecursionLevel)
