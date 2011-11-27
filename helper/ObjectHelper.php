@@ -5,6 +5,11 @@
  */
 namespace nutshell\helper
 {
+	
+	use application\plugin\capture\Exception;
+
+	use \ArrayObject;
+	
 	/**
 	 * The Object helper class.
 	 * 
@@ -151,6 +156,38 @@ namespace nutshell\helper
 				//otherwise return only the required property
 				$keys = array_keys($result);
 				return $result[$keys[0]];
+			}
+		}
+		
+		/**
+		 * This method recursively encondes an array or an object into an ArrayObject.
+		 * @param mixed $arrayObject
+		 * @throws Exception
+		 */
+		public function encodeIntoArrayObject($objectOrArray, $maxRecursionLevel = 5, $recursionLevel = 0)
+		{
+			// prevents infinite recursion
+			if ($recursionLevel>$maxRecursionLevel)
+			{
+				return new \ArrayObject($objectOrArray);
+			}
+			
+			if (is_array($objectOrArray) || (is_object($objectOrArray)))
+			{
+				$result = new \ArrayObject($objectOrArray);
+				
+				foreach($result as $key=>$value)
+				{
+					if (is_array($value) || (is_object($value)))
+					{
+						$result[$key] = self::encodeIntoArrayObject($value, $maxRecursionLevel, $recursionLevel+1);
+					}
+				}
+				return $result;
+			}
+			else
+			{
+				throw new Exception("encodeIntoObjectArray expects an array or an object.");
 			}
 		}
 	}
