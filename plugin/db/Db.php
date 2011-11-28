@@ -62,6 +62,11 @@ namespace nutshell\plugin\db
 					throw new Exception(sprintf("Failed to initiate connection for %s", $connectionName));
 				}
 				
+				if($charset = $connectionParams->charset) {
+					//sets the connection's charset
+					$connection->query('SET NAMES ' . $charset);
+				}
+				
 				return $connection;
 			} 
 			else
