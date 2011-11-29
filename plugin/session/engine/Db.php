@@ -214,11 +214,12 @@ SQL
 		 */
 		public function gcSessionHandler($maxlifetime)
 		{
-			$this->activeConnector->delete(<<<SQL
+		
+			$sql =
+<<<SQL
 DELETE FROM {$this->table} WHERE DATE_ADD(session_ts, INTERVAL ? SECOND) < CURRENT_TIMESTAMP
-SQL
-			, $sessionId
-			);
+SQL;
+			$this->activeConnector->delete($sql, $maxlifetime);
 			return true;
 		}
 	}
