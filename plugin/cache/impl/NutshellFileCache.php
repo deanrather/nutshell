@@ -86,7 +86,7 @@ namespace nutshell\plugin\cache
 				$subFolder = $subFolder._DS_;
 			}
 			
-			$fileName = $this->cacheFolder._DS_.$subFolder.'cache_'.$keyMD5;
+			$fileName = $this->cacheFolder._DS_.$subFolder.'.cache_'.$keyMD5;
 			
 			try 
 			{	
