@@ -66,6 +66,12 @@ namespace nutshell\plugin\verylargequery
 		 */
 		protected $maxNumberOfRowsPerFile = 100000;
 		
+		/**
+		 * Indicates if field names have to be included.
+		 * @var bool
+		 */
+		protected $includeFieldNames = false;
+		
 		public static function loadDependencies()
 		{
 		
@@ -163,6 +169,15 @@ namespace nutshell\plugin\verylargequery
 		public function setRenameColumns(array $pRenameColumns)
 		{
 			$this->aRenameColumns = $pRenameColumns;
+		}
+		
+		/**
+		 * When the parameter is true, indicates that field names are included into the output.
+		 * @param bool $includeFieldNames
+		 */
+		public function setIncludeFieldNames($pIncludeFieldNames)
+		{
+			$this->includeFieldNames = $pIncludeFieldNames;
 		}
 
 		/**
@@ -275,6 +290,11 @@ namespace nutshell\plugin\verylargequery
 					else
 					{
 						$oFormat->new_file();
+					}
+					
+					if ($this->includeFieldNames)
+					{
+						$oFormat->processRecord(array_keys($row));
 					}
 					
 					$openFile = true;
