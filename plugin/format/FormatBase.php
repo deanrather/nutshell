@@ -181,7 +181,7 @@ namespace nutshell\plugin\format
 		 */
 		public function setEncoding($str)
 		{
-			if (in_array($this->supportedEncodings,$str))
+			if (in_array($str, $this->supportedEncodings))
 			{
 				$this->encoding = $str;
 			}
