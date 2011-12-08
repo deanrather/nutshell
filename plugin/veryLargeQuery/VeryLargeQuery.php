@@ -78,6 +78,12 @@ namespace nutshell\plugin\verylargequery
 		 */
 		protected $lineBreakID = 0; // WINDOWS/DEFALULT
 		
+		/**
+		 * Character encoding used when saving files.
+		 * @var string
+		 */
+		protected $charEncoding = '';
+		
 		public static function loadDependencies()
 		{
 		
@@ -187,6 +193,15 @@ namespace nutshell\plugin\verylargequery
 		}
 		
 		/**
+		 * Sets the character encoding when saving a file.
+		 * @param unknown_type $str
+		 */
+		public function setcharEncoding($str)
+		{
+			$this->charEncoding = $str;
+		}
+		
+		/**
 		 * Sets the type of line break
 		 * @param int $lineBreakID
 		 */
@@ -284,6 +299,11 @@ namespace nutshell\plugin\verylargequery
 			$oFormat = $this->plugin->Format($format);
 			
 			$oFormat->setLineBreakFromID($this->lineBreakID);
+			
+			if (strlen($this->charEncoding)>0)
+			{
+				$oFormat->setEncoding($this->charEncoding);
+			}
 
 			// executes the query
 			$this->query($sql);
