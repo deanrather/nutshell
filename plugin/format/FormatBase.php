@@ -34,6 +34,20 @@ namespace nutshell\plugin\format
 		const LINE_BREAK_WIN = 'CRLF';
 	
 		const LINE_BREAK_UNIX = 'LF';
+		
+		const LINE_BREAK_WIN_ID = 0;
+		
+		const LINE_BREAK_UNIX_ID = 1;
+		
+		/**
+		 * Array that maps ID to line break value
+		 * @var array
+		 */
+		protected $aLineBreaks = array
+		(
+			self::LINE_BREAK_WIN_ID 	=> self::LINE_BREAK_WIN,
+			self::LINE_BREAK_UNIX_ID 	=> self::LINE_BREAK_UNIX
+		);
 	
 		protected $_format_config_line_break = self::LINE_BREAK_UNIX;
 	
@@ -50,8 +64,8 @@ namespace nutshell\plugin\format
 		public static function getAvailableLineBreaks() {
 			if (is_null(self::$_line_breaks)) {
 				self::$_line_breaks = array();
-				self::$_line_breaks[self::LINE_BREAK_UNIX] = self::translate('Mac/Unix (LF)');
-				self::$_line_breaks[self::LINE_BREAK_WIN] = self::translate('Windows (CRLF)');
+				self::$_line_breaks[self::LINE_BREAK_UNIX] = 'Unix (LF)';
+				self::$_line_breaks[self::LINE_BREAK_WIN] = 'Windows (CRLF)';
 			}
 			 
 			return array_merge(array(), self::$_line_breaks);
@@ -88,6 +102,11 @@ namespace nutshell\plugin\format
 		{
 			$this->_format_name = $value;
 			return $this;
+		}
+		
+		public function setLineBreakFromID($id)
+		{
+			$this->setFormat_config_line_break($this->aLineBreaks[$id]);
 		}
 		 
 		public function setFormat_config_line_break($value) {

@@ -72,6 +72,12 @@ namespace nutshell\plugin\verylargequery
 		 */
 		protected $includeFieldNames = false;
 		
+		/**
+		 * The type of line break used when saving into a file.
+		 * @var int
+		 */
+		protected $lineBreakID = 0; // WINDOWS/DEFALULT
+		
 		public static function loadDependencies()
 		{
 		
@@ -179,6 +185,15 @@ namespace nutshell\plugin\verylargequery
 		{
 			$this->includeFieldNames = $pIncludeFieldNames;
 		}
+		
+		/**
+		 * Sets the type of line break
+		 * @param int $lineBreakID
+		 */
+		public function setLineBreak($lineBreakID)
+		{
+			$this->lineBreakID = $lineBreakID;
+		}
 
 		/**
 		 * This function does:
@@ -267,6 +282,8 @@ namespace nutshell\plugin\verylargequery
 			$format = strtolower($format);
 			
 			$oFormat = $this->plugin->Format($format);
+			
+			$oFormat->setLineBreakFromID($this->lineBreakID);
 
 			// executes the query
 			$this->query($sql);
