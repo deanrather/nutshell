@@ -1,6 +1,23 @@
 {
 	"config":
 	{
-		
+		"sendConfig": 
+		{
+			"smtp": 
+			{
+				"mode": "smtp",
+				"host": "localhost",
+				"port": 25,
+				"keepAlive": true
+			},
+			"sendmail": 
+			{
+				"mode": "sendmail"
+			},
+			"php":
+			{
+				"model": "php"
+			}
+		}
 	}
 }
