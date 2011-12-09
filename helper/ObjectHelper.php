@@ -187,7 +187,7 @@ namespace nutshell\helper
 			}
 			else
 			{
-				throw new Exception("encodeIntoObjectArray expects an array or an object.");
+				throw new \Exception("encodeIntoObjectArray expects an array or an object.");
 			}
 		}
 	}
