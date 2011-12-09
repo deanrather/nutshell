@@ -6,8 +6,8 @@
 namespace nutshell\plugin\email
 {
 	use nutshell\core\plugin\Plugin;
-	use nutshell\behaviour\Native;
-	use nutshell\behaviour\Factory;
+	use nutshell\behaviour\Singleton;
+	use nutshell\behaviour\AbstractFactory;
 	use nutshell\plugin\email\exception\EmailException;
 	use \PHPMailer;
 	
@@ -15,10 +15,16 @@ namespace nutshell\plugin\email
 	 * @package nutshell-plugin
 	 * @author guillaume
 	 */
-	class Email extends Plugin implements Native, Factory 
+	class Email extends Plugin implements Singleton, AbstractFactory 
 	{
 		
-		const CONFIG_SMTP_MODE = 'mode';
+		const MODE_PHP = 'php';
+		
+		const MODE_SENDMAIL = 'sendmail';
+		
+		const MODE_SMTP = 'smtp';
+		
+		const CONFIG_MODE = 'mode';
 		
 		const CONFIG_SMTP_HOST = 'host';
 		
@@ -39,9 +45,14 @@ namespace nutshell\plugin\email
 			if(!self::$dependenciesLoaded) 
 			{
 				require_once __DIR__ . _DS_ . 'impl' . _DS_ . 'class.phpmailer.php';
-				require_once __DIR__ . _DS_ . 'exception' _DS_ . 'EmailException.php';
+				require_once __DIR__ . _DS_ . 'exception' . _DS_ . 'EmailException.php';
 				self::$dependenciesLoaded = true;
 			}
+		}
+		
+		public static function registerBehaviours() 
+		{
+			
 		}
 		
 		public function init() 
@@ -97,31 +108,31 @@ namespace nutshell\plugin\email
 			//set the mailer to send exceptions on errors
 			$mail = new PHPMailer(true);
 			
-			if(!is_null($sendConfig)) 
+			if(!is_null($sendConfigName)) 
 			{
 				//retrieve plugin config
 				$pluginConfig = self::config();
 				
 				if ($sendParams = $pluginConfig->sendConfig->{$sendConfigName})
 				{
-					switch($sendParams->{self::CONFIG_SMTP_MODE}) 
+					switch($sendParams->{self::CONFIG_MODE}) 
 					{
-						case MODE_PHP:
+						case self::MODE_PHP:
 							$mail->IsMail();
 							break;
 							
-						case MODE_SENDMAIL:
+						case self::MODE_SENDMAIL:
 							$mail->IsSendmail();
 							break;
 							
-						case MODE_SMTP:
+						case self::MODE_SMTP:
 							$mail->IsSMTP();
 							
 							self::configureSMTP($sendParams, $mail);
 							break;
 						
 						default:
-							throw new EmailException(sprintf('Unsupported send mode "%s"', $sendParams->{self::CONFIG_SMTP_MODE}));
+							throw new EmailException(sprintf('Unsupported send mode "%s"', $sendParams->{self::CONFIG_MODE}));
 							break;
 					}
 				} 

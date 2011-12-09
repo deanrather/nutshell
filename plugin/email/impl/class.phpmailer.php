@@ -905,7 +905,10 @@ class PHPMailer {
   * @param string $lang_path Path to the language file directory
   * @access public
   */
-  function SetLanguage($langcode = 'en', $lang_path = 'language' . _DS_ ) {
+  function SetLanguage($langcode = 'en', $lang_path = null) {
+  	if(!$lang_path) {
+  		$lang_path = 'language' . DIRECTORY_SEPARATOR;
+  	}
     //Define full set of translatable strings
     $PHPMAILER_LANG = array(
       'provide_address' => 'You must provide at least one recipient email address.',
