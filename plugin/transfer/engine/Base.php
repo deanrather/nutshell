@@ -94,6 +94,31 @@ namespace nutshell\plugin\transfer\engine
 		}
 		
 		/**
+		 * This method sends multiple files to the remote folder.
+		 * @param array	 $aFiles Array with full path.
+		 * @param string $remoteFolder
+		 * @param int    $maxAttemptCount
+		 */
+		public function putRetryingMultipleFiles($aFiles, $remoteFolder='', $maxAttemptCount = self::DEFAULT_RETRY_COUNT)
+		{
+			foreach($aFiles as $localfile)
+			{
+				if (strlen($remoteFolder>0))
+				{
+					$remoteFile = "$remoteFolder/".basename($localfile);
+				}
+				else
+				{
+					$remoteFile = basename($localfile);
+				}
+					
+				$this->plugin->Logger()->info("Sending $localfile ($remoteFile).");
+				$this->putRetrying($localfile, $remoteFile);
+				$this->plugin->Logger()->info("Sent $localfile ($remoteFile).");
+			}
+		}
+		
+		/**
 		 * Get a file to the server
 		 *
 		 * @param string $remote remote file path
