@@ -43,7 +43,18 @@ namespace nutshell\plugin\format
 		 */
 		protected $_delimiter_escape = false;
 		
-	
+		/**
+		 * To be used by DSV, CSV, ...
+		 * @var string
+		 */
+		protected $_text_qualifier = '"';
+		
+		/**
+		 * To be used in DSV, CSV, ...
+		 * @var unknown_type
+		 */
+		protected $_escape_with = '"';
+		
 		const LINE_BREAK_WIN = 'CRLF';
 	
 		const LINE_BREAK_UNIX = 'LF';
@@ -222,7 +233,25 @@ namespace nutshell\plugin\format
 		{
 			$this->setFormat_config_line_break($this->aLineBreaks[$id]);
 		}
-		 
+		
+		/**
+		 * This function sets the text qualifier (identifies that what is inside is a string).
+		 * @param string $str
+		 */
+		public function setTextQualifier($str)
+		{
+			$this->_text_qualifier = '"';
+		}
+		
+		/**
+		 * Escapes the text qualifier. In CSV it's ".
+		 * @param string $str
+		 */
+		public function setEscapeWith($str)
+		{
+			$this->_escape_with = '"';
+		}
+		
 		public function setFormat_config_line_break($value) {
 			if (is_null($value) || empty($value)) {
 				$value = self::LINE_BREAK_UNIX;
