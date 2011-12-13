@@ -6,10 +6,6 @@ namespace nutshell\plugin\format
 	 */
 	class Dsv extends FormatBase {
 	
-		protected $_delimiter = null;
-	
-		protected $_delimiter_escape = false;
-	
 	    protected function writeRecord($batch) {
 	    	if($this->_delimiter_escape) {
 	    		$this->escapeDelimiter($batch);

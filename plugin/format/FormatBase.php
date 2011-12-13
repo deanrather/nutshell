@@ -30,6 +30,19 @@ namespace nutshell\plugin\format
 		protected $_file_extension;
 	
 		protected $_headers;
+		
+		/**
+		 * Used by DSV and CSV.
+		 * @var string
+		 */
+		protected $_delimiter = null;
+		
+		/**
+		 * Used by DSV and CSV.
+		 * @var string
+		 */
+		protected $_delimiter_escape = false;
+		
 	
 		const LINE_BREAK_WIN = 'CRLF';
 	
@@ -189,6 +202,16 @@ namespace nutshell\plugin\format
 			{
 				throw new Exception("$str isn't a valid character encoding.");
 			}
+		}
+
+		/**
+		 * Sets the delimiter. (Useful for CSV and DSV).
+		 * @param string $delimiter
+		 */
+		public function setDelimiter($delimiter)
+		{
+			$this->_delimiter = $delimiter;
+			$this->_delimiter_escape = true;
 		}
 		
 		/**
