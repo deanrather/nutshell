@@ -41,7 +41,8 @@ namespace nutshell\plugin\format
 				'psv' => 'Psv',
 				'xml' => 'Xml',
 				'json'=> 'Json',
-				'adf' => 'adf'
+				'adf' => 'adf',
+				'dsv' => 'Dsv'
 			);
 		}
 		
