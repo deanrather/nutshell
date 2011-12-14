@@ -19,7 +19,7 @@ namespace nutshell\plugin\format
 		 */
 		protected $work_base_dir = '';
 	
-		protected $_format_name;
+		protected $format_name;
 	
 		protected $_work_file_name;
 	
@@ -27,7 +27,7 @@ namespace nutshell\plugin\format
 	
 		protected $_file_handle = null;
 	
-		protected $_file_extension;
+		protected $file_extension;
 	
 		protected $_headers;
 		
@@ -189,12 +189,12 @@ namespace nutshell\plugin\format
 		 
 		public function getFormat_name()
 		{
-			return $this->_format_name;
+			return $this->format_name;
 		}
 		 
 		public function setFormat_name($value)
 		{
-			$this->_format_name = $value;
+			$this->format_name = $value;
 			return $this;
 		}
 		
@@ -325,12 +325,12 @@ namespace nutshell\plugin\format
 		 
 		public function getFile_extension()
 		{
-			return $this->_file_extension;
+			return $this->file_extension;
 		}
 		 
 		protected function setFile_extension($value)
 		{
-			$this->_file_extension = $value;
+			$this->file_extension = $value;
 			return $this;
 		}
 		 
