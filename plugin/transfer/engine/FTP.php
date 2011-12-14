@@ -21,6 +21,15 @@ namespace nutshell\plugin\transfer\engine
 		 */
 		protected $mode = self::TRANSFER_MODE_PASSIVE;
 		
+		/**
+		 * This method sets the transfer mode.
+		 * @param string $str
+		 */
+		public function setMode($str)
+		{
+			$this->mode = $str;
+		}
+		
 		protected function connect()
 		{
 			if(is_null($this->connection))
