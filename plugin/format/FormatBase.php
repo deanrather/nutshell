@@ -362,7 +362,8 @@ namespace nutshell\plugin\format
 		{
 			if (strlen($filename)>0)
 			{
-				if ( (strpos($filename,"/")>0) || (strpos($filename,"\\")>0))
+				$fileNameWithPreSpace = " ".$filename;
+				if ( (strpos($fileNameWithPreSpace,"/")>0) || (strpos($fileNameWithPreSpace,"\\")>0) || (strpos($fileNameWithPreSpace,_DS_)>0) )
 				{
 					$this->_work_file_name = $filename;
 				}
