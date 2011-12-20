@@ -36,13 +36,14 @@ namespace nutshell\plugin\format
 			return array
 			(
 				// egine name (or format name) => class name
-				'csv' => 'Csv',
-				'tsv' => 'Tsv',
-				'psv' => 'Psv',
-				'xml' => 'Xml',
-				'json'=> 'Json',
-				'adf' => 'adf',
-				'dsv' => 'Dsv'
+				'csv' 			=> 'Csv',
+				'tsv' 			=> 'Tsv',
+				'psv' 			=> 'Psv',
+				'xml' 			=> 'Xml',
+				'json'			=> 'Json',
+				'adf' 			=> 'adf',
+				'dsv' 			=> 'Dsv',
+				'phptemplate'	=> 'PHPTemplate'
 			);
 		}
 		
@@ -56,6 +57,7 @@ namespace nutshell\plugin\format
 			include_once __DIR__ . _DS_ .'Tsv.php';
 			include_once __DIR__ . _DS_ .'Xml.php';
 			include_once __DIR__ . _DS_ .'Adf.php';
+			include_once __DIR__ . _DS_ .'PHPTemplate.php';
 		}
 			
 		public static function registerBehaviours()
