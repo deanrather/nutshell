@@ -55,6 +55,8 @@ namespace nutshell\plugin\logger
 			
 			include_once(__DIR__.'/Filter.php');
 			
+			include_once(__DIR__.'/writer/console/ConsoleWriter.php');
+			
 			include_once(__DIR__.'/writer/db/DbWriter.php');
 			
 			include_once(__DIR__.'/writer/file/FileWriter.php');

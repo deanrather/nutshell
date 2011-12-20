@@ -35,6 +35,7 @@ namespace nutshell\plugin\logger\writer
 		private static $instances = array();
 		
 		private static $implementations = array(
+			'ConsoleWriter' => 'nutshell\plugin\logger\writer\console\ConsoleWriter',
 			'FileWriter' => 'nutshell\plugin\logger\writer\file\FileWriter',
 			'DailyFileWriter' => 'nutshell\plugin\logger\writer\file\DailyFileWriter',
 			'DbWriter' => 'nutshell\plugin\logger\writer\db\DbWriter',
