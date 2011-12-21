@@ -91,7 +91,9 @@ namespace nutshell\plugin\format
 			}
 			else
 			{
-				throw new Exception("Engine $engine isn't supported.");
+				$error_msg = "Engine $engine isn't supported.";
+				$this->plugin->Logger->fatal($error_msg); // just to be sure that the error message will be in the log.
+				throw new Exception($error_msg);
 			}
 		}
 	}	
