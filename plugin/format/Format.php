@@ -58,6 +58,7 @@ namespace nutshell\plugin\format
 			include_once __DIR__ . _DS_ .'Xml.php';
 			include_once __DIR__ . _DS_ .'Adf.php';
 			include_once __DIR__ . _DS_ .'PHPTemplate.php';
+			include_once __DIR__ . _DS_ .'strict'. _DS_. 'Strict.php';
 		}
 			
 		public static function registerBehaviours()

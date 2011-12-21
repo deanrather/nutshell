@@ -12,6 +12,10 @@ namespace nutshell\plugin\format
 		 */
 		protected $templateStr = '';
 		
+		/**
+		 * This property stores the error message found while processing the last record.
+		 * @var string
+		 */
 		protected $templateErrorMessage = '';
 		
 		/**
@@ -25,6 +29,7 @@ namespace nutshell\plugin\format
 		
 		/**
 		 * This function returns the error messsage of the last processed record.
+		 * @return string
 		 */
 		public function getLastTemplateErrorMessage()
 		{
@@ -39,18 +44,16 @@ namespace nutshell\plugin\format
 		public function encode($record)
 		{
 			ob_start();
-			
 			try 
 			{
-				eval('?>'  . $this->templateStr);
+				\nutshell\plugin\format\strict\evalInStrictNameSpace('?>'  . $this->templateStr);
 				$output = ob_get_clean();
 				$this->templateErrorMessage = '';
-			} catch (Exception $e) 
+			} catch (Exception $e)
 			{
 				$output = null;
 				$this->templateErrorMessage = $e->getMessage();
 			}
-
 			ob_end_clean();
 
 			return $output;
