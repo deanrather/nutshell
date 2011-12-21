@@ -52,9 +52,9 @@ namespace nutshell\plugin\format
 			} catch (Exception $e)
 			{
 				$output = null;
+				ob_end_clean();
 				$this->templateErrorMessage = $e->getMessage();
 			}
-			ob_end_clean();
 
 			return $output;
 		}
