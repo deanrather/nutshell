@@ -46,7 +46,7 @@ namespace nutshell\plugin\format\stricttemplate
 	}
 	
 	/**
-	 * Just executes an "eval" call.
+	 * Replaces {varName} by value AND executes an "eval($code)" call.
 	 * @param string $code
 	 */
 	function evalInStrictNameSpace($code, array $args = null)
@@ -56,9 +56,20 @@ namespace nutshell\plugin\format\stricttemplate
 		
 		if (isset($args))
 		{
+			$mayHaveSimpleVars = strpos(' '.$code, '{');
+			
 			foreach($args as $varName=>$value)
 			{
 				$tpl->setKeyVal($varName, $value);
+			}
+			
+			if ($mayHaveSimpleVars)
+			{
+				foreach($args as $varName=>$value)
+				{
+					// Replaces {varName} by value
+					$code = str_replace('{'.$varName.'}', $value, $code);
+				}
 			}
 		}
 		
