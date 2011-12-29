@@ -446,6 +446,16 @@ namespace nutshell\plugin\format
 			
 			fwrite($this->file_handle, $content);
 		}
+		
+		/**
+		 * Used to encode a record into a string (without writting to a file).
+		 * @param array $record
+		 * @return string
+		 */
+		public function encode($record)
+		{
+			throw new Exception("Format->encode has not been implemented in this format");
+		}
 		 
 		protected static function updateLineBreaks($toStyle, $txt) {
 			switch($toStyle) {

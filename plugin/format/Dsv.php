@@ -6,17 +6,28 @@ namespace nutshell\plugin\format
 	 */
 	class Dsv extends FormatBase {
 		
-	    protected function writeRecord($batch) {
-	    	if($this->_delimiter_escape) {
-	    		$this->escapeDelimiter($batch);
+		/**
+		 * Encodes a record into a string.
+		 * @param array $record
+		 */
+		public function encode($record)
+		{
+			if($this->_delimiter_escape) {
+	    		$this->escapeDelimiter($record);
 	    	}
-	
-	        $this->writef(<<<EOL
+	    	
+			return sprintf
+			(
+<<<EOL
 %s
 
 EOL
-	        , implode($this->_delimiter, $batch)
-	        );
+			,implode($this->_delimiter, $record)
+			);
+		}
+		
+	    protected function writeRecord($batch) {
+	        $this->writef( $this->encode($batch) );
 	    }
 	
 	    protected function initHandler() {
