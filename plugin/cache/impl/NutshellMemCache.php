@@ -25,5 +25,14 @@ namespace nutshell\plugin\cache
 		{
 			//TODO: code here
 		}
+		
+		/**
+		 * Clears the cache
+		 * @param string $subFolder
+		 */
+		public function clear($subFolder='')
+		{
+			//TODO: code here
+		}
 	}
 }

@@ -1,6 +1,8 @@
 <?php
 namespace nutshell\plugin\cache
 {
+	use \DirectoryIterator;
+	
 	class NutshellFileCache extends NutshellCache
 	{
 		/**
@@ -8,6 +10,8 @@ namespace nutshell\plugin\cache
 		 * @var string
 		 */
 		protected $cacheFolder = '';
+		
+		const CS_FILENAME = '.cache_';
 		
 		/**
 		 * Defines the global file system cache folder.
@@ -35,7 +39,7 @@ namespace nutshell\plugin\cache
 				$subFolder = $subFolder._DS_;
 			}
 			
-			$fileName    = $this->cacheFolder.$subFolder.'.cache_'.$keyMD5;
+			$fileName    = $this->cacheFolder.$subFolder.self::CS_FILENAME.$keyMD5;
 			$tmpFileName = $this->cacheFolder.$subFolder.'tmp_'.$keyMD5;
 			
 			$cacheLiteral = serialize
@@ -86,7 +90,7 @@ namespace nutshell\plugin\cache
 				$subFolder = $subFolder._DS_;
 			}
 			
-			$fileName = $this->cacheFolder._DS_.$subFolder.'.cache_'.$keyMD5;
+			$fileName = $this->cacheFolder._DS_.$subFolder.self::CS_FILENAME.$keyMD5;
 			
 			try 
 			{	
@@ -116,6 +120,45 @@ namespace nutshell\plugin\cache
 			}
 
 			return false;
+		}
+		
+		/**
+		 * Clears all cache files.
+		 * @param string $subFolder
+		 */
+		public function clear($subFolder='')
+		{
+			$prefixLen = strlen(self::CS_FILENAME);
+			
+			if (strlen($subFolder))
+			{
+				$subFolder = $subFolder._DS_;
+			}
+
+			$folderName = $this->cacheFolder._DS_.$subFolder;
+			
+			foreach (new DirectoryIterator($folderName) as $iteration)
+			{
+				if ($iteration->isFile() && !$iteration->isDot())
+				{
+					$baseFileName = $iteration->getBasename();
+					
+					$fileName = $iteration->getPathname();
+					
+					if (substr($baseFileName,0,$prefixLen) == self::CS_FILENAME)
+					{
+						try 
+						{
+							unlink($fileName);	
+						} 
+						catch (Exception $e)
+						{
+							// it's a minor problem a cache clear fault. But we log just for safety.
+							$this->plugin->Logger->fatal("Failed to delete cache file '$fileName' ($baseFileName).");
+						}
+					}
+				}
+			}
 		}
 	}
 }

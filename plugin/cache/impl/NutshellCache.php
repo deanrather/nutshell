@@ -20,5 +20,11 @@ namespace nutshell\plugin\cache
 		 * @return mixed
 		 */
 		abstract public function retrieve($cacheKey, $subFolder='');
+		
+		/**
+		 * Clears the cache. In the case of a file system cache, clears all cache files.
+		 * @param string $subFolder
+		 */
+		abstract public function clear($subFolder='');
 	}
 }
