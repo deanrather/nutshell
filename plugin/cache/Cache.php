@@ -90,6 +90,15 @@ namespace nutshell\plugin\cache
 		}
 		
 		/**
+		 * Clears the cache. In the case of a file system cache, clears all cache files.
+		 * @param string $subFolder
+		 */
+		public function clear($subFolder='')
+		{
+			return $this->oCacheManager->clear($subFolder);
+		}
+		
+		/**
 		 * Builds a cacke key based in an unlimited amount of parameters.
 		 */
 		public function getCacheKey()
