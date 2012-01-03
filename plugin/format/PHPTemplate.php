@@ -58,6 +58,20 @@ namespace nutshell\plugin\format
 
 			return $output;
 		}
+		
+		/**
+		 * This function sets a template and econdes a string.
+		 * @param array $record
+		 * @param string $pTemplate
+		 * @return string
+		 * @see encode
+		 * @see setTemplate
+		 */
+		public function encodeWithTemplate($record, $pTemplate)
+		{
+			$this->setTemplate($pTemplate);
+			return $this->encode($record);
+		}
 
 		/**
 		 * Writes a record encoded using the current template.
