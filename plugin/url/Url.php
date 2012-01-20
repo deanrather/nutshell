@@ -60,10 +60,6 @@ namespace nutshell\plugin\url
 				$URL.=(empty($prefix)?'?':'/?').$suffix;
 			}
 			$return=$protocol.$_SERVER['HTTP_HOST'].'/'.$URL;
-			if (!empty($URL))
-			{
-				$return.='/';
-			}
 			return $return;
 		}
 		
