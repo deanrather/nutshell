@@ -26,5 +26,12 @@ namespace nutshell\plugin\cache
 		 * @param string $subFolder
 		 */
 		abstract public function clear($subFolder='');
+		
+		/**
+		 * Removes the key from the cache.
+		 * @param string $cacheKey
+		 * @param string $subFolder
+		 */
+		abstract public function free($cacheKey, $subFolder='');
 	}
 }

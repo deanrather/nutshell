@@ -99,6 +99,16 @@ namespace nutshell\plugin\cache
 		}
 		
 		/**
+		* Removes the key from the cache.
+		* @param string $key
+		* @param string $subFolder
+		*/
+		public function free($cacheKey, $subFolder='')
+		{
+			return $this->oCacheManager->free($cacheKey, $subFolder);
+		}
+		
+		/**
 		 * Builds a cacke key based in an unlimited amount of parameters.
 		 */
 		public function getCacheKey()
