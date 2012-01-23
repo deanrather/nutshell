@@ -71,8 +71,7 @@ namespace nutshell\plugin\storage\engine\file
 			{
 				if ($autoCreateDir)
 				{
-					mkdir($pathInfo['dirname'],0777,true);
-					$toLocation=realpath($toLocation);
+					mkdir($toLocation,0777,true);
 				}
 				else
 				{
@@ -132,6 +131,7 @@ namespace nutshell\plugin\storage\engine\file
 					copy($fromLocation._DS_.$thisDir,$destination._DS_.$diffDir._DS_.$thisDir);
 				}
 			}
+			closedir($handler);
 		}
 	}
 }
