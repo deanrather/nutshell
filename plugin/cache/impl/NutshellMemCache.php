@@ -34,5 +34,15 @@ namespace nutshell\plugin\cache
 		{
 			//TODO: code here
 		}
+		
+		/**
+		 * Removes the key from the cache.
+		 * @param string $key
+		 * @param string $subFolder
+		 */
+		public function free($cacheKey, $subFolder='')
+		{
+			//TODO: code here
+		}
 	}
 }

@@ -160,5 +160,36 @@ namespace nutshell\plugin\cache
 				}
 			}
 		}
+		
+		/**
+		 * Removes the key from the cache.
+		 * @param string $key
+		 * @param string $subFolder
+		 */
+		public function free($cacheKey, $subFolder='')
+		{
+			$keyMD5 = md5($cacheKey);
+			
+			if (strlen($subFolder)>0)
+			{
+				$subFolder = $subFolder._DS_;
+			}
+			
+			$fileName = $this->cacheFolder._DS_.$subFolder.self::CS_FILENAME.$keyMD5;
+			
+			try 
+			{	
+				if (file_exists($fileName))
+				{	
+					unlink($fileName);					
+				}
+			} 
+			catch (\Exception $e) 
+			{
+				$this->plugin->Logger->fatal('Error while removing cache file: $fileName.');
+				// nothing can be done when a cache free fails.
+				// no exception should be provoked
+			}
+		}
 	}
 }
