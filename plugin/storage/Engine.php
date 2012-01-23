@@ -21,7 +21,7 @@ namespace nutshell\plugin\storage
 		
 		public function bindBucket($name,$path)
 		{
-			if(!isset($this->buckets[$name]))
+			if (!isset($this->buckets[$name]))
 			{
 				return $this->buckets[$name]=$this->getBucketInstance($path);
 			}
@@ -33,13 +33,13 @@ namespace nutshell\plugin\storage
 		
 		public function getBucket($name)
 		{
-			if(isset($this->buckets[$name]))
+			if (isset($this->buckets[$name]))
 			{
 				return $this->buckets[$name];
 			}
 			else
 			{
-				throw new Exception('Bucket "'.$name.'" is already bound and cannot be bound twice.');
+				throw new Exception('Bucket "'.$name.'" has not been bound. Use bindBucket($name,$path) before using getBucket.');
 			}
 		}
 	}
