@@ -39,7 +39,7 @@ namespace nutshell\plugin\storage
 			}
 			else
 			{
-				throw new Exception('Bucket "'.$name.'" has not been bound. Use bindBucket($name,$path) before using getBucket.');
+				return false;
 			}
 		}
 	}
