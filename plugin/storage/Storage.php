@@ -19,6 +19,7 @@ namespace nutshell\plugin\storage
 		const ENGINE_DIR='engine';
 		const ENGINE_NAMESPACE='\\engine\\';
 		
+		private static $handlers=array();
 		
 		public static function loadDependencies()
 		{
@@ -36,12 +37,13 @@ namespace nutshell\plugin\storage
 		{
 			self::loadDependencies();
 			$handler=strtolower($handler);
+			if (isset(self::$handlers[$handler]))return self::$handlers[$handler];
 			$file=__DIR__._DS_.self::ENGINE_DIR._DS_.$handler._DS_.ucfirst($handler).'.php';
 			if (is_file($file))
 			{
 				require_once($file);
 				$class=__NAMESPACE__ .self::ENGINE_NAMESPACE.$handler.'\\'.ucfirst($handler);
-				return new $class;
+				return self::$handlers[$handler]=new $class;
 			}
 			else
 			{

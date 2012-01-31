@@ -57,6 +57,7 @@ namespace nutshell\core\request
 		{
 			if ($numArgs=func_num_args())
 			{
+				$args=func_get_args();
 				call_user_func_array(array($this->handler,'set'),$args);
 			}
 			else
