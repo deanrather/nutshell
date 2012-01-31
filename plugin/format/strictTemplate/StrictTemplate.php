@@ -13,15 +13,26 @@ namespace nutshell\plugin\format\stricttemplate
 	 */
 	class StrictTemplate
 	{
-		private $keyVals	=array();
+		private $keyVals	     = array();
+		
+		public $caseInsensitive  = true;
 		
 		public function setKeyVal($key,$val)
 		{
+			if ($this->caseInsensitive)
+			{
+				$key = strtolower($key);
+			}
 			$this->keyVals[$key]=$val;
 		}
 		
 		public function get($key)
 		{
+			if ($this->caseInsensitive)
+			{
+				$key = strtolower($key);
+			}
+
 			if (isset($this->keyVals[$key]))
 			{
 				return $this->keyVals[$key];
@@ -34,6 +45,11 @@ namespace nutshell\plugin\format\stricttemplate
 		
 		public function __get($key)
 		{
+			if ($this->caseInsensitive)
+			{
+				$key = strtolower($key);
+			}
+
 			if (isset($this->keyVals[$key]))
 			{
 				print $this->keyVals[$key];
@@ -49,10 +65,12 @@ namespace nutshell\plugin\format\stricttemplate
 	 * Replaces {varName} by value AND executes an "eval($code)" call.
 	 * @param string $code
 	 */
-	function evalInStrictNameSpace($code, array $args = null)
+	function evalInStrictNameSpace($code, array $args = null, $caseInsensitive = true)
 	{
 		// creates a tpl object that can be seen by the eval execution.
 		$tpl = new StrictTemplate();
+		
+		$tpl->caseInsensitive = $caseInsensitive;
 		
 		if (isset($args))
 		{
@@ -67,8 +85,14 @@ namespace nutshell\plugin\format\stricttemplate
 			{
 				foreach($args as $varName=>$value)
 				{
-					// Replaces {varName} by value
-					$code = str_replace('{'.$varName.'}', $value, $code);
+					if ($caseInsensitive)
+					{
+						$code = str_ireplace('{'.$varName.'}', $value, $code);
+					}
+					else
+					{
+						$code = str_replace('{'.$varName.'}', $value, $code);
+					}
 				}
 			}
 		}

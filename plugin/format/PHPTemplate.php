@@ -41,12 +41,12 @@ namespace nutshell\plugin\format
 		 * @param array $record
 		 * @return string
 		 */
-		public function encode($record)
+		public function encode($record, $caseInsensitive = true)
 		{
 			ob_start();
 			try 
 			{
-				\nutshell\plugin\format\stricttemplate\evalInStrictNameSpace('?>'  . $this->templateStr, $record);
+				\nutshell\plugin\format\stricttemplate\evalInStrictNameSpace('?>'  . $this->templateStr, $record, $caseInsensitive);
 				$output = ob_get_clean();
 				$this->templateErrorMessage = '';
 			} catch (Exception $e)
@@ -67,10 +67,10 @@ namespace nutshell\plugin\format
 		 * @see encode
 		 * @see setTemplate
 		 */
-		public function encodeWithTemplate($record, $pTemplate)
+		public function encodeWithTemplate($record, $pTemplate, $caseInsensitive = true)
 		{
 			$this->setTemplate($pTemplate);
-			return $this->encode($record);
+			return $this->encode($record, $caseInsensitive);
 		}
 
 		/**
