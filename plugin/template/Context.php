@@ -77,7 +77,7 @@ namespace nutshell\plugin\template
 			}
 			else
 			{
-				throw new Exception('Invalid template function. Function "'.$method.'" hsa not been registered. Register with $context->registerCallback($name,$closure).');
+				throw new Exception('Invalid template function. Function "'.$method.'" has not been registered. Register with $context->registerCallback($name,$closure).');
 			}
 		}
 	}
