@@ -73,7 +73,7 @@ namespace nutshell\plugin\template
 		{
 			if (isset($this->callbacks[$method]))
 			{
-				call_user_func_array($this->callbacks[$method],$args);
+				return call_user_func_array($this->callbacks[$method],$args);
 			}
 			else
 			{
