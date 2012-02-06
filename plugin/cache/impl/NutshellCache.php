@@ -22,6 +22,12 @@ namespace nutshell\plugin\cache
 		abstract public function retrieve($cacheKey, $subFolder='');
 		
 		/**
+		 * Clears all expired cache.
+		 * @param string $subFolder
+		 */
+		abstract public function clearExpired($subFolder='');
+		
+		/**
 		 * Clears the cache. In the case of a file system cache, clears all cache files.
 		 * @param string $subFolder
 		 */

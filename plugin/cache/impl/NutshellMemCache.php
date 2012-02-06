@@ -27,6 +27,15 @@ namespace nutshell\plugin\cache
 		}
 		
 		/**
+		 * Clears all expired cache.
+		 * @param string $subFolder
+		 */
+		public function clearExpired($subFolder='')
+		{
+			//TODO: code here
+		}
+		
+		/**
 		 * Clears the cache
 		 * @param string $subFolder
 		 */

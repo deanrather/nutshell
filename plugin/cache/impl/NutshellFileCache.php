@@ -2,6 +2,7 @@
 namespace nutshell\plugin\cache
 {
 	use \DirectoryIterator;
+	use nutshell\Nutshell;
 	
 	class NutshellFileCache extends NutshellCache
 	{
@@ -110,6 +111,12 @@ namespace nutshell\plugin\cache
 							{
 								return $data['data'];
 							}
+							else
+							{
+								// it's expired. It's better to remove it!
+								unset($handle);
+								unlink($fileName);
+							}
 						}
 					}
 				}
@@ -123,7 +130,55 @@ namespace nutshell\plugin\cache
 		}
 		
 		/**
-		 * Clears all cache files.
+		 * Clears all expired files.
+		 * @param string $subFolder
+		 */
+		public function clearExpired($subFolder='')
+		{
+			$cntRemoved = 0;
+			$now = time();
+			
+			$prefixLen = strlen(self::CS_FILENAME);
+			
+			if (strlen($subFolder))
+			{
+				$subFolder = $subFolder._DS_;
+			}
+
+			$folderName = $this->cacheFolder._DS_.$subFolder;
+			
+			foreach (new DirectoryIterator($folderName) as $iteration)
+			{
+				if ($iteration->isFile() && !$iteration->isDot())
+				{
+					$baseFileName = $iteration->getBasename();
+					
+					$fileName = $iteration->getPathname();
+					
+					if (substr($baseFileName,0,$prefixLen) == self::CS_FILENAME)
+					{
+						if ($handle = fopen($fileName, "rb"))
+						{
+							$unserializedData = fread($handle, filesize($fileName));
+							$data = unserialize($unserializedData);
+							unset($handle);
+						
+							// is the cached value expired?
+							if ($now > $data['expiry'])
+							{
+								// deletes the expired file
+								unlink($fileName);
+								$cntRemoved++;
+							}
+						}
+					}
+				}
+			}
+			Nutshell::getInstance()->plugin->Logger->info(" $cntRemoved expired cache files have been removed.");
+		}
+
+		/**
+		 * Clears all files.
 		 * @param string $subFolder
 		 */
 		public function clear($subFolder='')
@@ -154,7 +209,7 @@ namespace nutshell\plugin\cache
 						catch (Exception $e)
 						{
 							// it's a minor problem a cache clear fault. But we log just for safety.
-							$this->plugin->Logger->fatal("Failed to delete cache file '$fileName' ($baseFileName).");
+							Nutshell::getInstance()->plugin->Logger->fatal("Failed to delete cache file '$fileName' ($baseFileName).");
 						}
 					}
 				}
@@ -186,7 +241,7 @@ namespace nutshell\plugin\cache
 			} 
 			catch (\Exception $e) 
 			{
-				$this->plugin->Logger->fatal('Error while removing cache file: $fileName.');
+				Nutshell::getInstance()->plugin->Logger->fatal('Error while removing cache file: $fileName.');
 				// nothing can be done when a cache free fails.
 				// no exception should be provoked
 			}

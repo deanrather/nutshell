@@ -90,6 +90,15 @@ namespace nutshell\plugin\cache
 		}
 		
 		/**
+		 * Clears all expired cache.
+		 * @param string $subFolder
+		 */
+		public function clearExpired($subFolder='')
+		{
+			return $this->oCacheManager->clearExpired($subFolder);
+		}
+		
+		/**
 		 * Clears the cache. In the case of a file system cache, clears all cache files.
 		 * @param string $subFolder
 		 */
