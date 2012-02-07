@@ -239,5 +239,25 @@ namespace nutshell\plugin\transfer\engine
 			
 			$this->plugin->Logger('nutshell.plugin.transfer.ftp')->info('Connection closed.');
 		}
+		
+		public function fileExists($remote)
+		{
+			$oldErrorHandler = set_error_handler('nutshell\plugin\transfer\engine\FTP::doNothingErrorHandler');
+				
+			try
+			{
+				$size = ftp_size ($this->connection, $remote);
+				
+				$result = ($size >= 0) ? true : false;
+			}
+			catch (\Exception $e)
+			{
+				$result = $false;
+			}
+				
+			set_error_handler($oldErrorHandler);
+				
+			return $result;
+		}
 	}
 }

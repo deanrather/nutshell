@@ -3,7 +3,7 @@ namespace nutshell\plugin\transfer\engine
 {
 	use nutshell\core\exception\Exception;
 	use nutshell\plugin\transfer\exception\TransferException;
-
+	
 	class SFTP extends SSH
 	{
 		protected $sftpHandle = null;
@@ -80,7 +80,7 @@ namespace nutshell\plugin\transfer\engine
 			//open the remote file descriptor
 			$target = sprintf("ssh2.sftp://%s%s", $this->sftpHandle, $remote);
 			
-			if($fremote = fopen($target, 'w'))
+			if($fremote = fopen($target, 'wb'))
 			{
 				$written = 0;
 				
@@ -200,6 +200,28 @@ namespace nutshell\plugin\transfer\engine
 			}
 			
 			$this->plugin->Logger('nutshell.plugin.transfer.sftp')->debug(sprintf('File %s deleted successfully.', $remote));
+		}
+		
+		public function fileExists($remote)
+		{
+			$target = sprintf("ssh2.sftp://%s%s", $this->sftpHandle, $remote);
+
+			$oldErrorHandler = set_error_handler('nutshell\plugin\transfer\engine\SFTP::doNothingErrorHandler');
+			
+			try
+			{
+				$handle = fopen($target, 'rb');
+				$result = ($handle) ? true : false; 
+				unset ($handle);
+			}
+			catch (\Exception $e) 
+			{
+				$result = $false;
+			}
+			
+			set_error_handler($oldErrorHandler);
+			
+			return $result;
 		}
 	}
 }

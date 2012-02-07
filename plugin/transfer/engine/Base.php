@@ -179,6 +179,17 @@ namespace nutshell\plugin\transfer\engine
 		}
 		
 		/**
+		 * Returns TRUE if the file exists.
+		 * SCP Doesn't implement fileExists.
+		 * @param string $remote
+		 * @throws TransferException
+		 */
+		public function fileExists($remote)
+		{
+			throw new TransferException('The %s engine does not implement the fileExists method.', get_class($this));
+		}
+		
+		/**
 		 * Close any active connection.
 		 *
 		 * @throws TransferException
@@ -186,6 +197,11 @@ namespace nutshell\plugin\transfer\engine
 		public function close()
 		{
 			throw new TransferException('The %s engine does not implement the close method.', get_class($this));
+		}
+		
+		public static function doNothingErrorHandler($no,$str,$file,$line) 
+		{
+			// do nothing
 		}
 	}
 }
