@@ -257,6 +257,7 @@ namespace nutshell\plugin\db\impl
 		{
 			$this->resetLastQueryParams();
 			$return=false;
+			
 			if (!empty($args[0]))
 			{
 				if ($args[0]!=$this->lastQuery['sql'] || !$usePrepared)
@@ -290,8 +291,7 @@ namespace nutshell\plugin\db\impl
 					}
 				}
 			}
-			
-			if ($this->lastQuery['statement']->execute())
+			if ($this->lastQuery['statement'] && $this->lastQuery['statement']->execute())
 			{
 				$this->lastQuery['resultSet']		=$this->lastQuery['statement']->fetchAll();
 				$this->lastQuery['numResults']		=count($this->lastQuery['resultSet']);
@@ -344,7 +344,7 @@ namespace nutshell\plugin\db\impl
 					}
 				}
 			}
-			@list(,,$this->lastQuery['lastError'])		=$this->lastQuery['statement']->errorInfo();
+			@list(,,$this->lastQuery['lastError'])		=$this->lastQuery['statement'] ? $this->lastQuery['statement']->errorInfo() : $this->connection->errorInfo();
 			
 			// throws an exception if there is a problem running the query and throwExceptionOnError
 			if (($this->throwExceptionOnError) && ($this->lastQuery['lastError']))
@@ -352,7 +352,7 @@ namespace nutshell\plugin\db\impl
 				$error_message = $this->lastQuery['lastError'];
 				try 
 				{
-					$faulty_sql = $this->lastQuery['statement']->queryString;
+					$faulty_sql = $this->lastQuery['statement'] ? $this->lastQuery['statement']->queryString : $this->lastQuery['sql'];
 					if (strlen($faulty_sql)>0)
 					{
 						Nutshell::getInstance()->plugin->Logger('nutshell.plugin.db')->error($error_message.":".$faulty_sql);

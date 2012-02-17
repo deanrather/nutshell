@@ -107,36 +107,20 @@ namespace nutshell\plugin\mvc\model
 		public $columns	   =array();  // array with columns
 		public $autoCreate =true;     // should create the table if it doesn't exist?
 		
-		private $types	            =array();
-		private $columnNames        =array(); // stores column names
+		protected $types	            =array();
+		protected $columnNames        =array(); // stores column names
 		
 		// the following to 4 properties are intended to speed up query building.
-		private $columnNamesListStr        ='';       // stores column names list separated by ','.
-		private $defaultInsertColumns      = array(); // when the primary key is auto increment, the primary key isn't present as an insert column
-		private $defaultInsertColumnsStr   = '';
-		private $defaultInsertPlaceHolders ='';       // part of an insert statement.		
+		protected $columnNamesListStr        ='';       // stores column names list separated by ','.
+		protected $defaultInsertColumns      = array(); // when the primary key is auto increment, the primary key isn't present as an insert column
+		protected $defaultInsertColumnsStr   = '';
+		protected $defaultInsertPlaceHolders ='';       // part of an insert statement.		
 		
 		public function __construct()
 		{
 			parent::__construct();
 			
-			if (!is_array($this->primary)){
-				throw new Exception('Primary Key has to be an array.');
-			}
-			
-			$this->columnNames = array_keys($this->columns);
-			$this->columnNamesListStr = '`'. implode('`,`', $this->columnNames) . '`';
-			
-			// doesn't make much sense inserting an auto increment column using default settings.
-			if (($this->primary_ai) && (count($this->primary)==1))
-			{
-				$this->defaultInsertColumns = array_diff($this->columnNames, $this->primary);
-			} else {
-				$this->defaultInsertColumns = &$this->columnNames;
-			}
-			
-			$this->defaultInsertColumnsStr = '`' . implode('`,`',$this->defaultInsertColumns) . '`';
-			$this->defaultInsertPlaceHolders = rtrim(str_repeat('?,',count($this->defaultInsertColumns)),',');				
+			$this->configure();				
 			
 			if (!empty($this->name) && (count($this->primary)>0) && !empty($this->columns))
 			{
@@ -145,38 +129,7 @@ namespace nutshell\plugin\mvc\model
 					// only creates the table when $autoCreate is true.
 					if ($this->autoCreate) 
 					{
-						$columns=array();
-						if ((count($this->primary)==1) && ($this->primary_ai))
-						{
-							$localAutoCreate = ' AUTO_INCREMENT ';
-						} else {
-							$localAutoCreate = '';
-						}
-						
-						foreach ($this->columns as $name=>$typeDef)
-						{
-							if ($this->isPrimaryKey($name))
-							{
-								$columns[]			= '`' . $name.'` '.$typeDef.' NOT NULL '.$localAutoCreate;
-							}
-							else
-							{
-								$columns[]			= '`' . $name.'` '.$typeDef.' NULL';
-							}
-						}
-						$columns=implode(',',$columns);
-						
-						//Create the table (if it doesn\'t already exist).
-						$dbPrefix = $this->getDbPrefix();
-						$query=
-							" CREATE TABLE IF NOT EXISTS {$dbPrefix}`{$this->name}`
-							(
-							{$columns},
-							PRIMARY KEY (`".implode('`,`',$this->primary)."`)
-							) ENGINE=INNODB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_bin
-";
-
-						$this->db->query($query);
+						$this->createTable();
 					}
 				}
 				else
@@ -188,6 +141,61 @@ namespace nutshell\plugin\mvc\model
 			{
 				throw new Exception('CRUD Model is misconfigured. Name, Primary Key and Columns must be defined.');
 			}
+		}
+		
+		protected function configure() {
+			if (!is_array($this->primary)){
+				throw new Exception('Primary Key has to be an array.');
+			}
+				
+			$this->columnNames = array_keys($this->columns);
+			$this->columnNamesListStr = '`'. implode('`,`', $this->columnNames) . '`';
+				
+			// doesn't make much sense inserting an auto increment column using default settings.
+			if (($this->primary_ai) && (count($this->primary)==1))
+			{
+				$this->defaultInsertColumns = array_diff($this->columnNames, $this->primary);
+			} else {
+				$this->defaultInsertColumns = &$this->columnNames;
+			}
+				
+			$this->defaultInsertColumnsStr = '`' . implode('`,`',$this->defaultInsertColumns) . '`';
+			$this->defaultInsertPlaceHolders = rtrim(str_repeat('?,',count($this->defaultInsertColumns)),',');
+		}
+		
+		protected function createTable() {
+			$columns=array();
+			if ((count($this->primary)==1) && ($this->primary_ai))
+			{
+				$localAutoCreate = ' AUTO_INCREMENT ';
+			} else {
+				$localAutoCreate = '';
+			}
+			
+			foreach ($this->columns as $name=>$typeDef)
+			{
+				if ($this->isPrimaryKey($name))
+				{
+					$columns[]			= '`' . $name.'` '.$typeDef.' NOT NULL '.$localAutoCreate;
+				}
+				else
+				{
+					$columns[]			= '`' . $name.'` '.$typeDef.' NULL';
+				}
+			}
+			$columns=implode(',',$columns);
+			
+			//Create the table (if it doesn\'t already exist).
+			$dbPrefix = $this->getDbPrefix();
+			$query=
+							" CREATE TABLE IF NOT EXISTS {$dbPrefix}`{$this->name}`
+							(
+{$columns},
+							PRIMARY KEY (`".implode('`,`',$this->primary)."`)
+							) ENGINE=INNODB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_bin
+";
+			
+			$this->db->query($query);
 		}
 		
 		/**
