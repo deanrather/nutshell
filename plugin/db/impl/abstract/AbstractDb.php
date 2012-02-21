@@ -1,11 +1,10 @@
 <?php
 namespace nutshell\plugin\db\impl
 {
+	use nutshell\Nutshell;
 	use \PDO;
 	use \PDOException;
 	use \PDOStatement;
-	use Nutshell;
-	
 	use nutshell\plugin\db\exception\DbException;
 	
 	/**
