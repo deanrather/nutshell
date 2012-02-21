@@ -23,11 +23,15 @@ namespace nutshell\plugin\logger\writer
 		
 		const NEW_LINE = '%n';
 		
+		const PID = '%t';
+		
 		const PERCENT = '%%';
 		
 		const EXTRA_BLOCK_START = '-- DATA START --';
 		
 		const EXTRA_BLOCK_END = '-- DATA END --';
+		
+		private static $pid = null;
 		
 		private static $contextTopatterns = array(
 			Writer::CTX_LOG_LEVEL => self::LOG_LEVEL,
@@ -111,12 +115,21 @@ namespace nutshell\plugin\logger\writer
 			$context[self::MESSAGE] = $msg;
 			$context[self::NEW_LINE] = "\n";
 			$context[self::DATE] = date('c');
+			$context[self::PID] = self::getPid();
 			$context[self::PERCENT] = '%';
 			if(array_key_exists(self::LOG_LEVEL, $context))
 			{
 				$context[self::LOG_LEVEL] = Level::toString($context[self::LOG_LEVEL]);
 			}
 			return $context;
+		}
+		
+		protected static function getPid() {
+			if(is_null(self::$pid)) {
+				self::$pid = getmypid();
+			}
+			
+			return self::$pid;
 		}
 	
 		
