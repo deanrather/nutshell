@@ -267,7 +267,7 @@ namespace nutshell\plugin\db\impl
 			}
 			else if (empty($args[0]) && empty($this->lastQuery['sql']))
 			{
-				throw new Exception('Unable to execute statement. Query was empty!');
+				throw new DbException('Unable to execute statement. Query was empty!');
 			}
 			if (isset($args[1]))
 			{
@@ -356,10 +356,10 @@ namespace nutshell\plugin\db\impl
 					{
 						Nutshell::getInstance()->plugin->Logger('nutshell.plugin.db')->error($error_message.":".$faulty_sql);
 					}
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 					// nothing can be done if the error treatment fails.
 				}
-				throw new Exception($error_message);			
+				throw new DbException($error_message);			
 			}
 			
 			return $return;
