@@ -312,7 +312,7 @@ SQL;
 				$where=array();
 				foreach ($whereKeyVals as $key=>$value)
 				{
-					$where[]=$key.'=?';
+					$where[]= '`' . $key . '` = ?';
 					$whereKeyValues[] = $value;
 				}
 				$whereKeySQL=implode(' AND ',$where);
