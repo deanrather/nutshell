@@ -204,6 +204,9 @@ namespace nutshell\plugin\transfer\engine
 		
 		public function fileExists($remote)
 		{
+			//make sure we are connected
+			$this->connect();
+			
 			$target = sprintf("ssh2.sftp://%s%s", $this->sftpHandle, $remote);
 
 			$oldErrorHandler = set_error_handler('nutshell\plugin\transfer\engine\SFTP::doNothingErrorHandler');
