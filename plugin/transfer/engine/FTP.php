@@ -242,6 +242,9 @@ namespace nutshell\plugin\transfer\engine
 		
 		public function fileExists($remote)
 		{
+			//make sure we are connected
+			$this->connect();
+			
 			$oldErrorHandler = set_error_handler('nutshell\plugin\transfer\engine\FTP::doNothingErrorHandler');
 				
 			try
