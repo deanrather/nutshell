@@ -251,7 +251,9 @@ namespace nutshell\plugin\transfer\engine
 			{
 				$size = ftp_size ($this->connection, $remote);
 				
-				$result = ($size >= 0) ? true : false;
+				$size = (!isset($size)) ? -1 : (int) $size;
+				
+				$result = ($size >= 0);
 			}
 			catch (\Exception $e)
 			{
