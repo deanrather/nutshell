@@ -44,7 +44,8 @@ namespace nutshell\plugin\storage\engine\file
 			}
 			else
 			{
-				throw new Exception('Unable to get file from bucket. Path is "'.$file.'".');
+				return null;
+// 				throw new Exception('Unable to get file from bucket. Path is "'.$file.'".');
 			}
 		}
 		
