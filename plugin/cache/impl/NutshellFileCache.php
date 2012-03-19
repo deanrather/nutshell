@@ -20,6 +20,11 @@ namespace nutshell\plugin\cache
 		 */
 		public function setCacheFolder($folder)
 		{
+			// enforces slash separator at the end.
+			if ( substr($folder, strlen($folder),1) != _DS_ )
+			{
+				$folder .= _DS_;
+			}
 			$this->cacheFolder = $folder;
 		}
 
@@ -91,7 +96,7 @@ namespace nutshell\plugin\cache
 				$subFolder = $subFolder._DS_;
 			}
 			
-			$fileName = $this->cacheFolder._DS_.$subFolder.self::CS_FILENAME.$keyMD5;
+			$fileName = $this->cacheFolder.$subFolder.self::CS_FILENAME.$keyMD5;
 			
 			try 
 			{	
@@ -120,7 +125,13 @@ namespace nutshell\plugin\cache
 						}
 					}
 				}
-			} catch (Exception $e) 
+			} 
+			catch (Exception $e) 
+			{
+				// nothing can be done when a cache load fails.
+				// no exception should be provoked
+			}
+			catch (\Exception $e) 
 			{
 				// nothing can be done when a cache load fails.
 				// no exception should be provoked
@@ -145,7 +156,7 @@ namespace nutshell\plugin\cache
 				$subFolder = $subFolder._DS_;
 			}
 
-			$folderName = $this->cacheFolder._DS_.$subFolder;
+			$folderName = $this->cacheFolder.$subFolder;
 			
 			foreach (new DirectoryIterator($folderName) as $iteration)
 			{
@@ -190,7 +201,7 @@ namespace nutshell\plugin\cache
 				$subFolder = $subFolder._DS_;
 			}
 
-			$folderName = $this->cacheFolder._DS_.$subFolder;
+			$folderName = $this->cacheFolder.$subFolder;
 			
 			foreach (new DirectoryIterator($folderName) as $iteration)
 			{
@@ -230,7 +241,7 @@ namespace nutshell\plugin\cache
 				$subFolder = $subFolder._DS_;
 			}
 			
-			$fileName = $this->cacheFolder._DS_.$subFolder.self::CS_FILENAME.$keyMD5;
+			$fileName = $this->cacheFolder.$subFolder.self::CS_FILENAME.$keyMD5;
 			
 			try 
 			{	
