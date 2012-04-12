@@ -253,6 +253,7 @@ namespace nutshell
 		 * @access private
 		 * @return Nutshell
 		 */
+
 		private function loadCoreConfig()
 		{
 			if (!defined(self::NUTSHELL_ENVIRONMENT))
@@ -267,10 +268,10 @@ namespace nutshell
 					$env = self::DEFAULT_ENVIRONMENT;
 				}
 				define(self::NUTSHELL_ENVIRONMENT, $env);
-				if (NS_INTERFACE==self::INTERFACE_HTTP)
-				{
-					header('X-Nutshell-Environment:'.NS_ENV);
-				}
+			}
+			if (NS_INTERFACE==self::INTERFACE_HTTP)
+			{
+				header('X-Nutshell-Environment:'.NS_ENV);
 			}
 			HookManager::execute('core','onBeforeConfigLoad');
 			$this->config = Framework::loadConfig(APP_HOME . Config::CONFIG_FOLDER, NS_ENV);
