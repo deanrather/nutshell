@@ -37,6 +37,7 @@ namespace nutshell
 		const DEFAULT_ENVIRONMENT	= 	'production';
 		
 		const INTERFACE_CLI 		= 	'CLI';
+		const INTERFACE_CGI			=	'CGI';
 		const INTERFACE_HTTP 		= 	'HTTP';
 		const INTERFACE_PHPUNIT		= 	'PHPUNIT';
 		
@@ -83,11 +84,24 @@ namespace nutshell
 				else if (strstr($_SERVER['PHP_SELF'],'phpunit'))
 				{
 					define('NS_INTERFACE', self::INTERFACE_PHPUNIT);
-				} 
+				}
 				else 
 				{
 					define('NS_INTERFACE', self::INTERFACE_CLI);
 				}
+			}
+			else if (!isset($_SERVER['REQUEST_URI']) && stristr($_SERVER['GATEWAY_INTERFACE'],'cgi'))
+			{
+				define('NS_INTERFACE', self::INTERFACE_CGI);
+				define('NS_WEB_HOME', dirname($_SERVER['SCRIPT_FILENAME']));
+				$scriptName=$_SERVER['SCRIPT_NAME'];
+				if (strstr($scriptName,'/.php'))
+				{
+					$scriptName=str_replace('/.php','/');
+				}
+				define('NS_APP_WEB_HOME', dirname($scriptName));
+				header('X-Powered-By: PHP/'.phpversion().' & Nutshell/'.self::VERSION);
+				header('X-Nutshell-Version:'.self::VERSION);
 			}
 			else
 			{

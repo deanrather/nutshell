@@ -6,6 +6,7 @@ namespace nutshell\core\request
 	use nutshell\core\exception\NutshellException;
 	use nutshell\core\request\handler\Http;
 	use nutshell\core\request\handler\Cli;
+	use nutshell\core\request\handler\Cgi;
 	use \SeekableIterator;
 	use \Countable;
 	use \OutOfBoundsException;
@@ -20,6 +21,11 @@ namespace nutshell\core\request
 			{
 				require(__DIR__._DS_.'handler'._DS_.'Http.php');
 				$this->handler=new Http();
+			}
+			else if (NS_INTERFACE==Nutshell::INTERFACE_CGI)
+			{
+				require(__DIR__._DS_.'handler'._DS_.'Cgi.php');
+				$this->handler=new Cgi();
 			}
 			else if (NS_INTERFACE==Nutshell::INTERFACE_CLI
 			|| NS_INTERFACE==Nutshell::INTERFACE_PHPUNIT)
