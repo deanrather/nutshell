@@ -97,7 +97,7 @@ namespace nutshell
 				$scriptName=$_SERVER['SCRIPT_NAME'];
 				if (strstr($scriptName,'/.php'))
 				{
-					$scriptName=str_replace('/.php','/');
+					$scriptName=str_replace('/.php','/',$scriptName);
 				}
 				define('NS_APP_WEB_HOME', dirname($scriptName));
 				header('X-Powered-By: PHP/'.phpversion().' & Nutshell/'.self::VERSION);
