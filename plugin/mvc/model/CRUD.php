@@ -126,8 +126,8 @@ namespace nutshell\plugin\mvc\model
 			{
 				if (isset($this->db))
 				{
-					// only creates the table when $autoCreate is true.
-					if ($this->autoCreate) 
+					// only creates the table when $autoCreate is true & This is a mySQL database
+					if ($this->autoCreate && stristr(get_class($this->db), 'mysql')) 
 					{
 						$this->createTable();
 					}
