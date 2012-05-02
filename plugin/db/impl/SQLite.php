@@ -26,7 +26,7 @@ namespace nutshell\plugin\db\impl
 		 */
 		protected function getPDOConnectionString($options) 
 		{
-			return $options[self::OPT_TYPE] . ':' . $options[self::OPT_HOST];
+			return $options[self::OPT_TYPE] . ':' . $options[self::OPT_DB];
 		}
 	}
 }

@@ -96,11 +96,10 @@ namespace nutshell\plugin\db
 				$options = array(
 					AbstractDb::OPT_HOST 		=> $connectionParams->host,
 					AbstractDb::OPT_PORT 		=> $connectionParams->port,
-					AbstractDb::OPT_DB 			=> $connectionParams->database,
+					AbstractDb::OPT_DB 			=> str_replace('{APP_HOME}',APP_HOME,$connectionParams->database),
 					AbstractDb::OPT_USERNAME 	=> $connectionParams->username,
 					AbstractDb::OPT_PASSWORD 	=> $connectionParams->password,
 				);
-				
 				$connection = new $className($options);
 				
 				if(!$connection->isConnected())
