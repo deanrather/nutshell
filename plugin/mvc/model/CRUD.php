@@ -86,7 +86,6 @@ namespace application\model
 
 /**
  * @package nutshell-plugin
- * @author guillaume
  */
 namespace nutshell\plugin\mvc\model
 {
@@ -227,6 +226,7 @@ namespace nutshell\plugin\mvc\model
 			VALUES
 				({$placeholders});
 SQL;
+die($query);
 			return $this->db->insert($query,$record);
 		}
 		
