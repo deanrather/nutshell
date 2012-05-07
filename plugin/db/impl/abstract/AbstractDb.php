@@ -262,7 +262,9 @@ namespace nutshell\plugin\db\impl
 				if ($args[0]!=$this->lastQuery['sql'] || !$usePrepared)
 				{
 					$this->lastQuery['sql']=$args[0];
-					$this->lastQuery['statement']=$this->connection->prepare($args[0],array(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true));
+					$config = array();
+					if(extension_loaded('pdo_mysql')) $config['PDO::MYSQL_ATTR_USE_BUFFERED_QUERY'] = true; 
+					$this->lastQuery['statement']=$this->connection->prepare($args[0],$config);
 				}
 			}
 			else if (empty($args[0]) && empty($this->lastQuery['sql']))
