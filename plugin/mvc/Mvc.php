@@ -53,7 +53,6 @@ namespace nutshell\plugin\mvc
 			
 			//Construct the namespaced class name.
 			$className='application\controller\\'.$this->route->getControlNamespace().ucwords($this->route->getControl());
-			var_dump($className);
 			
 			//Initiate the controller.
 			$this->controller=new $className($this);
