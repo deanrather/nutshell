@@ -102,7 +102,15 @@ namespace nutshell\plugin\mvc
 					$this->router->advancePointer();
 					$dir		.=$controller._DS_;
 					$controller	=$this->route->getControl();
+					$indexFile	=$dir.$controller.'Index.php';
 					$file		=$dir.$controller.'.php';
+					
+					if (is_file($indexFile))
+					{
+						$this->route->setControl('index');
+						$file = $indexFile;
+						break;
+					}
 				}
 				else
 				{
