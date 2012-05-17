@@ -72,7 +72,7 @@ namespace nutshell\core\exception
 				} 
 				else 
 				{
-					throw new NutshellException('Failed to write to default log: no loader active');
+					user_error("Failed to load logger: $message", E_USER_ERROR);
 				}
 			}
 		}
