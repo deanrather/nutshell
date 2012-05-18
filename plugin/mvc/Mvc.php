@@ -86,9 +86,16 @@ namespace nutshell\plugin\mvc
 			}
 		}
 		
+		/**
+		 * Looks at $this->route to load the appropriate controller
+		 * If a file exists in the controllers directory by that name, includes the file and returns 
+		 * Otherwise, if a directory exists inside the controllers directory by this name with an Index.php, load that file
+		 * Otherwise, look inside that folder for a file by that name.
+		 * Note that folders must be named in lowerCamelCase, and files must be named in UpperCamelCase -- otherwise your site will die on linux servers
+		 */
 		public function loadController()
 		{
-			$controller	=$this->route->getControl();
+			$controller	=ucFirst($this->route->getControl());
 			$dir		=APP_HOME.$this->config->dir->controllers;
 			$file		=$dir.$controller.'.php';
 			while (true)
@@ -100,7 +107,7 @@ namespace nutshell\plugin\mvc
 				else if (is_dir($dir))
 				{
 					$this->router->advancePointer();
-					$dir		.=$controller._DS_;
+					$dir		.=lcfirst($controller)._DS_;
 					$controller	=$this->route->getControl();
 					$indexFile	=$dir.$controller.'Index.php';
 					$file		=$dir.$controller.'.php';
