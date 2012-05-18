@@ -97,9 +97,7 @@ namespace nutshell\helper
 		 */
 		public static function removeCrLf($str)
 		{
-			$str = str_replace("\r", '', $str);
-			$str = str_replace("\n", '', $str);
-			return $str;
+			return str_replace(array("\r","\n"), '', $str);;
 		}
 		
 		/**
