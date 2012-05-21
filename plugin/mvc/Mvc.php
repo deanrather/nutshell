@@ -126,12 +126,14 @@ namespace nutshell\plugin\mvc
 					$this->router->advancePointer();
 					$controller=$this->route->getControl();
 					
-					// Check this directory for an Index.php
+					// If we are on the final node (controller is null) then Check this directory for an Index.php
 					$indexFile=$dir.lcFirst($controller)._DS_.'Index.php';
-					if (is_file($indexFile))
+					if (!$controller && is_file($indexFile))
 					{
-						$this->route->setControl('index');
-						$file = $indexFile;
+						$this->router->advancePointer();
+						$this->route->setControl('Index');
+						$dir.=lcFirst($controller)._DS_;
+						$file=$dir.'Index.php';
 						break;
 					}
 					
@@ -140,8 +142,8 @@ namespace nutshell\plugin\mvc
 				}
 				else
 				{
-					$files=implode("\n", $triedFiles);
-					throw new NutshellException("MVC Exception. Unable to load controller. \nNone of the following files exist:\n$files");
+					$files=implode("<br>", $triedFiles);
+					throw new NutshellException("MVC Exception. Unable to load controller. <br>None of the following files exist:<br>$files");
 				}
 			}
 			include($file);
