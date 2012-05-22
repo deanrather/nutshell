@@ -115,18 +115,31 @@ namespace nutshell\core\exception
 		 * This method is called when an exception happens.
 		 * @param Exception $exception
 		 */
-		public static function treatException($exception)
+		public static function treatException($exception, $format=null)
 		{
 			if (!self::$blockRecursion)
 			{
 				self::$blockRecursion = true;
-			
-				$message =
-					( ($exception->code>0)             ? "ERROR {$exception->code}. " : "" ).
-					( "Exception class:".get_class($exception).". ").
-					( (strlen($exception->message)>0)  ? "Message: {$exception->message}. " : "").
-					( (strlen($exception->file)>0)     ? "File: {$exception->file}. " : "").
-					( ($exception->line>0)             ? "Line: {$exception->line}. " : "") ;
+				
+				if($format=='json')
+				{
+					$message = "{error:true";
+					$message .= ", class:'".get_class($exception)."'";
+					if($exception->code>0)				$message .= ", code:".$exception->code;
+					if(strlen($exception->message)>0)	$message .= ", message:'".$exception->message."'";
+					if(strlen($exception->file)>0)		$message .= ", file:'".$exception->file."'";
+					if($exception->line>0)				$message .= ", line:".$exception->line;
+					$message .= '}';
+				}
+				else
+				{
+					$message = "ERROR";
+					$message .= "\nClass:".get_class($exception);
+					if($exception->code>0)				$message .= "\nCode: ".$exception->code;
+					if(strlen($exception->message)>0)	$message .= "\nMessage: ".$exception->message;
+					if(strlen($exception->file)>0)		$message .= "\nFile: ".$exception->file;
+					if($exception->line>0)				$message .= "\nLine: ".$exception->line;
+				}
 				
 				try // to log
 				{
