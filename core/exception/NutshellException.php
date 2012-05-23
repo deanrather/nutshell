@@ -123,13 +123,14 @@ namespace nutshell\core\exception
 				
 				if($format=='json')
 				{
-					$message = "{error:true";
-					$message .= ", class:'".get_class($exception)."'";
-					if($exception->code>0)				$message .= ", code:".$exception->code;
-					if(strlen($exception->message)>0)	$message .= ", message:'".$exception->message."'";
-					if(strlen($exception->file)>0)		$message .= ", file:'".$exception->file."'";
-					if($exception->line>0)				$message .= ", line:".$exception->line;
-					$message .= '}';
+					$message = array('error' => true);
+					$message["class"] = get_class($exception);
+					if($exception->code>0)				$message["code"] = $exception->code;
+					if(strlen($exception->message)>0)	$message["message"] = $exception->message;
+					if(strlen($exception->file)>0)		$message["file"] = $exception->file;
+					if($exception->line>0)				$message["line"] = $exception->line;
+					header('content-type:application/json');
+					$message = json_encode($message);
 				}
 				else
 				{
