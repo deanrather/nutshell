@@ -9,7 +9,7 @@ namespace nutshell\plugin\db
 
 	use nutshell\Nutshell;
 	use nutshell\core\plugin\Plugin;
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 	use nutshell\behaviour\Singleton;
 	use nutshell\behaviour\AbstractFactory;
 	use nutshell\plugin\db\impl\AbstractDb;

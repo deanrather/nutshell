@@ -6,7 +6,7 @@
 namespace nutshell\plugin\storage
 {
 	use nutshell\core\plugin\Plugin;
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\AbstractFactory;
 	
@@ -47,7 +47,7 @@ namespace nutshell\plugin\storage
 			}
 			else
 			{
-				throw new Exception('Invalid storage handler "'.$handler.'".');
+				throw new NutshellException('Invalid storage handler "'.$handler.'".');
 			}
 		}
 	}

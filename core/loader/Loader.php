@@ -8,7 +8,7 @@ namespace nutshell\core\loader
 
 	use nutshell\helper\ObjectHelper;
 
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 
 	use nutshell\core\Component;
 	use nutshell\plugin;
@@ -70,7 +70,7 @@ namespace nutshell\core\loader
 				}
 				else
 				{
-					throw new Exception('Unable to autoload class "'.$namespace.$className.'".');
+					throw new NutshellException('Unable to autoload class "'.$namespace.$className.'".');
 				}
 			}
 		}
@@ -156,7 +156,7 @@ namespace nutshell\core\loader
 				
 				if(!isset($this->classNames[$key]))
 				{
-					throw new Exception("Loader can't load key {$key}.");
+					throw new NutshellException("Loader can't load key {$key}.");
 				}
 			}
 
@@ -180,7 +180,7 @@ namespace nutshell\core\loader
 			}
 			else
 			{
-				throw new Exception('Loader failed to load class "'.$className.'". This is likely because the container '
+				throw new NutshellException('Loader failed to load class "'.$className.'". This is likely because the container '
 									.'handle you\'re using to handle the loading with doesn\'t impement the "Loadable" behaviour.');
 			}
 		}

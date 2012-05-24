@@ -9,7 +9,7 @@ namespace nutshell\core\plugin
 	use nutshell\behaviour\Loadable;
 
 	use nutshell\Nutshell;
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 	use nutshell\core\Component;
 	use nutshell\core\config\Config;
 	use nutshell\core\HookManager;
@@ -109,7 +109,7 @@ namespace nutshell\core\plugin
 		 * @param String $behaviourName - The name of the behaviour to register.
 		 * @param Mixed $callback - A function reference or Closure.
 		 * @return Void
-		 * @throws Exception
+		 * @throws NutshellException
 		 */
 		protected static function registerBehaviour($plugin,$behaviourName,$callback)
 		{
@@ -121,7 +121,7 @@ namespace nutshell\core\plugin
 			}
 			else
 			{
-				throw new Exception('Plugin ".$pluginName." tried to define the behaviour "'.$behaviourName.'". But this behaviour has already been defined.');
+				throw new NutshellException('Plugin ".$pluginName." tried to define the behaviour "'.$behaviourName.'". But this behaviour has already been defined.');
 			}
 		}
 		
@@ -135,7 +135,7 @@ namespace nutshell\core\plugin
 		 * @access public
 		 * @static
 		 * @param Array $args - Args to be passed to the plugin constructor.
-		 * @throws Exception - If one of the base behaviours is not implemented.
+		 * @throws NutshellException - If one of the base behaviours is not implemented.
 		 * @return nutshell\core\plugin\Plugin
 		 */
 		public static function getInstance(Array $args=array())
@@ -178,7 +178,7 @@ namespace nutshell\core\plugin
 					else
 					{
 //						throw new Exception('Invalid plugin. Plugin must implement one of either "Factory", "Singleton" or "Abstractable" interfaces.');
-						throw new Exception('Invalid plugin. Plugin must implement one of either "Factory", "Singleton" or "AbstractFactory" interfaces.');
+						throw new NutshellException('Invalid plugin. Plugin must implement one of either "Factory", "Singleton" or "AbstractFactory" interfaces.');
 					}
 				}
 			}

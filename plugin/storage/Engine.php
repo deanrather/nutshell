@@ -5,7 +5,7 @@
  */
 namespace nutshell\plugin\storage
 {
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 	use nutshell\core\plugin\PluginExtension;
 	/**
 	 * @package nutshell-plugin
@@ -27,7 +27,7 @@ namespace nutshell\plugin\storage
 			}
 			else
 			{
-				throw new Exception('Bucket "'.$name.'" is already bound and cannot be bound twice.');
+				throw new NutshellException('Bucket "'.$name.'" is already bound and cannot be bound twice.');
 			}
 		}
 		

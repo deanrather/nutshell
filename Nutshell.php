@@ -309,7 +309,7 @@ namespace nutshell
 			$path = realpath($path);
 			if(is_null($path)) 
 			{
-				throw new Exception('Invalid application path');
+				throw new NutshellException('Invalid application path');
 			}
 			define('APP_HOME', $path . DIRECTORY_SEPARATOR);
 		}
@@ -350,7 +350,7 @@ namespace nutshell
 		 * @param String $key - The shortcut.
 		 * @access public
 		 * @return nutshell\core\loader\Loader
-		 * @throws nutshell\core\exception\Exception - If $key is not "plugin".
+		 * @throws nutshell\core\exception\NutshellException - If $key is not "plugin".
 		 */
 		public function __get($key)
 		{
@@ -360,7 +360,7 @@ namespace nutshell
 			}
 			else
 			{
-				throw new Exception('Attempted to get invalid property "'.$key.'" from core.');
+				throw new NutshellException('Attempted to get invalid property "'.$key.'" from core.');
 			}
 		}
 		
@@ -371,11 +371,11 @@ namespace nutshell
 		 * @param String $val
 		 * @access public
 		 * @return void
-		 * @throws nutshell\core\exception\Exception - If anything attempts to set something on the core.
+		 * @throws nutshell\core\exception\NutshellException - If anything attempts to set something on the core.
 		 */
 		public function __set($key,$val)
 		{
-			throw new Exception('Sorry, nutshell core is read only!');
+			throw new NutshellException('Sorry, nutshell core is read only!');
 		}
 		
 		/**
