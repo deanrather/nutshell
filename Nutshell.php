@@ -18,7 +18,7 @@ namespace nutshell
 	use nutshell\core\loader\Loader;
 	use nutshell\core\loader\HipHopLoader;
 	use nutshell\core\plugin\Plugin;
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 	use \DIRECTORY_SEPARATOR;
 	use \DirectoryIterator;
 	
@@ -121,6 +121,8 @@ namespace nutshell
 			//Load the core components.
 			$this->loadCoreComponents();
 			
+			NutshellException::setHandlers();
+			
 			//Init the request object.
 			$this->request=new Request;
 			
@@ -201,7 +203,6 @@ namespace nutshell
 			require(NS_HOME.'core'._DS_.'Component.php');
 			require(NS_HOME.'core'._DS_.'HookManager.php');
 			require(NS_HOME.'core'._DS_.'exception'._DS_.'NutshellException.php');
-			require(NS_HOME.'core'._DS_.'exception'._DS_.'Exception.php');
 			require(NS_HOME.'core'._DS_.'request'._DS_.'Request.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'exception'._DS_.'ConfigException.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'Config.php');
@@ -211,7 +212,7 @@ namespace nutshell
 			require(NS_HOME.'core'._DS_.'plugin'._DS_.'Plugin.php');
 			require(NS_HOME.'core'._DS_.'plugin'._DS_.'PluginExtension.php');
 			
-			Exception::register();
+			NutshellException::register();
 			Request::register();
 			Config::register();
 			Loader::register();

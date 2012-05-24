@@ -5,6 +5,7 @@
 namespace nutshell\core\exception
 {
 	use nutshell\Nutshell;
+	use nutshell\core\Component;
 	use \Exception;
 
 	/**
@@ -12,6 +13,10 @@ namespace nutshell\core\exception
 	 */
 	class NutshellException extends Exception
 	{
+		public static function register() 
+		{
+			Component::load(array());
+		}
 		
 		/**
 		* Prevents recursion.
@@ -64,15 +69,23 @@ namespace nutshell\core\exception
 		{
 			if (strlen($message)>0)
 			{
-				$nutInst = Nutshell::getInstance();
-				if ($nutInst->hasPluginLoader())
+				try
+				{	
+					$nutInst = Nutshell::getInstance();
+					if ($nutInst->hasPluginLoader())
+					{
+						$log = $nutInst->plugin->Logger();
+						$log->fatal($message);
+					} 
+					else 
+					{
+						user_error("Failed to load logger: $message", E_USER_ERROR);
+					}
+				}
+				catch (Exception $e) 
 				{
-					$log = $nutInst->plugin->Logger();
-					$log->fatal($message);
-				} 
-				else 
-				{
-					user_error("Failed to load logger: $message", E_USER_ERROR);
+					//falling back to the system logger
+					error_log($message);
 				}
 			}
 		}
@@ -112,6 +125,36 @@ namespace nutshell\core\exception
 		}
 		
 		/**
+		 * Generates a nice desription of the message in either HTML or JSON.
+		 * Good for returning to the client (in dev mode) logging.
+		 * @param Exception $exception the exception 
+		 * @param String $format html or json
+		 */
+		public static function getDescription($exception, $format=null)
+		{
+			if($format=='json')
+			{
+				$message = array('error' => true);
+				$message["class"] = get_class($exception);
+				if($exception->code>0)				$message["code"] = $exception->code;
+				if(strlen($exception->message)>0)	$message["message"] = $exception->message;
+				if(strlen($exception->file)>0)		$message["file"] = $exception->file;
+				if($exception->line>0)				$message["line"] = $exception->line;
+				header('content-type:application/json');
+				$message = json_encode($message);
+			}
+			else
+			{
+				$message = "ERROR";
+				$message .= "\nClass:".get_class($exception);
+				if($exception->code>0)				$message .= "\nCode: ".$exception->code;
+				if(strlen($exception->message)>0)	$message .= "\nMessage: ".$exception->message;
+				if(strlen($exception->file)>0)		$message .= "\nFile: ".$exception->file;
+				if($exception->line>0)				$message .= "\nLine: ".$exception->line;
+			}
+		}
+		
+		/**
 		 * This method is called when an exception happens.
 		 * @param Exception $exception
 		 */
@@ -121,40 +164,16 @@ namespace nutshell\core\exception
 			{
 				self::$blockRecursion = true;
 				
-				if($format=='json')
-				{
-					$message = array('error' => true);
-					$message["class"] = get_class($exception);
-					if($exception->code>0)				$message["code"] = $exception->code;
-					if(strlen($exception->message)>0)	$message["message"] = $exception->message;
-					if(strlen($exception->file)>0)		$message["file"] = $exception->file;
-					if($exception->line>0)				$message["line"] = $exception->line;
-					header('content-type:application/json');
-					$message = json_encode($message);
-				}
-				else
-				{
-					$message = "ERROR";
-					$message .= "\nClass:".get_class($exception);
-					if($exception->code>0)				$message .= "\nCode: ".$exception->code;
-					if(strlen($exception->message)>0)	$message .= "\nMessage: ".$exception->message;
-					if(strlen($exception->file)>0)		$message .= "\nFile: ".$exception->file;
-					if($exception->line>0)				$message .= "\nLine: ".$exception->line;
-				}
+				$message = self::getDescription($exception);
 				
-				try // to log
+				self::logMessage($message);
+				
+				if (self::$echoErrors) 
 				{
-					if (self::$echoErrors) 
-					{
-						header('HTTP/1.1 500 Application Error');
-						echo $message;
-					}
-					self::logMessage($message);		
-				} catch (Exception $e) 
-				{
-					//falling back to the system logger
-					error_log($message);
+					header('HTTP/1.1 500 Application Error');
+					echo $message;
 				}
+					
 				self::$blockRecursion = false;
 			}
 		}
@@ -170,6 +189,4 @@ namespace nutshell\core\exception
 			self::$echoErrors = (NS_ENV=='dev');
 		}
 	}
-
-	NutshellException::setHandlers();
 }

@@ -5,14 +5,14 @@
  */
 namespace nutshell\plugin\router\exception 
 {
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 
 	/**
 	 * 
 	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
 	 * @package nutshell-plugin
 	 */
-	class RouterException extends Exception
+	class RouterException extends NutshellException
 	{
 		
 	}

@@ -5,13 +5,13 @@
  */
 namespace nutshell\plugin\session\exception
 {
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 
 	/**
 	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
 	 * @package nutshell-plugin
 	 */
-	class SessionException extends Exception
+	class SessionException extends NutshellException
 	{
 		
 	}
