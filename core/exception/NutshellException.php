@@ -65,7 +65,7 @@ namespace nutshell\core\exception
 		 * Logs a message if Nutshell has a loader.
 		 * @param string $message
 		 */
-		private static function logMessage($message)
+		public static function logMessage($message)
 		{
 			if (strlen($message)>0)
 			{
@@ -88,6 +88,15 @@ namespace nutshell\core\exception
 					error_log($message);
 				}
 			}
+		}
+		
+		/**
+		 * Logs this exception
+		 */
+		public function log()
+		{
+			$message = self::getDescription($this);
+			self::logMessage($message);
 		}
 		
 		/**
@@ -126,7 +135,7 @@ namespace nutshell\core\exception
 		
 		/**
 		 * Generates a nice desription of the message in either HTML or JSON.
-		 * Good for returning to the client (in dev mode) logging.
+		 * Good for returning to the client (in dev mode) or logging.
 		 * @param Exception $exception the exception 
 		 * @param String $format html or json
 		 */
@@ -145,13 +154,15 @@ namespace nutshell\core\exception
 			}
 			else
 			{
-				$message = "ERROR";
+				$message = "\nERROR";
 				$message .= "\nClass:".get_class($exception);
 				if($exception->code>0)				$message .= "\nCode: ".$exception->code;
 				if(strlen($exception->message)>0)	$message .= "\nMessage: ".$exception->message;
 				if(strlen($exception->file)>0)		$message .= "\nFile: ".$exception->file;
 				if($exception->line>0)				$message .= "\nLine: ".$exception->line;
+				$message .= "\n";
 			}
+			return $message;
 		}
 		
 		/**
@@ -164,7 +175,7 @@ namespace nutshell\core\exception
 			{
 				self::$blockRecursion = true;
 				
-				$message = self::getDescription($exception);
+				$message = self::getDescription($exception, $format);
 				
 				self::logMessage($message);
 				
