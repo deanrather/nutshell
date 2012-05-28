@@ -72,7 +72,7 @@ namespace nutshell\core\exception
 				} 
 				else 
 				{
-					throw new NutshellException('Failed to write to default log: no loader active');
+					user_error("Failed to load logger: $message", E_USER_ERROR);
 				}
 			}
 		}
@@ -153,7 +153,7 @@ namespace nutshell\core\exception
 		{
 			set_exception_handler('nutshell\core\exception\NutshellException::treatException');
 			self::$oldErrorHandler = set_error_handler('nutshell\core\exception\NutshellException::treatError');
-			self::$echoErrors = (NS_ENV=='dev')?true:false;
+			self::$echoErrors = (NS_ENV=='dev');
 		}
 	}
 
