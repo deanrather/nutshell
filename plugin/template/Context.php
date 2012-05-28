@@ -5,7 +5,7 @@
  */
 namespace nutshell\plugin\template
 {
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 	use nutshell\core\plugin\PluginExtension;
 	use \Closure;
 	
@@ -36,7 +36,7 @@ namespace nutshell\plugin\template
 			}
 			else
 			{
-				throw new Exception('Invalid keyval lengths. Keys and values should contain the same number of items.');
+				throw new NutshellException('Invalid keyval lengths. Keys and values should contain the same number of items.');
 			}
 		}
 		
@@ -77,7 +77,7 @@ namespace nutshell\plugin\template
 			}
 			else
 			{
-				throw new Exception('Invalid template function. Function "'.$method.'" has not been registered. Register with $context->registerCallback($name,$closure).');
+				throw new NutshellException('Invalid template function. Function "'.$method.'" has not been registered. Register with $context->registerCallback($name,$closure).');
 			}
 		}
 	}

@@ -5,7 +5,7 @@
  */
 namespace nutshell\core\config
 {
-	use nutshell\core\exception\Exception;
+	use nutshell\core\config\exception\ConfigException;
 	
 	/**
 	 * Configuration node instance
@@ -35,7 +35,7 @@ namespace nutshell\core\config
 				//lookup through the extended files list
 				if(in_array($configRoot->extends, $extended)) 
 				{
-					throw new Exception('Cyclic config file dependency detected!');
+					throw new ConfigException('Cyclic config file dependency detected!');
 				}
 				$parentConfig = $extendHandler($configRoot->extends, $extended);
 				$config = $parentConfig->extendWithNode($configRoot->config);

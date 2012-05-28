@@ -5,6 +5,7 @@ namespace nutshell\plugin\verylargequery
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Factory;
 	use nutshell\helper\ArrayHelper;
+	use nutshell\core\exception\NutshellException;
 
 	/**
 	 * This class is designed for running queries that return very large amounts of rows and memory. This class should support result sets as large as 500GB or 1TB.
@@ -123,13 +124,13 @@ namespace nutshell\plugin\verylargequery
 				}
 				catch(PDOException $exception)
 				{
-					throw new Exception($exception->getMessage());
+					throw new NutshellException($exception->getMessage());
 				}
 			}
 			else
 			{
 				$args=func_get_args();
-				throw new Exception('Unable to establish connection to the database.');
+				throw new NutshellException('Unable to establish connection to the database.');
 			}
 			return true;
 		}
@@ -265,7 +266,7 @@ namespace nutshell\plugin\verylargequery
 					unlink($localfile);
 				}
 				$oTransfer->close();				
-			} catch (Exception $e) {
+			} catch (NutshellException $e) {
 				foreach($aFiles as $localfile)
 				{
 					if (file_exists ( $localfile ) )

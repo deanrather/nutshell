@@ -81,7 +81,7 @@ namespace nutshell\core\config
 		 * 
 		 * @param mixed $obj
 		 * @return nutshell\core\config\Config the current instance
-		 * @throws Exception if the argument is not of a supported type
+		 * @throws ConfigException if the argument is not of a supported type
 		 */
 		protected function loadObject($obj) 
 		{
@@ -533,7 +533,7 @@ namespace nutshell\core\config
 		 * Loads the specified file into a config instance
 		 * 
 		 * @param string $file
-		 * @throws Exception if the file could not be found/read
+		 * @throws ConfigException if the file could not be found/read
 		 * @return nutshell\config\Config an instance of the config
 		 */
 		protected static function doLoadConfigFile($pathAlternatives, $file, $extendHandler = null, &$extended = null) 

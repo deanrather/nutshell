@@ -18,7 +18,7 @@ namespace nutshell
 	use nutshell\core\loader\Loader;
 	use nutshell\core\loader\HipHopLoader;
 	use nutshell\core\plugin\Plugin;
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 	use \DIRECTORY_SEPARATOR;
 	use \DirectoryIterator;
 	
@@ -121,6 +121,8 @@ namespace nutshell
 			//Load the core components.
 			$this->loadCoreComponents();
 			
+			NutshellException::setHandlers();
+			
 			//Init the request object.
 			$this->request=new Request;
 			
@@ -201,7 +203,6 @@ namespace nutshell
 			require(NS_HOME.'core'._DS_.'Component.php');
 			require(NS_HOME.'core'._DS_.'HookManager.php');
 			require(NS_HOME.'core'._DS_.'exception'._DS_.'NutshellException.php');
-			require(NS_HOME.'core'._DS_.'exception'._DS_.'Exception.php');
 			require(NS_HOME.'core'._DS_.'request'._DS_.'Request.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'exception'._DS_.'ConfigException.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'Config.php');
@@ -213,7 +214,7 @@ namespace nutshell
 			require(NS_HOME.'core'._DS_.'plugin'._DS_.'LibraryPlugin.php');
 			require(NS_HOME.'core'._DS_.'plugin'._DS_.'PluginExtension.php');
 			
-			Exception::register();
+			NutshellException::register();
 			Request::register();
 			Config::register();
 			Loader::register();
@@ -310,7 +311,7 @@ namespace nutshell
 			$path = realpath($path);
 			if(is_null($path)) 
 			{
-				throw new Exception('Invalid application path');
+				throw new NutshellException('Invalid application path');
 			}
 			define('APP_HOME', $path . DIRECTORY_SEPARATOR);
 		}
@@ -351,7 +352,7 @@ namespace nutshell
 		 * @param String $key - The shortcut.
 		 * @access public
 		 * @return nutshell\core\loader\Loader
-		 * @throws nutshell\core\exception\Exception - If $key is not "plugin".
+		 * @throws nutshell\core\exception\NutshellException - If $key is not "plugin".
 		 */
 		public function __get($key)
 		{
@@ -361,7 +362,7 @@ namespace nutshell
 			}
 			else
 			{
-				throw new Exception('Attempted to get invalid property "'.$key.'" from core.');
+				throw new NutshellException('Attempted to get invalid property "'.$key.'" from core.');
 			}
 		}
 		
@@ -372,11 +373,11 @@ namespace nutshell
 		 * @param String $val
 		 * @access public
 		 * @return void
-		 * @throws nutshell\core\exception\Exception - If anything attempts to set something on the core.
+		 * @throws nutshell\core\exception\NutshellException - If anything attempts to set something on the core.
 		 */
 		public function __set($key,$val)
 		{
-			throw new Exception('Sorry, nutshell core is read only!');
+			throw new NutshellException('Sorry, nutshell core is read only!');
 		}
 		
 		/**

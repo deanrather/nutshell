@@ -39,7 +39,7 @@ if (!class_exists('ArrayObject'))
 			}
 			else
 			{
-				throw new Exception('ArrayObject expects parameter 1 to be an Array or Object.');
+				throw new NutshellException('ArrayObject expects parameter 1 to be an Array or Object.');
 			}
 		}
 		
@@ -65,12 +65,12 @@ if (!class_exists('ArrayObject'))
 				}
 				else
 				{
-					throw new Exception('Unable to set data based on the current set flag. The flag is "'.$this->__private_flags.'".');
+					throw new NutshellException('Unable to set data based on the current set flag. The flag is "'.$this->__private_flags.'".');
 				}
 			}
 			else
 			{
-				throw new Exception('Invalid data set. The data set must be an array or object.');
+				throw new NutshellException('Invalid data set. The data set must be an array or object.');
 			}
 			return $this;
 		}
@@ -140,7 +140,7 @@ if (!class_exists('ArrayObject'))
 			}
 			else
 			{
-				throw new Exception('Invalid Flag.');
+				throw new NutshellException('Invalid Flag.');
 			}
 			if ($this->count())
 			{
@@ -249,7 +249,7 @@ if (!class_exists('ArrayObject'))
 			}
 			else
 			{
-				throw new Exception('ArrayObject::exchangeArray expects parameter 1 to be an Array or Object.');
+				throw new NutshellException('ArrayObject::exchangeArray expects parameter 1 to be an Array or Object.');
 			}
 		}
 		
@@ -293,7 +293,7 @@ if (!class_exists('ArrayObject'))
 			{
 				if (is_null($offset))
 				{
-					throw new Exception('Sorry, unable to set values like this. This feature is currently not implemented.');
+					throw new NutshellException('Sorry, unable to set values like this. This feature is currently not implemented.');
 				}
 				else
 				{
@@ -302,7 +302,7 @@ if (!class_exists('ArrayObject'))
 			}
 			else
 			{
-				throw new Exception('Unable to set data based on the current set flag. The flag is "'.$this->__private_flags.'".');
+				throw new NutshellException('Unable to set data based on the current set flag. The flag is "'.$this->__private_flags.'".');
 			}
 		}
 		
@@ -318,7 +318,7 @@ if (!class_exists('ArrayObject'))
 			}
 			else
 			{
-				throw new Exception('Unable to set data based on the current set flag. The flag is "'.$this->__private_flags.'".');
+				throw new NutshellException('Unable to set data based on the current set flag. The flag is "'.$this->__private_flags.'".');
 			}
 		}
 		
@@ -334,7 +334,7 @@ if (!class_exists('ArrayObject'))
 			}
 			else
 			{
-				throw new Exception('Unable to set data based on the current set flag. The flag is "'.$this->__private_flags.'".');
+				throw new NutshellException('Unable to set data based on the current set flag. The flag is "'.$this->__private_flags.'".');
 			}
 		}
 		
@@ -350,7 +350,7 @@ if (!class_exists('ArrayObject'))
 			}
 			else
 			{
-				throw new Exception('Unable to set data based on the current set flag. The flag is "'.$this->__private_flags.'".');
+				throw new NutshellException('Unable to set data based on the current set flag. The flag is "'.$this->__private_flags.'".');
 			}
 		}
 		
@@ -371,7 +371,7 @@ if (!class_exists('ArrayObject'))
 			}
 			else
 			{
-				throw new Exception('ArrayObject::unserialize expects unserialized string to be a Array or Object.');
+				throw new NutshellException('ArrayObject::unserialize expects unserialized string to be a Array or Object.');
 			}
 		}
 		

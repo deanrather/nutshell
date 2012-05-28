@@ -5,7 +5,7 @@
  */
 namespace nutshell\plugin\storage\engine\file
 {
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 	use nutshell\plugin\storage\AbstractBucket;
 	
 	/**
@@ -60,7 +60,7 @@ namespace nutshell\plugin\storage\engine\file
 			}
 			else
 			{
-				throw new Exception('Unable to delete file from bucket. Path is "'.$file.'".');
+				throw new NutshellException('Unable to delete file from bucket. Path is "'.$file.'".');
 			}
 		}
 		
@@ -76,7 +76,7 @@ namespace nutshell\plugin\storage\engine\file
 				}
 				else
 				{
-					throw new Exception('Copy destination doesn\'t exist. Pass "true" as the last argument of this method to auto create the destination folder.');
+					throw new NutshellException('Copy destination doesn\'t exist. Pass "true" as the last argument of this method to auto create the destination folder.');
 				}
 			}
 			if (is_file($fromLocation))
@@ -107,7 +107,7 @@ namespace nutshell\plugin\storage\engine\file
 					}
 					else
 					{
-						throw new Exception('Move destination doesn\'t exist. Pass "true" as the last argument of this method to auto create the destination folder.');
+						throw new NutshellException('Move destination doesn\'t exist. Pass "true" as the last argument of this method to auto create the destination folder.');
 					}
 				}
 				rename($fromLocation,$toLocation);
