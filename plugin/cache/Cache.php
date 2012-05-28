@@ -9,6 +9,7 @@ namespace nutshell\plugin\cache
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Singleton;
 	use nutshell\Nutshell;
+	use nutshell\core\exception\NutshellException;
 	
 	/**
 	 * @package nutshell-plugin
@@ -43,7 +44,7 @@ namespace nutshell\plugin\cache
 				try 
 				{
 					$configCacheFolder = '';//$configCacheFolder = $this->config->plugin->cache->absolutePath;
-				} catch (Exception $e) 
+				} catch (NutshellException $e) 
 				{
 					$configCacheFolder = '';
 				}
@@ -62,7 +63,7 @@ namespace nutshell\plugin\cache
 			}
 			else
 			{
-				throw new Exception("'$type' is not a valid cache type.");
+				throw new NutshellException("'$type' is not a valid cache type.");
 			}
 		}
 		

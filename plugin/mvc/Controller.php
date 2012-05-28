@@ -6,7 +6,7 @@
 namespace nutshell\plugin\mvc
 {
 	use nutshell\core\plugin\PluginExtension;
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 	use nutshell\Nutshell;
 	use nutshell\plugin\mvc\Mvc;
 

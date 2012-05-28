@@ -126,7 +126,7 @@ namespace nutshell\plugin\cache
 					}
 				}
 			} 
-			catch (Exception $e) 
+			catch (NutshellException $e) 
 			{
 				// nothing can be done when a cache load fails.
 				// no exception should be provoked
@@ -217,7 +217,7 @@ namespace nutshell\plugin\cache
 						{
 							unlink($fileName);	
 						} 
-						catch (Exception $e)
+						catch (NutshellException $e)
 						{
 							// it's a minor problem a cache clear fault. But we log just for safety.
 							Nutshell::getInstance()->plugin->Logger->fatal("Failed to delete cache file '$fileName' ($baseFileName).");

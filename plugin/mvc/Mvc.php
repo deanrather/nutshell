@@ -86,35 +86,64 @@ namespace nutshell\plugin\mvc
 			}
 		}
 		
+		/**
+		 * Looks at $this->route to load the appropriate controller
+		 * Works its way through URI nodes until it finds a controller with the name of that node.
+		 * If a file exists in the controllers directory by that name, includes the file and returns 
+		 * Otherwise, if a directory exists inside the controllers directory by this name, It looks in there.
+		 * If, inside the directory by this node's name, there is an Index.php, it loads that.
+		 * Otherwise, it tries to load a file by the name of the next uri node's name.
+		 * If there is not an index file, or a file by the node's name, it looks into a folder by that node's name and proceeds.
+		 * Note that folders must be named in lowerCamelCase, and files must be named in UpperCamelCase -- otherwise your site will die on linux servers
+		 */
 		public function loadController()
 		{
+			// The first URI node
 			$controller	=$this->route->getControl();
-			$dir		=APP_HOME.$this->config->dir->controllers;
-			$file		=$dir.$controller.'.php';
+			
+			// The Directory with controllers in it
+			$dir=APP_HOME.$this->config->dir->controllers;
+			
+			// Maybe we're at website.com/hello/. Check the directory for a Hello.php
+			$file=$dir.ucFirst($controller).'.php';
+			
+			$triedFiles=array();
+			
+			// This loop will be broken out from once we find the file. Otherwise it will throw an error.
 			while (true)
 			{
+				$triedFiles[] = $file;
 				if (is_file($file))
 				{
 					break;
 				}
 				else if (is_dir($dir))
 				{
+					// Now check for a directory by this node's name. Directories are all lowerCamelCase
+					$dir.=lcFirst($controller)._DS_;
+				
+					// Update the controller to point to the next URI node 
 					$this->router->advancePointer();
-					$dir		.=$controller._DS_;
-					$controller	=$this->route->getControl();
-					$indexFile	=$dir.$controller.'Index.php';
-					$file		=$dir.$controller.'.php';
+					$controller=$this->route->getControl();
 					
-					if (is_file($indexFile))
+					// If we are on the final node (controller is null) then Check this directory for an Index.php
+					$indexFile=$dir.lcFirst($controller)._DS_.'Index.php';
+					if (!$controller && is_file($indexFile))
 					{
-						$this->route->setControl('index');
-						$file = $indexFile;
+						$this->router->advancePointer();
+						$this->route->setControl('Index');
+						$dir.=lcFirst($controller)._DS_;
+						$file=$dir.'Index.php';
 						break;
 					}
+					
+					// Update the file to look for a file the new node's name in the directory
+					$file=$dir.ucFirst($controller).'.php';
 				}
 				else
 				{
-					throw new NutshellException('MVC Exception. Unable to load controller. The controller "'.$this->route->getControl().'" was not found.');
+					$files=implode("<br>", $triedFiles);
+					throw new NutshellException("MVC Exception. Unable to load controller. <br>None of the following files exist:<br>$files");
 				}
 			}
 			include($file);

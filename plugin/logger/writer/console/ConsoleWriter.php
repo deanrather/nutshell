@@ -7,8 +7,6 @@ namespace nutshell\plugin\logger\writer\console
 {
 	use nutshell\core\config\Config;
 	
-	use nutshell\core\exception\Exception;
-	
 	use nutshell\plugin\logger\writer\Writer;
 	
 	/**

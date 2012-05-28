@@ -7,7 +7,7 @@ namespace nutshell\plugin\direct
 {
 	use nutshell\helper\ObjectHelper;
 	use nutshell\plugin\mvc\Controller;
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 	use nutshell\core\plugin\PluginExtension;
 	use nutshell\behaviour\direct\Pollable;
 	
@@ -81,7 +81,7 @@ namespace nutshell\plugin\direct
 				}
 				else
 				{
-					throw new Exception('Invalid provider type "'.$provider->type.'".');
+					throw new NutshellException('Invalid provider type "'.$provider->type.'".');
 				}
 				$descriptor[]=$thisProvider;
 			}

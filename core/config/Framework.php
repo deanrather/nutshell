@@ -8,8 +8,6 @@ namespace nutshell\core\config
 {
 	use nutshell\core\config\exception\ConfigException;
 
-	use nutshell\core\exception\Exception;
-
 	use nutshell\Nutshell;
 
 	/**
@@ -50,16 +48,16 @@ namespace nutshell\core\config
 			{
 				if(!@mkdir($folder))
 				{
-					throw new Exception(sprintf("Could not create the config cache folder. Please check the write permission on %s.", dirname($folder)));
+					throw new ConfigException(sprintf("Could not create the config cache folder. Please check the write permission on %s.", dirname($folder)));
 				}
 			}
 			else if(!is_dir($folder))
 			{
-				throw new Exception(sprintf("%s does not resolve to a directory.", $folder));
+				throw new ConfigException(sprintf("%s does not resolve to a directory.", $folder));
 			}
 			else if((PHP_OS=="linux" && !is_executable($folder)) || !is_writeable($folder))
 			{
-				throw new Exception(sprintf("Nutshell requires write and execute permission on %s", $folder));
+				throw new ConfigException(sprintf("Nutshell requires write and execute permission on %s", $folder));
 			}
 			
 			
@@ -69,17 +67,17 @@ namespace nutshell\core\config
 			{
 				if(!is_writeable($folder))
 				{
-					throw new Exception(sprintf("%s is not a writeable directory.", $folder));
+					throw new ConfigException(sprintf("%s is not a writeable directory.", $folder));
 				}
 				$rebuildCache = true;
 			}
 			else if(!is_file($file)) 
 			{
-				throw new Exception(sprintf("%s does not resolve to a regular file.", $file));
+				throw new ConfigException(sprintf("%s does not resolve to a regular file.", $file));
 			}
 			else if(!is_readable($file) || !is_writeable($file)) 
 			{
-				throw new Exception(sprintf("Nutshell requires read and write permissions on %s.", $file));
+				throw new ConfigException(sprintf("Nutshell requires read and write permissions on %s.", $file));
 			}
 			else if(self::forceRebuild() || time() - filemtime($file) > self::CONFIG_EXPIRATION)
 			{
@@ -111,7 +109,7 @@ namespace nutshell\core\config
 			
 			if(file_put_contents(self::getCachedConfigFile(), $configFile->__toString()) === false)
 			{
-				throw new Exception(sprintf("Failed to write to file %s.", self::getCachedConfigFile()));
+				throw new ConfigException(sprintf("Failed to write to file %s.", self::getCachedConfigFile()));
 			}
 			
 			return $config;

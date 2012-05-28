@@ -49,7 +49,7 @@ namespace nutshell\plugin\format
 				\nutshell\plugin\format\stricttemplate\evalInStrictNameSpace('?>'  . $this->templateStr, $record, $caseInsensitive);
 				$output = ob_get_clean();
 				$this->templateErrorMessage = '';
-			} catch (Exception $e)
+			} catch (NutshellException $e)
 			{
 				$output = null;
 				ob_end_clean();

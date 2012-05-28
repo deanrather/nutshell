@@ -5,13 +5,13 @@
  */
 namespace nutshell\core\config\exception
 {
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 
 	/**
 	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
 	 * @package nutshell
 	 */
-	class ConfigException extends Exception
+	class ConfigException extends NutshellException
 	{
 		const CODE_INVALID_JSON = 1;
 		
