@@ -22,6 +22,22 @@ namespace nutshell\core\exception
 		
 		
 		
+		/**
+		 * Receives an Error Code, and optionally one or many debug variables.
+		 * The error code is for displaying to the user and identifying the exception type within the system
+		 * The debug variables are for display in dev mode, and for logging
+		 */
+		public function __construct($code, $debug=null)
+		{
+			$this->code = $this->getCodePrefix().'-'.$code;
+			
+			// Set my 'debug' attribute
+			$args = func_get_args();
+			array_shift($args);
+			$this->debug = $args;
+		}
+		
+		
 		/*
 		 * Static Attributes
 		 */
@@ -60,21 +76,6 @@ namespace nutshell\core\exception
 		 * Member Functions
 		 */
 		
-		
-		/**
-		 * Receives an Error Code, and optionally one or many debug variables.
-		 * The error code is for displaying to the user and identifying the exception type within the system
-		 * The debug variables are for display in dev mode, and for logging
-		 */
-		public function __construct($code, $debug=null)
-		{
-			$this->code = $this->getCodePrefix().'-'.$code;
-			
-			// Set my 'debug' attribute
-			$args = func_get_args();
-			array_shift($args);
-			$this->debug = $args;
-		}
 		
 		
 		/**
@@ -117,7 +118,8 @@ namespace nutshell\core\exception
 				'CODE'	=> $this->code,
 				'FILE'	=> $this->file,
 				'LINE'	=> $this->line,
-				'STACK'	=> $this->getTraceAsString()
+				'STACK'	=> "\n".$this->getTraceAsString(),
+				'DEBUG'	=> var_export($this->debug, true)
 			);
 			
 			if($format=='json')
@@ -233,7 +235,7 @@ namespace nutshell\core\exception
 		 * This method is called when an exception happens.
 		 * @param Exception $exception
 		 */
-		public static function treatException($exception, $format=null)
+		public static function treatException($exception, $format='html')
 		{
 			if (!self::$blockRecursion)
 			{
