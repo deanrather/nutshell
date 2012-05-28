@@ -28,11 +28,11 @@ namespace nutshell
 	 */
 	class Nutshell
 	{
-		const VERSION				=	'1.0.0-dev-6';
+		const VERSION				=	'1.0.0-dev-7';
 		const VERSION_MAJOR			=	1;
 		const VERSION_MINOR			=	0;
 		const VERSION_MICRO			=	0;
-		const VERSION_DEV			=	6;
+		const VERSION_DEV			=	7;
 		const NUTSHELL_ENVIRONMENT	=	'NS_ENV';
 		const DEFAULT_ENVIRONMENT	= 	'production';
 		
