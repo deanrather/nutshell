@@ -39,7 +39,7 @@ namespace nutshell\plugin\Session\engine
 				}
 				catch(\Exception $e)
 				{
-					throw new SessionException(sprintf("Could not instantiate %s database connector for session handler", $this->config->connector), 0, $e);
+					throw new SessionException(sprintf("Could not instantiate %s database connector for session handler: %s", $this->config->connector, $e->getMessage()), 0, $e);
 				}
 			}
 			else
@@ -214,11 +214,12 @@ SQL
 		 */
 		public function gcSessionHandler($maxlifetime)
 		{
-			$this->activeConnector->delete(<<<SQL
+		
+			$sql =
+<<<SQL
 DELETE FROM {$this->table} WHERE DATE_ADD(session_ts, INTERVAL ? SECOND) < CURRENT_TIMESTAMP
-SQL
-			, $sessionId
-			);
+SQL;
+			$this->activeConnector->delete($sql, $maxlifetime);
 			return true;
 		}
 	}

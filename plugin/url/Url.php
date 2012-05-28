@@ -8,6 +8,7 @@ namespace nutshell\plugin\url
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Singleton;
+	use nutshell\Nutshell;
 	
 	/**
 	 * @author guillaume
@@ -29,64 +30,52 @@ namespace nutshell\plugin\url
 		
 		public function init()
 		{
-			$baseURL = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-			if(defined('NS_APP_WEB_HOME')) 
-			{
-				$baseURL = preg_replace('/^' . preg_quote(NS_APP_WEB_HOME, '/') . '/', '', $baseURL);
-			}
-			$nodes=explode('/', $baseURL);
-			if (!reset($nodes))	array_shift($nodes);
-			if (!end($nodes))	array_pop($nodes);
-			if (!isset($nodes[0]))
-			{
-				$nodes[0]='';
-			}
-			if (substr(current($nodes),0,1)=='?')
-			{
-				array_pop($nodes);
-			}
-			$this->nodes=$nodes;
+			
 		}
 		
 		public function node($num)
 		{
-			if (isset($this->nodes[$num]))
-			{
-				return $this->nodes[$num];
-			}
-			return null;
+			return $this->request->node($num);
 		}
 		
 		public function nodeEmpty($num)
 		{
-			return (isset($this->nodes[$num]) && empty($this->nodes[$num]));
+			return $this->request->nodeEmpty($num);
 		}
 		
+		/**
+		 * @deprecated
+		 */
 		public function getNodes()
 		{
-			return $this->nodes;
+			return $this->request->getNodes();
 		}
 		
 		public function makeURL($URL='',$protocol='http://')
 		{
 			$URL=trim($URL,'/');
+			$URL=str_replace('?ns_url=','',$URL); // If we are in CLI mode, remove the ns_url tag, we will re-add it later.
 			if (strstr($URL,'?'))
 			{
 				list($prefix,$suffix)=explode('?',$URL,2);
 				$URL=trim($prefix,'/');
 				$URL.=(empty($prefix)?'?':'/?').$suffix;
 			}
-			$return=$protocol.$_SERVER['HTTP_HOST'].'/'.$URL;
-			if (!empty($URL))
+			if (NS_INTERFACE==Nutshell::INTERFACE_CGI) // If we are in CLI mode, put ns_url in
+			{ 
+				$URL=str_replace('?','&',$URL);
+				$return=$protocol.$_SERVER['HTTP_HOST'].'/?ns_url='.$URL;
+			}
+			else
 			{
-				$return.='/';
+				$return=$protocol.$_SERVER['HTTP_HOST'].'/'.$URL;
 			}
 			return $return;
 		}
 		
 		public function getCurrentURL()
 		{
-			return $this->makeURL().implode('/',$this->nodes);
+			return $this->makeURL().implode('/',$this->request->getNodes());
 		}
 	}
 }

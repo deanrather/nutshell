@@ -13,7 +13,8 @@ namespace nutshell\plugin\modelGenerator
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Singleton;
 	use nutshell\Nutshell;
-	use nutshell\helper\String;
+	use nutshell\helper\StringHelper;
+	use nutshell\core\exception\NutshellException;
 
 	/**
 	 * @author joao
@@ -25,7 +26,7 @@ namespace nutshell\plugin\modelGenerator
 		
 		public static function loadDependencies()
 		{
-
+			
 		}
 		
 		public static function registerBehaviours()
@@ -38,8 +39,10 @@ namespace nutshell\plugin\modelGenerator
 			if ($connection=Nutshell::getInstance()->config->plugin->Mvc->connection)
 			{
 				$this->db=Nutshell::getInstance()->plugin->Db->{$connection};
-			} else {
-				throw new Exception('Model generator can\'t find a db connection.');
+			}
+			else
+			{
+				throw new NutshellException('Model generator can\'t find a db connection.');
 			} 
 		}
 		
@@ -73,7 +76,7 @@ namespace nutshell\plugin\modelGenerator
 			{
 				$column_name    = $column['COLUMN_NAME'];
 				$column_type    = $column['COLUMN_TYPE'];
-				$column_comment = trim(String::removeCrLf($column['COLUMN_COMMENT']));
+				$column_comment = trim(StringHelper::removeCrLf($column['COLUMN_COMMENT']));
 				
 				if (strlen($column_comment)>0)
 				{
@@ -118,37 +121,33 @@ namespace nutshell\plugin\modelGenerator
 		 */
 		public function getModelStrFromTable($table_name, $folder, $model_name, $autoCreate = false, $table_comment='')
 		{
-			$tableStructure    = $this->db->getColumnsFromMysqlTable($table_name);
-			$pk_array_str      = $this->getPKArray($tableStructure);
-			$primary_ai_str    = $this->isAutoIncrement($tableStructure) ? "true" : "false";
-			$autoCreate_str    = $autoCreate ? "true" : "false";
-			$column_definition = $this->getColumnDefinition($tableStructure);
+			$tableStructure		= $this->db->getColumnsFromMysqlTable($table_name);
+			$pk_array_str		= $this->getPKArray($tableStructure);
+			$primary_ai_str		= $this->isAutoIncrement($tableStructure) ? "true" : "false";
+			$autoCreate_str		= $autoCreate ? "true" : "false";
+			$column_definition	= $this->getColumnDefinition($tableStructure);
 			
-			$table_comment = trim(String::removeCrLf($table_comment));
+			$table_comment = trim(StringHelper::removeCrLf($table_comment));
 			
 			if (strlen($table_comment)>0)
 			{
 				$table_comment = '// '.$table_comment."\n	";
 			}
 			
-			$code = 
-"<?php
-namespace application\model$folder
-{
-	use nutshell\plugin\mvc\model\CRUD;
-	
-	{$table_comment}class $model_name extends CRUD
-	{
-		public \$name       = '$table_name';
-		public \$primary    = $pk_array_str;
-		public \$primary_ai = $primary_ai_str;
-		public \$autoCreate = $autoCreate_str;
-		
-		public \$columns    = $column_definition;
-	}
-}
-?>";
-			return $code;
+			
+			$template	=$this->plugin->Template(__DIR__._DS_.'model.tpl.php');
+			$template	->setKeyVal('table_name',		$table_name)
+						->setKeyVal('folder',			$folder)
+						->setKeyVal('table_comment',	$table_comment)
+						->setKeyVal('model_name',		$model_name)
+						->setKeyVal('pk_array_str',		$pk_array_str)
+						->setKeyVal('primary_ai_str',	$primary_ai_str)
+						->setKeyVal('autoCreate_str',	$autoCreate_str)
+						->setKeyVal('column_definition',$column_definition);
+			
+			$template->compile();
+			
+			return $template->getCompiled();
 		}
 		
 	}// class

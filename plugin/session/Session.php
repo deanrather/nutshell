@@ -5,7 +5,7 @@
  */
 namespace nutshell\plugin\session
 {
-	use nutshell\helper\Object;
+	use nutshell\helper\ObjectHelper;
 	use nutshell\Nutshell;
 	use nutshell\plugin\session\exception\SessionException;
 	use nutshell\core\plugin\Plugin;
@@ -43,9 +43,12 @@ namespace nutshell\plugin\session
 				'NamedSession',
 				function($classInstance)
 				{
-					$session											=Nutshell::getInstance()->plugin->Session;
-					$session->{Object::getBaseClassName($classInstance)}=new stdClass();
-					$classInstance->session								=$session->{Object::getBaseClassName($classInstance)};
+					$session	=Nutshell::getInstance()->plugin->Session;
+					if (!isset($session->{ObjectHelper::getBaseClassName($classInstance)}))
+					{
+						$session->{ObjectHelper::getBaseClassName($classInstance)}=new stdClass();
+					}
+					$classInstance->session=$session->{ObjectHelper::getBaseClassName($classInstance)};
 				}
 			);
 		}

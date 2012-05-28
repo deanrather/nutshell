@@ -5,9 +5,9 @@
  */
 namespace nutshell\plugin\direct
 {
-	use nutshell\helper\Object;
+	use nutshell\helper\ObjectHelper;
 	use nutshell\plugin\mvc\Controller;
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 	use nutshell\core\plugin\PluginExtension;
 	use nutshell\behaviour\direct\Pollable;
 	
@@ -54,7 +54,7 @@ namespace nutshell\plugin\direct
 					$thisProvider=array
 					(
 						'type'		=>$provider->type,
-						'url'		=>$this->plugin->Url->makeURL(strtolower(Object::getBaseClassName($this->controller)).'/'.$providerName),
+						'url'		=>$this->plugin->Url->makeURL(strtolower(ObjectHelper::getBaseClassName($this->controller)).'/'.$providerName),
 						'interval'	=>(isset($provider->interval))?$provider->interval:self::DEFAULT_INTERVAL,
 					);
 				}
@@ -63,7 +63,7 @@ namespace nutshell\plugin\direct
 					$thisProvider=array
 					(
 						'type'		=>$provider->type,
-						'url'		=>$this->plugin->Url->makeURL(strtolower(Object::getBaseClassName($this->controller)).'/'.$providerName),
+						'url'		=>$this->plugin->Url->makeURL(strtolower(ObjectHelper::getBaseClassName($this->controller)).'/'.$providerName),
 						'namespace'	=>$this->nsPrefix.'.'.$providerName,
 						'actions'	=>array()
 					);
@@ -81,7 +81,7 @@ namespace nutshell\plugin\direct
 				}
 				else
 				{
-					throw new Exception('Invalid provider type "'.$provider->type.'".');
+					throw new NutshellException('Invalid provider type "'.$provider->type.'".');
 				}
 				$descriptor[]=$thisProvider;
 			}
@@ -91,9 +91,9 @@ namespace nutshell\plugin\direct
 		
 		public function processRequest($provider)
 		{
-			if (isset($GLOBALS['HTTP_RAW_POST_DATA']))
+			if (!is_null($this->request->getRaw()))
 			{
-				$request=json_decode($GLOBALS['HTTP_RAW_POST_DATA']);
+				$request=json_decode($this->request->getRaw());
 			}
 			//Remoting Request
 			if (!empty($request))

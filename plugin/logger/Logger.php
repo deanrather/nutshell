@@ -7,7 +7,7 @@ namespace nutshell\plugin\logger
 {
 	use nutshell\core\plugin\Plugin;
 	
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 	
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\AbstractFactory;
@@ -54,6 +54,8 @@ namespace nutshell\plugin\logger
 			include_once(__DIR__.'/writer/Pattern.php');
 			
 			include_once(__DIR__.'/Filter.php');
+			
+			include_once(__DIR__.'/writer/console/ConsoleWriter.php');
 			
 			include_once(__DIR__.'/writer/db/DbWriter.php');
 			
@@ -112,13 +114,13 @@ namespace nutshell\plugin\logger
 				{
 					if ($writer->writer === null)
 					{
-						throw new Exception(sprintf("Incorrect logger definition."));
+						throw new LoggerException(sprintf("Incorrect logger definition."));
 					}
 					
 					$writerConfig = $this->config->writers->{$writer->writer};
 					if ($writerConfig === null)
 					{
-						throw new Exception(sprintf("Could not locate a writer definition named: %s", $writer->writer));
+						throw new LoggerException(sprintf("Could not locate a writer definition named: %s", $writer->writer));
 					}
 					$this->filters[$writer->writer] = new Filter(
 						$this,
@@ -129,7 +131,7 @@ namespace nutshell\plugin\logger
 			}
 			else
 			{
-				throw new Exception(sprintf("No writers defined for logger: %s", $this->loggerName));
+				throw new LoggerException(sprintf("No writers defined for logger: %s", $this->loggerName));
 			}
 		}
 		

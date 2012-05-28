@@ -6,7 +6,7 @@
 namespace nutshell\plugin\direct
 {
 	use nutshell\plugin\mvc\Controller;
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Singleton;
@@ -24,7 +24,7 @@ namespace nutshell\plugin\direct
 			require(__DIR__.'/ProviderController.php');
 			require(__DIR__.'/MvcProviderController.php');
 			require(__DIR__.'/Responder.php');
-			require(__DIR__.'/Service.php');;
+			require(__DIR__.'/Service.php');
 			require(__DIR__.'/behaviour/Pollable.php');
 			require(__DIR__.'/behaviour/Remotable.php');
 		}
@@ -54,7 +54,7 @@ namespace nutshell\plugin\direct
 			}
 			else
 			{
-				throw new Exception('Invalid API Reference. "'.$APIRef.'" has not been defined in config.');
+				throw new NutshellException('Invalid API Reference. "'.$APIRef.'" has not been defined in config.');
 			}
 		}
 	}

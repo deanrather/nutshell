@@ -12,12 +12,13 @@ namespace nutshell
 {
 	use nutshell\core\Component;
 	use nutshell\core\HookManager;
+	use nutshell\core\request\Request;
 	use nutshell\core\config\Config;
 	use nutshell\core\config\Framework;
 	use nutshell\core\loader\Loader;
 	use nutshell\core\loader\HipHopLoader;
 	use nutshell\core\plugin\Plugin;
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 	use \DIRECTORY_SEPARATOR;
 	use \DirectoryIterator;
 	
@@ -27,19 +28,21 @@ namespace nutshell
 	 */
 	class Nutshell
 	{
-		const VERSION				=	'1.0.0-dev-5';
+		const VERSION				=	'1.0.0-dev-6';
 		const VERSION_MAJOR			=	1;
 		const VERSION_MINOR			=	0;
 		const VERSION_MICRO			=	0;
-		const VERSION_DEV			=	3;
+		const VERSION_DEV			=	6;
 		const NUTSHELL_ENVIRONMENT	=	'NS_ENV';
 		const DEFAULT_ENVIRONMENT	= 	'production';
 		
 		const INTERFACE_CLI 		= 	'CLI';
+		const INTERFACE_CGI			=	'CGI';
 		const INTERFACE_HTTP 		= 	'HTTP';
 		const INTERFACE_PHPUNIT		= 	'PHPUNIT';
 		
 		public $config 				=	null;
+		public $request				=	null;
 		private $pluginLoader       =   null;
 		
 		/**
@@ -70,20 +73,49 @@ namespace nutshell
 			
 			if (isset($_SERVER['argc']) && $_SERVER['argc'] > 0)
 			{
-				define('NS_INTERFACE', self::INTERFACE_CLI);
+				if(isset($_SERVER['GATEWAY_INTERFACE']))
+				{
+					define('NS_INTERFACE', self::INTERFACE_HTTP);
+					define('NS_WEB_HOME', dirname($_SERVER['SCRIPT_FILENAME']));
+					define('NS_APP_WEB_HOME', dirname($_SERVER['SCRIPT_NAME']));
+					header('X-Powered-By: PHP/'.phpversion().' & Nutshell/'.self::VERSION);
+					header('X-Nutshell-Version:'.self::VERSION);
+				}
+				else if (strstr($_SERVER['PHP_SELF'],'phpunit'))
+				{
+					define('NS_INTERFACE', self::INTERFACE_PHPUNIT);
+				}
+				else 
+				{
+					define('NS_INTERFACE', self::INTERFACE_CLI);
+				}
 			}
-			else if (strstr($_SERVER['PHP_SELF'],'phpunit'))
+			else if (!isset($_SERVER['REQUEST_URI']) && stristr($_SERVER['GATEWAY_INTERFACE'],'cgi'))
 			{
-				define('NS_INTERFACE', self::INTERFACE_PHPUNIT);
+				define('NS_INTERFACE', self::INTERFACE_CGI);
+				define('NS_WEB_HOME', dirname($_SERVER['SCRIPT_FILENAME']));
+				$scriptName=$_SERVER['SCRIPT_NAME'];
+				if (strstr($scriptName,'/.php'))
+				{
+					$scriptName=str_replace('/.php','/',$scriptName);
+				}
+				define('NS_APP_WEB_HOME', dirname($scriptName));
+				header('X-Powered-By: PHP/'.phpversion().' & Nutshell/'.self::VERSION);
+				header('X-Nutshell-Version:'.self::VERSION);
 			}
 			else
 			{
 				define('NS_INTERFACE', self::INTERFACE_HTTP);
 				define('NS_WEB_HOME', dirname($_SERVER['SCRIPT_FILENAME']));
 				define('NS_APP_WEB_HOME', dirname($_SERVER['SCRIPT_NAME']));
+				header('X-Powered-By: PHP/'.phpversion().' & Nutshell/'.self::VERSION);
+				header('X-Nutshell-Version:'.self::VERSION);
 			}
 			
-			//Load the behaviours first.
+			//Get the system environment before doing anything.
+			$this->getEnvironment();
+			
+			//Load the behaviours.
 			$this->loadBehaviours();
 			
 			//Load the helpers.
@@ -92,8 +124,22 @@ namespace nutshell
 			//Load the core components.
 			$this->loadCoreComponents();
 			
+			NutshellException::setHandlers();
+			
+			//Init the request object.
+			$this->request=new Request;
+			
 			//Load the core config.
 			$this->loadCoreConfig();
+			
+			//Parse php.ini config settings.
+			HookManager::execute('core','onBeforeSetPHPIni');
+			foreach ($this->config->php as $key=>$val)
+			{
+				ini_set($key,$val);
+				HookManager::execute('core','onSetPHPIni',array($key,$val));
+			}
+			HookManager::execute('core','onAfterSetPHPIni');
 			
 			//init loader.
 			$this->initLoader();
@@ -160,16 +206,19 @@ namespace nutshell
 			require(NS_HOME.'core'._DS_.'Component.php');
 			require(NS_HOME.'core'._DS_.'HookManager.php');
 			require(NS_HOME.'core'._DS_.'exception'._DS_.'NutshellException.php');
-			require(NS_HOME.'core'._DS_.'exception'._DS_.'Exception.php');
+			require(NS_HOME.'core'._DS_.'request'._DS_.'Request.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'exception'._DS_.'ConfigException.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'Config.php');
 			require(NS_HOME.'core'._DS_.'config'._DS_.'Framework.php');
 			require(NS_HOME.'core'._DS_.'loader'._DS_.'Loader.php');
 			require(NS_HOME.'core'._DS_.'loader'._DS_.'HipHopLoader.php');
+			require(NS_HOME.'core'._DS_.'plugin'._DS_.'AbstractPlugin.php');
 			require(NS_HOME.'core'._DS_.'plugin'._DS_.'Plugin.php');
+			require(NS_HOME.'core'._DS_.'plugin'._DS_.'LibraryPlugin.php');
 			require(NS_HOME.'core'._DS_.'plugin'._DS_.'PluginExtension.php');
 			
-			Exception::register();
+			NutshellException::register();
+			Request::register();
 			Config::register();
 			Loader::register();
 			Plugin::register();
@@ -201,6 +250,36 @@ namespace nutshell
 		}
 		
 		/**
+		 * Fetches the system envrionment.
+		 * 
+		 * Used to set the NS_ENV constant.
+		 * 
+		 * @access private
+		 * @return Nutshell
+		 */
+		private function getEnvironment()
+		{
+			if (!defined(self::NUTSHELL_ENVIRONMENT))
+			{
+				$env=getenv('NS_ENV');
+				if (!$env && function_exists('apache_getenv'))
+				{
+					$env=apache_getenv('NS_ENV');
+				}
+				if (!$env)
+				{
+					$env = self::DEFAULT_ENVIRONMENT;
+				}
+				define(self::NUTSHELL_ENVIRONMENT, $env);
+			}
+			if (NS_INTERFACE==self::INTERFACE_HTTP)
+			{
+				header('X-Nutshell-Environment:'.NS_ENV);
+			}
+			return $this;
+		}
+		
+		/**
 		 * Load the core config based on environment variables.
 		 * Defaults to production mode.
 		 * 
@@ -212,14 +291,6 @@ namespace nutshell
 		 */
 		private function loadCoreConfig()
 		{
-			if (!defined(self::NUTSHELL_ENVIRONMENT))
-			{
-				if(!$env = getenv('NS_ENV')) 
-				{
-					$env = self::DEFAULT_ENVIRONMENT;
-				}
-				define(self::NUTSHELL_ENVIRONMENT, $env);
-			}
 			HookManager::execute('core','onBeforeConfigLoad');
 			$this->config = Framework::loadConfig(APP_HOME . Config::CONFIG_FOLDER, NS_ENV);
 			HookManager::execute('core','onAfterConfigLoad');
@@ -255,7 +326,7 @@ namespace nutshell
 			$path = realpath($path);
 			if(is_null($path)) 
 			{
-				throw new Exception('Invalid application path');
+				throw new NutshellException('Invalid application path');
 			}
 			define('APP_HOME', $path . DIRECTORY_SEPARATOR);
 		}
@@ -296,7 +367,7 @@ namespace nutshell
 		 * @param String $key - The shortcut.
 		 * @access public
 		 * @return nutshell\core\loader\Loader
-		 * @throws nutshell\core\exception\Exception - If $key is not "plugin".
+		 * @throws nutshell\core\exception\NutshellException - If $key is not "plugin".
 		 */
 		public function __get($key)
 		{
@@ -306,7 +377,7 @@ namespace nutshell
 			}
 			else
 			{
-				throw new Exception('Attempted to get invalid property "'.$key.'" from core.');
+				throw new NutshellException('Attempted to get invalid property "'.$key.'" from core.');
 			}
 		}
 		
@@ -317,11 +388,11 @@ namespace nutshell
 		 * @param String $val
 		 * @access public
 		 * @return void
-		 * @throws nutshell\core\exception\Exception - If anything attempts to set something on the core.
+		 * @throws nutshell\core\exception\NutshellException - If anything attempts to set something on the core.
 		 */
 		public function __set($key,$val)
 		{
-			throw new Exception('Sorry, nutshell core is read only!');
+			throw new NutshellException('Sorry, nutshell core is read only!');
 		}
 		
 		/**

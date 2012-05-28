@@ -108,9 +108,10 @@ namespace nutshell\plugin\mvc
 			$this->templateContext->registerCallback
 			(
 				'loadView',
-				function($viewName) use ($scope)
+				function($viewName,$viewKeyVals=array()) use ($scope)
 				{
 					$template=$scope->plugin->Template($scope->buildViewPath($viewName));
+					$scope->templateContext->setKeyVals(array_keys($viewKeyVals),array_values($viewKeyVals));
 					$template->setContext($scope->templateContext);
 					print $template->compile();
 				}

@@ -7,7 +7,7 @@ namespace nutshell\plugin\logger\writer
 {
 	use nutshell\core\config\Config; 
 	use nutshell\helper\Object;
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 	
 	/**
 	 * 
@@ -35,6 +35,7 @@ namespace nutshell\plugin\logger\writer
 		private static $instances = array();
 		
 		private static $implementations = array(
+			'ConsoleWriter' => 'nutshell\plugin\logger\writer\console\ConsoleWriter',
 			'FileWriter' => 'nutshell\plugin\logger\writer\file\FileWriter',
 			'DailyFileWriter' => 'nutshell\plugin\logger\writer\file\DailyFileWriter',
 			'DbWriter' => 'nutshell\plugin\logger\writer\db\DbWriter',
@@ -49,7 +50,7 @@ namespace nutshell\plugin\logger\writer
 		 * Extracts valuable configuration options from the config node
 		 * 
 		 * @param Config $config
-		 * @throws Exception if a mandatory parameter is missing
+		 * @throws NutshellException if a mandatory parameter is missing
 		 */
 		protected function parseConfig(Config $config)
 		{
@@ -87,7 +88,7 @@ namespace nutshell\plugin\logger\writer
 			}
 			else if($mandatory)
 			{
-				throw new Exception("Missing mandatory '%' config option for writer", $optionName);
+				throw new NutshellException("Missing mandatory '%s' config option for writer", $optionName);
 			}
 		}
 		
@@ -117,7 +118,7 @@ namespace nutshell\plugin\logger\writer
 		{
 			if(!array_key_exists($config->class, self::$implementations))
 			{
-				throw new Exception(sprintf('Cannot resolve requested writer implementation: %s', $config->class));
+				throw new NutshellException(sprintf('Cannot resolve requested writer implementation: %s', $config->class));
 			}
 			
 			return new self::$implementations[$config->class]($config);

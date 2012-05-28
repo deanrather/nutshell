@@ -86,13 +86,12 @@ namespace application\model
 
 /**
  * @package nutshell-plugin
- * @author guillaume
  */
 namespace nutshell\plugin\mvc\model
 {
 	use nutshell\Nutshell;
 	use nutshell\plugin\mvc\Model;
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 	
 	/**
 	 * @author guillaume, joao
@@ -100,32 +99,57 @@ namespace nutshell\plugin\mvc\model
 	 */
 	abstract class CRUD extends Model
 	{
-		public $name	   =null;     // table name
-		public $primary	   =array();  // array with primary keys.
-		public $primary_ai =true;     // is the pk auto increment? Only works if count($primary) == 1
-		public $columns	   =array();  // array with columns
-		public $autoCreate =true;     // should create the table if it doesn't exist?
+		public $dbName							=null;			//dbName
+		public $name							=null;			// table name
+		public $primary							=array();		// array with primary keys.
+		public $primary_ai						=true;			// is the pk auto increment? Only works if count($primary) == 1
+		public $columns							=array();		// array with columns
+		public $autoCreate						=true;			// should create the table if it doesn't exist?
 		
-		private $types	            =array();
-		private $columnNames        =array(); // stores column names
+		protected $types						=array();
+		protected $columnNames					=array();		// stores column names
 		
 		// the following to 4 properties are intended to speed up query building.
-		private $columnNamesListStr        ='';       // stores column names list separated by ','.
-		private $defaultInsertColumns      = array(); // when the primary key is auto increment, the primary key isn't present as an insert column
-		private $defaultInsertColumnsStr   = '';
-		private $defaultInsertPlaceHolders ='';       // part of an insert statement.		
+		protected $columnNamesListStr			='';			// stores column names list separated by ','.
+		protected $defaultInsertColumns			=array();		// when the primary key is auto increment, the primary key isn't present as an insert column
+		protected $defaultInsertColumnsStr		='';
+		protected $defaultInsertPlaceHolders	='';			// part of an insert statement.		
 		
 		public function __construct()
 		{
 			parent::__construct();
 			
-			if (!is_array($this->primary)){
-				throw new Exception('Primary Key has to be an array.');
+			$this->configure();				
+			
+			if (!empty($this->name) && (count($this->primary)>0) && !empty($this->columns))
+			{
+				if (isset($this->db))
+				{
+					// only creates the table when $autoCreate is true & This is a mySQL database
+					if ($this->autoCreate && stristr(get_class($this->db), 'mysql')) 
+					{
+						$this->createTable();
+					}
+				}
+				else
+				{
+					throw new NutshellException('DB connection not defined in config.');
+				}
 			}
-			
+			else
+			{
+				throw new NutshellException('CRUD Model is misconfigured. Name, Primary Key and Columns must be defined.');
+			}
+		}
+		
+		protected function configure() {
+			if (!is_array($this->primary)){
+				throw new NutshellException('Primary Key has to be an array.');
+			}
+				
 			$this->columnNames = array_keys($this->columns);
-			$this->columnNamesListStr = implode(',',$this->columnNames);
-			
+			$this->columnNamesListStr = '`'. implode('`,`', $this->columnNames) . '`';
+				
 			// doesn't make much sense inserting an auto increment column using default settings.
 			if (($this->primary_ai) && (count($this->primary)==1))
 			{
@@ -133,59 +157,44 @@ namespace nutshell\plugin\mvc\model
 			} else {
 				$this->defaultInsertColumns = &$this->columnNames;
 			}
-			
-			$this->defaultInsertColumnsStr = implode(',',$this->defaultInsertColumns);
-			$this->defaultInsertPlaceHolders = rtrim(str_repeat('?,',count($this->defaultInsertColumns)),',');				
-			
-			if (!empty($this->name) && (count($this->primary)>0) && !empty($this->columns))
+				
+			$this->defaultInsertColumnsStr = '`' . implode('`,`',$this->defaultInsertColumns) . '`';
+			$this->defaultInsertPlaceHolders = rtrim(str_repeat('?,',count($this->defaultInsertColumns)),',');
+		}
+		
+		protected function createTable() {
+			$columns=array();
+			if ((count($this->primary)==1) && ($this->primary_ai))
 			{
-				if (isset($this->db))
+				$localAutoCreate = ' AUTO_INCREMENT ';
+			} else {
+				$localAutoCreate = '';
+			}
+			
+			foreach ($this->columns as $name=>$typeDef)
+			{
+				if ($this->isPrimaryKey($name))
 				{
-					// only creates the table when $autoCreate is true.
-					if ($this->autoCreate) 
-					{
-						$columns=array();
-						if ((count($this->primary)==1) && ($this->primary_ai))
-						{
-							$localAutoCreate = ' AUTO_INCREMENT ';
-						} else {
-							$localAutoCreate = '';
-						}
-						
-						foreach ($this->columns as $name=>$typeDef)
-						{
-							if ($this->isPrimaryKey($name))
-							{
-								$columns[]			=$name.' '.$typeDef.' NOT NULL '.$localAutoCreate;
-							}
-							else
-							{
-								$columns[]			=$name.' '.$typeDef.' NULL';
-							}
-						}
-						$columns=implode(',',$columns);
-						
-						//Create the table (if it doesn\'t already exist).
-						$query=
-							" CREATE TABLE IF NOT EXISTS {$this->name}
-							(
-							{$columns},
-							PRIMARY KEY (".implode(',',$this->primary).")
-							) ENGINE=INNODB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_bin
-";
-
-						$this->db->query($query);
-					}
+					$columns[]			= '`' . $name.'` '.$typeDef.' NOT NULL '.$localAutoCreate;
 				}
 				else
 				{
-					throw new Exception('DB connection not defined in config.');
+					$columns[]			= '`' . $name.'` '.$typeDef.' NULL';
 				}
 			}
-			else
-			{
-				throw new Exception('CRUD Model is misconfigured. Name, Primary Key and Columns must be defined.');
-			}
+			$columns=implode(',',$columns);
+			
+			//Create the table (if it doesn\'t already exist).
+			$dbPrefix = $this->getDbPrefix();
+			$query=
+							" CREATE TABLE IF NOT EXISTS {$dbPrefix}`{$this->name}`
+							(
+{$columns},
+							PRIMARY KEY (`".implode('`,`',$this->primary)."`)
+							) ENGINE=INNODB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_bin
+";
+			
+			$this->db->query($query);
 		}
 		
 		/**
@@ -206,15 +215,18 @@ namespace nutshell\plugin\mvc\model
 				$keys			=&$this->defaultInsertColumnsStr;
 			} else {
 				$placeholders = rtrim(str_repeat('?,',count($record)),',');
-				$keys         = implode(',',$fields);
+				$keys         = '`' . implode('`,`',$fields) . '`';
 			}
+			
+			$dbPrefix = $this->getDbPrefix();
 			$query=
 <<<SQL
-			INSERT INTO {$this->name}
+			INSERT INTO {$dbPrefix}`{$this->name}`
 				({$keys})
 			VALUES
 				({$placeholders});
 SQL;
+die($query);
 			return $this->db->insert($query,$record);
 		}
 		
@@ -255,15 +267,25 @@ SQL;
 			if (count($readColumns)>0) 
 			{
 				// reads only selected columns
-				$columnsSQL = implode(',',$readColumns);
+				$columnsSQL = '`' . implode('`,`', $readColumns) . '`';
 			} else {
 				// reads all columns
 				$columnsSQL = $this->columnNamesListStr;
 			}
 			
-			$query = " SELECT {$columnsSQL} FROM {$this->name} {$whereKeySQL} {$additionalPartSQL} ";
+			$dbPrefix = $this->getDbPrefix();
+			$query = " SELECT {$columnsSQL} FROM {$dbPrefix}`{$this->name}` {$whereKeySQL} {$additionalPartSQL} ";
 			
 			return $this->db->getResultFromQuery($query,$whereKeyValues);
+		}
+		
+		/**
+		 * Return a string serving as a prefix for the table name in the query. If the dbName property in the class is set to null or an empty
+		 * value, then no prefix will be generated and the query will run on the currently selected database.
+		 * @return string
+		 */
+		protected function getDbPrefix() {
+			return $this->dbName ? '`' . $this->dbName . '`.' : '';
 		}
 
 		/**
@@ -281,7 +303,7 @@ SQL;
 			//Quick update is possible if $whereKeyVals is numeric and PK is composed by only one column.
 			if (is_numeric($whereKeyVals) && (count($this->primary)==1))
 			{
-				$whereKeySQL = " {$this->primary[0]} = ? ";
+				$whereKeySQL = " `{$this->primary[0]}` = ? ";
 				$whereKeyValues[] = (int) $whereKeyVals;
 			}
 			//More specific keyval matching.
@@ -290,14 +312,14 @@ SQL;
 				$where=array();
 				foreach ($whereKeyVals as $key=>$value)
 				{
-					$where[]=$key.'=?';
+					$where[]= '`' . $key . '` = ?';
 					$whereKeyValues[] = $value;
 				}
-				$whereKeySQL=implode(' and ',$where);
+				$whereKeySQL=implode(' AND ',$where);
 			}
 			else
 			{
-		 		throw new Exception('$whereKeyVals is invalid. Specify an array of key value pairs or a single numeric for primay key match.');
+		 		throw new NutshellException('$whereKeyVals is invalid. Specify an array of key value pairs or a single numeric for primay key match.');
 			}
 		}
 		
@@ -307,7 +329,7 @@ SQL;
 			$set=array();
 			foreach (array_keys($updateKeyVals) as $key)
 			{
-				$set[]=$key.'=?';
+				$set[] = '`' . $key . '` = ?';
 			}
 			$set=implode(',',$set);
 
@@ -315,8 +337,9 @@ SQL;
 			$whereKeyValues = array();
 			$this->getWhereSQL($whereKeyVals, $whereKeySQL, $whereKeyValues);
 	
+			$dbPrefix = $this->getDbPrefix();
 			$query=<<<SQL
-			UPDATE {$this->name}
+			UPDATE {$dbPrefix}`{$this->name}`
 			SET {$set}
 			WHERE {$whereKeySQL};
 SQL;
@@ -332,8 +355,9 @@ SQL;
 			$whereKeySQL = '';
 			$whereKeyValues = array();
 			$this->getWhereSQL($whereKeyVals, $whereKeySQL, $whereKeyValues);
-				
-			$query=" DELETE FROM {$this->name} WHERE {$whereKeySQL} ";
+			
+			$dbPrefix = $this->getDbPrefix();
+			$query=" DELETE FROM {$dbPrefix}`{$this->name}` WHERE {$whereKeySQL} ";
 			 
 			return $this->db->delete($query,$whereKeyValues);
 		}

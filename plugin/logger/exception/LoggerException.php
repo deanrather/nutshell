@@ -5,13 +5,13 @@
  */
 namespace nutshell\plugin\logger\exception
 {
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 
 	/**
 	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
 	 * @package nutshell-plugin
 	 */
-	class LoggerException extends Exception
+	class LoggerException extends NutshellException
 	{
 		
 	} 

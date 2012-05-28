@@ -5,41 +5,47 @@
  */
 namespace nutshell\plugin\router\handler
 {
-	use nutshell\core\plugin\PluginExtension;
+	use nutshell\plugin\router\Router;
 	use nutshell\plugin\router\Route;
+	use nutshell\plugin\router\handler\Http;
 	
 	/**
 	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
 	 * @package nutshell-plugin
 	 */
-	class SimpleRest extends PluginExtension
+	class SimpleRest extends Http
 	{
-		private $route	=null;
+		private $route = null;
+		private $pointer = 0;
 		
-		public function __construct()
+		public function __construct() {
+			$this->calculateRoute();
+		}
+		
+		public function calculateRoute()
 		{
-			if ($this->plugin->Url->nodeEmpty(0))
+			if ($this->request->nodeEmpty($this->pointer))
 			{
-				$this->route=new Route('index','index',array());
+				$this->route = $this->createRoute('index','index',array());
 			}
 			else
 			{
-				//Set the controler to node 0.
-				$control=$this->plugin->Url->node(0);
+				//Set the controller to node @pointer.
+				$control = $this->request->node($this->pointer);
 				
 				//Set some defaults.
-				$action	='index';
-				$args	=array();
+				$action	= 'index';
+				$args	= array();
 				
 				//Check for action.
-				if (!is_null($this->plugin->Url->node(1)))
+				if (!is_null($this->request->node($this->pointer + 1)))
 				{
-					//Set args to nodes 2 onwards.
-					$node=1;
+					//Set args to nodes @pointer + 1 onwards.
+					$node = $this->pointer + 1;
 					while (true)
 					{
 						//grab the next node
-						$arg = $this->plugin->Url->node($node++);
+						$arg = $this->request->node($node++);
 						
 						if(is_null($arg)) 
 						{
@@ -49,8 +55,21 @@ namespace nutshell\plugin\router\handler
 						$args[] = $arg;
 					}
 				}
-				$this->route=new Route($control,$action,$args);
+				
+				$this->route = $this->createRoute($control, $action, $args);
 			}
+		}
+		
+		public function advancePointer()
+		{
+			$this->pointer++;
+			$this->calculateRoute();
+		}
+		
+		public function rewindPointer()
+		{
+			$this->pointer--;
+			$this->calculateRoute();
 		}
 		
 		public function getRoute()
@@ -58,5 +77,8 @@ namespace nutshell\plugin\router\handler
 			return $this->route;
 		}
 	}
+	
+	//register the handler
+	Router::registerHandler('simpleRest', __NAMESPACE__ . '\SimpleRest');
 }
 ?>

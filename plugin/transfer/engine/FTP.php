@@ -21,6 +21,15 @@ namespace nutshell\plugin\transfer\engine
 		 */
 		protected $mode = self::TRANSFER_MODE_PASSIVE;
 		
+		/**
+		 * This method sets the transfer mode.
+		 * @param string $str
+		 */
+		public function setMode($str)
+		{
+			$this->mode = $str;
+		}
+		
 		protected function connect()
 		{
 			if(is_null($this->connection))
@@ -229,6 +238,31 @@ namespace nutshell\plugin\transfer\engine
 			}
 			
 			$this->plugin->Logger('nutshell.plugin.transfer.ftp')->info('Connection closed.');
+		}
+		
+		public function fileExists($remote)
+		{
+			//make sure we are connected
+			$this->connect();
+			
+			$oldErrorHandler = set_error_handler('nutshell\plugin\transfer\engine\FTP::doNothingErrorHandler');
+				
+			try
+			{
+				$size = ftp_size ($this->connection, $remote);
+				
+				$size = (!isset($size)) ? -1 : (int) $size;
+				
+				$result = ($size >= 0);
+			}
+			catch (\Exception $e)
+			{
+				$result = $false;
+			}
+				
+			set_error_handler($oldErrorHandler);
+				
+			return $result;
 		}
 	}
 }

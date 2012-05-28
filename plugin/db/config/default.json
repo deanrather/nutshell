@@ -1,6 +1,7 @@
 {
 	"config":
 	{
-		"source": "plugin default"
+		"source": "plugin default",
+		"defaultHandler": "mysql"
 	}
 }

@@ -7,6 +7,8 @@ namespace nutshell\plugin\transfer\engine
 
 	abstract class Base extends PluginExtension
 	{
+		const DEFAULT_RETRY_COUNT = 3;
+		
 		protected $host;
 		
 		protected $port;
@@ -54,6 +56,66 @@ namespace nutshell\plugin\transfer\engine
 		public function put($local, $remote)
 		{
 			throw new TransferException('The %s engine does not implement the put method.', get_class($this));
+		}
+		
+		/**
+		 * Copy a file to the server retrying $maxAttemptCount times.
+		 * @param string $local
+		 * @param string $remote
+		 * @param int $maxAttemptCount
+		 * @throws TransferException
+		 */
+		public function putRetrying($local, $remote, $maxAttemptCount = self::DEFAULT_RETRY_COUNT)
+		{
+			$error_message = '';
+			
+			$notSent = true;
+			
+			$attemptCnt = 0;
+			
+			while( $notSent && ($attemptCnt<$maxAttemptCount) )
+			{
+				try 
+				{
+					$attemptCnt++;
+					$this->put($local, $remote);
+					$notSent = false;
+				} catch (TransferException $e) 
+				{
+					$error_message = $error_message. " Attempt $attemptCnt:".$e->getMessage();
+					// sleeps 2 seconds after a failed attempt
+					sleep(2);
+				}
+			}
+			if ($notSent)
+			{
+				throw new TransferException($error_message);
+			}
+		}
+		
+		/**
+		 * This method sends multiple files to the remote folder.
+		 * @param array	 $aFiles Array with full path.
+		 * @param string $remoteFolder
+		 * @param int    $maxAttemptCount
+		 */
+		public function putRetryingMultipleFiles($aFiles, $remoteFolder='', $maxAttemptCount = self::DEFAULT_RETRY_COUNT)
+		{
+			foreach($aFiles as $localfile)
+			{
+				if (strlen($remoteFolder>0))
+				{
+					$remoteFile = "$remoteFolder/".basename($localfile);
+				}
+				else
+				{
+					$remoteFile = basename($localfile);
+				}
+					
+				$this->plugin->Logger()->info("Sending $localfile ($remoteFile).");
+				$this->putRetrying($localfile, $remoteFile);
+				$this->plugin->Logger()->info("Sent $localfile ($remoteFile).");
+			}
 		}
 		
 		/**
@@ -117,6 +179,17 @@ namespace nutshell\plugin\transfer\engine
 		}
 		
 		/**
+		 * Returns TRUE if the file exists.
+		 * SCP Doesn't implement fileExists.
+		 * @param string $remote
+		 * @throws TransferException
+		 */
+		public function fileExists($remote)
+		{
+			throw new TransferException('The %s engine does not implement the fileExists method.', get_class($this));
+		}
+		
+		/**
 		 * Close any active connection.
 		 *
 		 * @throws TransferException
@@ -124,6 +197,11 @@ namespace nutshell\plugin\transfer\engine
 		public function close()
 		{
 			throw new TransferException('The %s engine does not implement the close method.', get_class($this));
+		}
+		
+		public static function doNothingErrorHandler($no,$str,$file,$line) 
+		{
+			// do nothing
 		}
 	}
 }

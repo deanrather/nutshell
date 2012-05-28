@@ -6,9 +6,9 @@ namespace nutshell\core\loader
 {
 	use nutshell\Nutshell;
 
-	use nutshell\helper\Object;
+	use nutshell\helper\ObjectHelper;
 
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\NutshellException;
 
 	use nutshell\core\Component;
 	use nutshell\plugin;
@@ -52,8 +52,8 @@ namespace nutshell\core\loader
 		
 		public static function autoload($className)
 		{
-			$namespace=Object::getNamespace($className);
-			$className=Object::getBaseClassName($className);
+			$namespace=ObjectHelper::getNamespace($className);
+			$className=ObjectHelper::getBaseClassName($className);
 			//Check for a plugin behaviour.
 			if (strstr($namespace,'behaviour\\'))
 			{
@@ -70,7 +70,7 @@ namespace nutshell\core\loader
 				}
 				else
 				{
-					throw new Exception('Unable to autoload class "'.$namespace.$className.'".');
+					throw new NutshellException('Unable to autoload class "'.$namespace.$className.'".');
 				}
 			}
 		}
@@ -85,6 +85,7 @@ namespace nutshell\core\loader
 		
 		public function __construct()
 		{
+			parent::__construct();
 			spl_autoload_register(__NAMESPACE__ .'\Loader::autoload');
 		}
 		
@@ -124,15 +125,21 @@ namespace nutshell\core\loader
 					
 					if (is_file($dirBaseFolderFile=$dirBase.lcfirst($key)._DS_.$key.'.php'))
 					{
-						require($dirBaseFolderFile);
-						$this->classNames[$key] = $namespaceBase.lcfirst($key).'\\'.$key;
+						$className = $namespaceBase.lcfirst($key).'\\'.$key;
+						if(!class_exists($className)) {
+							require($dirBaseFolderFile);
+						}
+						$this->classNames[$key] = $className;
 						$this->interfaces[$key] = $this->loadClassDependencies($this->classNames[$key]);
 						break;
 					}
 					else if (is_file($dirBaseFile=$dirBase.$key.'.php'))
 					{
-						require($dirBaseFile);
-						$this->classNames[$key] = $namespaceBase.$key;
+						$className = $namespaceBase.$key;
+						if(!class_exists($className)) {
+							require($dirBaseFile);
+						}
+						$this->classNames[$key] = $className;
 						$this->interfaces[$key] = $this->loadClassDependencies($this->classNames[$key]);
 						break;
 					}
@@ -149,7 +156,7 @@ namespace nutshell\core\loader
 				
 				if(!isset($this->classNames[$key]))
 				{
-					throw new Exception("Loader can't load key {$key}.");
+					throw new NutshellException("Loader can't load key {$key}.");
 				}
 			}
 
@@ -173,7 +180,7 @@ namespace nutshell\core\loader
 			}
 			else
 			{
-				throw new Exception('Loader failed to load class "'.$className.'". This is likely because the container '
+				throw new NutshellException('Loader failed to load class "'.$className.'". This is likely because the container '
 									.'handle you\'re using to handle the loading with doesn\'t impement the "Loadable" behaviour.');
 			}
 		}

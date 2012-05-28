@@ -8,8 +8,6 @@ namespace nutshell\core\config
 {
 	use nutshell\core\config\exception\ConfigException;
 
-	use nutshell\core\exception\Exception;
-
 	use nutshell\Nutshell;
 
 	/**
@@ -50,16 +48,16 @@ namespace nutshell\core\config
 			{
 				if(!@mkdir($folder))
 				{
-					throw new Exception(sprintf("Could not create the config cache folder. Please check the write permission on %s.", dirname($folder)));
+					throw new ConfigException(sprintf("Could not create the config cache folder. Please check the write permission on %s.", dirname($folder)));
 				}
 			}
 			else if(!is_dir($folder))
 			{
-				throw new Exception(sprintf("%s does not resolve to a directory.", $folder));
+				throw new ConfigException(sprintf("%s does not resolve to a directory.", $folder));
 			}
 			else if((PHP_OS=="linux" && !is_executable($folder)) || !is_writeable($folder))
 			{
-				throw new Exception(sprintf("Nutshell requires write and execute permission on %s", $folder));
+				throw new ConfigException(sprintf("Nutshell requires write and execute permission on %s", $folder));
 			}
 			
 			
@@ -69,17 +67,17 @@ namespace nutshell\core\config
 			{
 				if(!is_writeable($folder))
 				{
-					throw new Exception(sprintf("%s is not a writeable directory.", $folder));
+					throw new ConfigException(sprintf("%s is not a writeable directory.", $folder));
 				}
 				$rebuildCache = true;
 			}
 			else if(!is_file($file)) 
 			{
-				throw new Exception(sprintf("%s does not resolve to a regular file.", $file));
+				throw new ConfigException(sprintf("%s does not resolve to a regular file.", $file));
 			}
 			else if(!is_readable($file) || !is_writeable($file)) 
 			{
-				throw new Exception(sprintf("Nutshell requires read and write permissions on %s.", $file));
+				throw new ConfigException(sprintf("Nutshell requires read and write permissions on %s.", $file));
 			}
 			else if(self::forceRebuild() || time() - filemtime($file) > self::CONFIG_EXPIRATION)
 			{
@@ -91,30 +89,27 @@ namespace nutshell\core\config
 		
 		protected static function forceRebuild()
 		{
-			return 
-				(NS_INTERFACE == Nutshell::INTERFACE_CLI && in_array('--' . self::CONFIG_REBUILD_KEY, $_SERVER['argv']))
-				|| (NS_INTERFACE == Nutshell::INTERFACE_HTTP && isset($_GET[self::CONFIG_REBUILD_KEY]) && $_GET[self::CONFIG_REBUILD_KEY]);
+			return Nutshell::getInstance()->request->get(self::CONFIG_REBUILD_KEY);
 		}
 		
 		protected static function rebuild($configPath, $environment)
 		{
 			$configFile = new Config();
-			header('Content-Type:text/plain');
 			
 			//loads the framework default
 			$config = Config::loadConfigFile(NS_HOME . Config::CONFIG_FOLDER, Config::makeConfigFileName(Config::DEFAULT_ENVIRONMENT));
 			//loads the framework default plugins config
 			$config->extendWith(self::loadAllPluginConfig(NS_HOME . 'plugin', Config::DEFAULT_ENVIRONMENT));
-			//loads the application config
-			$config->extendWith(Config::loadConfigFile($configPath, Config::makeConfigFileName(array($environment, Config::DEFAULT_ENVIRONMENT))));
 			//loads the application plugins config
 			$config->extendWith(self::loadAllPluginConfig(APP_HOME . 'plugin', array($environment, Config::DEFAULT_ENVIRONMENT)));
+			//loads the application config
+			$config->extendWith(Config::loadConfigFile($configPath, Config::makeConfigFileName(array($environment, Config::DEFAULT_ENVIRONMENT))));
 			
 			$configFile->config = $config;
 			
 			if(file_put_contents(self::getCachedConfigFile(), $configFile->__toString()) === false)
 			{
-				throw new Exception(sprintf("Failed to write to file %s.", self::getCachedConfigFile()));
+				throw new ConfigException(sprintf("Failed to write to file %s.", self::getCachedConfigFile()));
 			}
 			
 			return $config;
