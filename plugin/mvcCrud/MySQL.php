@@ -1,119 +1,32 @@
 <?php
 /**
- * CRUD Usage Examples:
- *
- **********************************
- * EXAMPLE 1: Composed Primary Key
- **********************************
- * 
-namespace application\model
-{
-	use nutshell\plugin\mvc\model\CRUD;
-	
-	class composedkeyexamplemodel extends CRUD
-	{
-		public $name	   ='composedkeytest';
-		public $primary	   =array('id','id2');
-		public $primary_ai =false;
-		public $autoCreate =true;
-		
-		public $columns=array
-		(
-			'id'		=> 'int',
-			'id2'       => 'int',
-			'name'	    => 'varchar(36)',
-			'i'         => 'int'
-		);
-		
-		public function test(){
-			$pk = array('id'=>2, 'id2'=>'3');
-			$this->delete($pk);
-			
-			$data = $this->read($pk);
-			
-			$this->insert(array(2,3,'test',4));
-			$data = $this->read($pk);	var_dump($data);
-			
-			$this->update(array('name'=>'updated test', 'i' => 400), $pk);
-			$data = $this->read($pk);	var_dump($data);
-			
-			$this->delete($pk);
-		}
-	}
- }
- * 
- * 
- ***********************************************
- * EXAMPLE 2: Simple Auto Increment Primary Key
- ***********************************************
- *
-namespace application\model
-{
-	use nutshell\plugin\mvc\model\CRUD;
-	
- 	class simplekeyexamplemodel extends CRUD
-    {
-   		public $name	   ='simplekeytest';
-		public $primary	   =array('id');
-		public $primary_ai =true;
-		public $autoCreate =true;
-	
-		public $columns=array
-		(
-			'id'		=> 'int',
-			'name'	    => 'varchar(36)',
-		);
-		
-		public function testQuery()
-		{
-			$data = $this->read();
-
-			// first record
-			$this->insert(array('foo'));
-			$data = $this->read();	var_dump($data);
-			
-			$pk = $data[0]['id'];
-			
-			$this->update(array('name'=>'bar'), $pk );
-			$data = $this->read();	var_dump($data);
-			
-			$this->delete($pk);
-		}
-	}
-}
- * 
- */
-
-/**
  * @package nutshell-plugin
+ * @author Timothy Chandler <tim.chandler@spinifexgroup.com>
  */
-namespace nutshell\plugin\mvc\model
+namespace nutshell\plugin\mvcCrud
 {
-	use nutshell\Nutshell;
 	use nutshell\plugin\mvc\Model;
-	use nutshell\core\exception\NutshellException;
-	
 	/**
-	 * @author guillaume, joao
+	 * @author Timothy Chandler <tim.chandler@spinifexgroup.com>
 	 * @package nutshell-plugin
 	 */
-	abstract class CRUD extends Model
+	class MySQL extends Model
 	{
-		public $dbName							=null;			//dbName
-		public $name							=null;			// table name
-		public $primary							=array();		// array with primary keys.
-		public $primary_ai						=true;			// is the pk auto increment? Only works if count($primary) == 1
-		public $columns							=array();		// array with columns
-		public $autoCreate						=true;			// should create the table if it doesn't exist?
+		public $dbName		=null;	  //dbName
+		public $name	   =null;     // table name
+		public $primary	   =array();  // array with primary keys.
+		public $primary_ai =true;     // is the pk auto increment? Only works if count($primary) == 1
+		public $columns	   =array();  // array with columns
+		public $autoCreate =true;     // should create the table if it doesn't exist?
 		
-		protected $types						=array();
-		protected $columnNames					=array();		// stores column names
+		protected $types	            =array();
+		protected $columnNames        =array(); // stores column names
 		
 		// the following to 4 properties are intended to speed up query building.
-		protected $columnNamesListStr			='';			// stores column names list separated by ','.
-		protected $defaultInsertColumns			=array();		// when the primary key is auto increment, the primary key isn't present as an insert column
-		protected $defaultInsertColumnsStr		='';
-		protected $defaultInsertPlaceHolders	='';			// part of an insert statement.		
+		protected $columnNamesListStr        ='';       // stores column names list separated by ','.
+		protected $defaultInsertColumns      = array(); // when the primary key is auto increment, the primary key isn't present as an insert column
+		protected $defaultInsertColumnsStr   = '';
+		protected $defaultInsertPlaceHolders ='';       // part of an insert statement.		
 		
 		public function __construct()
 		{
@@ -133,18 +46,18 @@ namespace nutshell\plugin\mvc\model
 				}
 				else
 				{
-					throw new NutshellException('DB connection not defined in config.');
+					throw new Exception('DB connection not defined in config.');
 				}
 			}
 			else
 			{
-				throw new NutshellException('CRUD Model is misconfigured. Name, Primary Key and Columns must be defined.');
+				throw new Exception('CRUD Model is misconfigured. Name, Primary Key and Columns must be defined.');
 			}
 		}
 		
 		protected function configure() {
 			if (!is_array($this->primary)){
-				throw new NutshellException('Primary Key has to be an array.');
+				throw new Exception('Primary Key has to be an array.');
 			}
 				
 			$this->columnNames = array_keys($this->columns);
@@ -319,7 +232,7 @@ die($query);
 			}
 			else
 			{
-		 		throw new NutshellException('$whereKeyVals is invalid. Specify an array of key value pairs or a single numeric for primay key match.');
+		 		throw new Exception('$whereKeyVals is invalid. Specify an array of key value pairs or a single numeric for primay key match.');
 			}
 		}
 		
@@ -373,3 +286,4 @@ SQL;
 		}
 	}
 }
+?>

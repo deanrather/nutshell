@@ -112,7 +112,10 @@ namespace nutshell
 				header('X-Nutshell-Version:'.self::VERSION);
 			}
 			
-			//Load the behaviours first.
+			//Get the system environment before doing anything.
+			$this->getEnvironment();
+			
+			//Load the behaviours.
 			$this->loadBehaviours();
 			
 			//Load the helpers.
@@ -209,7 +212,9 @@ namespace nutshell
 			require(NS_HOME.'core'._DS_.'config'._DS_.'Framework.php');
 			require(NS_HOME.'core'._DS_.'loader'._DS_.'Loader.php');
 			require(NS_HOME.'core'._DS_.'loader'._DS_.'HipHopLoader.php');
+			require(NS_HOME.'core'._DS_.'plugin'._DS_.'AbstractPlugin.php');
 			require(NS_HOME.'core'._DS_.'plugin'._DS_.'Plugin.php');
+			require(NS_HOME.'core'._DS_.'plugin'._DS_.'LibraryPlugin.php');
 			require(NS_HOME.'core'._DS_.'plugin'._DS_.'PluginExtension.php');
 			
 			NutshellException::register();
@@ -245,17 +250,14 @@ namespace nutshell
 		}
 		
 		/**
-		 * Load the core config based on environment variables.
-		 * Defaults to production mode.
+		 * Fetches the system envrionment.
 		 * 
-		 * The environment can be changed by setting an
-		 * environment variable named "NS_ENV" to anything else.
+		 * Used to set the NS_ENV constant.
 		 * 
 		 * @access private
 		 * @return Nutshell
 		 */
-
-		private function loadCoreConfig()
+		private function getEnvironment()
 		{
 			if (!defined(self::NUTSHELL_ENVIRONMENT))
 			{
@@ -274,6 +276,21 @@ namespace nutshell
 			{
 				header('X-Nutshell-Environment:'.NS_ENV);
 			}
+			return $this;
+		}
+		
+		/**
+		 * Load the core config based on environment variables.
+		 * Defaults to production mode.
+		 * 
+		 * The environment can be changed by setting an
+		 * environment variable named "NS_ENV" to anything else.
+		 * 
+		 * @access private
+		 * @return Nutshell
+		 */
+		private function loadCoreConfig()
+		{
 			HookManager::execute('core','onBeforeConfigLoad');
 			$this->config = Framework::loadConfig(APP_HOME . Config::CONFIG_FOLDER, NS_ENV);
 			HookManager::execute('core','onAfterConfigLoad');
