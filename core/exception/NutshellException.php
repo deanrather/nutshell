@@ -29,12 +29,24 @@ namespace nutshell\core\exception
 		 */
 		public function __construct($code, $debug=null)
 		{
-			$this->code = $this->getCodePrefix().'-'.$code;
+			$debug = func_get_args();
 			
-			// Set my 'debug' attribute
-			$args = func_get_args();
-			array_shift($args);
-			$this->debug = $args;
+			/**
+			 * If they didn't pass in an exception code,
+			 * treat all input as debug info.
+			 * set exception code to 0
+			 */
+			if(!is_int($code))
+			{
+				$code = self::GENERIC_ERROR;
+			}
+			else
+			{
+				array_shift($debug);
+			}
+			
+			$this->code = $this->getCodePrefix().'-'.$code;
+			$this->debug = $debug;
 		}
 		
 		
@@ -124,18 +136,21 @@ namespace nutshell\core\exception
 			
 			if($format=='json')
 			{
-				$description = json_encode($message);
+				$description = json_encode($description);
+			}
+			elseif($format=='html')
+			{
+				$description = '<pre>'.print_r($description, true).'</pre>';
 			}
 			else
 			{
+				// Display in a sensible way for logging.
 				$temp = array();
 				foreach($description as $key => $val)
 				{
 					$temp[] = "$key: $val";
 				}
 				$description = implode("\n", $temp);
-
-				if($format=='html') $description = nl2br($description); // why this don't work
 			}
 			
 			return $description;
