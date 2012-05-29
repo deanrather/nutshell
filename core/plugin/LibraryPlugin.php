@@ -46,10 +46,27 @@ namespace nutshell\core\plugin
 				$namespace=ObjectHelper::getNamespace($className);
 				list(,,$plugin)	=explode('\\',$namespace);
 				
+				if (is_dir(NS_HOME.'plugin'._DS_.$plugin._DS_))
+				{
+					$dir=NS_HOME.'plugin'._DS_.$plugin._DS_;
+				}
+				else if (is_dir(APP_HOME.'plugin'._DS_.$plugin._DS_))
+				{
+					$dir=APP_HOME.'plugin'._DS_.$plugin._DS_;
+				}
+				else
+				{
+					throw new NutshellException
+					(
+						NutshellException::PLUGIN_LIBRARY_NOT_FOUND,
+						NS_HOME.'plugin'._DS_.$plugin._DS_,
+						APP_HOME.'plugin'._DS_.$plugin._DS_
+					);
+				}
 				/**
 				 * Of note, the plugin which instaciates
 				 */
-				foreach (new DirectoryIterator(NS_HOME.'plugin'._DS_.$plugin._DS_) as $iteration)
+				foreach (new DirectoryIterator($dir) as $iteration)
 				{
 					//We don't load folders or files from within folders.
 					if ($iteration->isFile() && !$iteration->isDot())

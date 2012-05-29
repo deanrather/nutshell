@@ -18,9 +18,10 @@ namespace nutshell\core\exception
 		 */
 		
 		/** The default error code. Please don't use this. Define your own error codes in your Exception Class */
-		const GENERIC_ERROR		= 0;
+		const GENERIC_ERROR				= 0;
 		
-		
+		/** The library pluin could not be found in either Nutshell or Application levels. */
+		const PLUGIN_LIBRARY_NOT_FOUND	= 1;
 		
 		/**
 		 * Receives an Error Code, and optionally one or many debug variables.
