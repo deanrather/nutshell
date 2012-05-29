@@ -263,7 +263,7 @@ namespace nutshell\core\exception
 				}
 				else
 				{
-					$message = "NON_NUTSHELL EXCEPTION!<br>";
+					$message = "NON NUTSHELL EXCEPTION!<br>";
 					$message .= $exception->getTraceAsString();
 					$message = nl2br($exception);
 				}
