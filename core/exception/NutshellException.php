@@ -256,10 +256,16 @@ namespace nutshell\core\exception
 			{
 				self::$blockRecursion = true;
 				
-				// TODO use instanceof. if it is not a nutshell exception, treat it badly.
-				echo '<pre>'.$exception->getTraceAsString();
-				
-				$message = $exception->getDescription($format);
+				if($exception instanceof NutshellException)
+				{
+					$message = $exception->getDescription($format);
+				}
+				else
+				{
+					$message = "NON_NUTSHELL EXCEPTION!<br>";
+					$message .= $exception->getTraceAsString();
+					$message = nl2br($exception);
+				}
 				
 				self::logMessage($message);
 				
