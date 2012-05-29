@@ -23,6 +23,9 @@ namespace nutshell\core\exception
 		/** The library pluin could not be found in either Nutshell or Application levels. */
 		const PLUGIN_LIBRARY_NOT_FOUND	= 1;
 		
+		/** The database statement is malformed. */
+		const DB_STATEMENT_INVALID		= 2;
+		
 		/**
 		 * Receives an Error Code, and optionally one or many debug variables.
 		 * The error code is for displaying to the user and identifying the exception type within the system

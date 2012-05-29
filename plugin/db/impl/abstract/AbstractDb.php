@@ -1,6 +1,8 @@
 <?php
 namespace nutshell\plugin\db\impl
 {
+	use nutshell\core\exception\NutshellException;
+
 	use nutshell\Nutshell;
 	use \PDO;
 	use \PDOException;
@@ -287,6 +289,7 @@ namespace nutshell\plugin\db\impl
 					$this->lastQuery['params']=&$args[1];
 					foreach ($args[1] as &$val)
 					{
+						if(!is_object($this->lastQuery['statement'])) throw new NutshellException(NutshellException::DB_STATEMENT_INVALID, $this->lastQuery);
 						$this->lastQuery['statement']->bindParam($i,$val);
 						$i++;
 					}
