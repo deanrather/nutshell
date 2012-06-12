@@ -117,6 +117,7 @@ namespace nutshell\core\exception
 		 */
 		public function getDescription($format='html')
 		{
+			// TODO Use reflection to get the CODE_NAME (and ideally code docblock) -- See Sandbox
 			$description = array
 			(
 				'ERROR'	=> true,
