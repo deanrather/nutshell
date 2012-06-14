@@ -90,10 +90,10 @@ namespace nutshell\plugin\modelGenerator
 				
 				$column_type = str_replace("'", "\'", $column_type);
 				
-				$rows[] = "				'$column_name' => '$column_type'{$column_comment} ";
+				$rows[] = "\t\t\t'$column_name' => '$column_type'{$column_comment} ";
 			}
 
-			return "array(\n".implode(",\n", $rows).')';
+			return "array\n\t\t(\n".implode(",\n", $rows)."\n\t\t)";
 		}
 
 		/**
