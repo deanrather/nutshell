@@ -9,12 +9,13 @@
  * @since <?php print date('d/m/Y'); ?>
  
  */
-namespace application\model<?php $tpl->folder ?>
+namespace application\model<?php $tpl->folder; ?>
 
 {
-	use nutshell\plugin\mvcQuery\MVCQuery;
+	use <?php $tpl->baseClassNamespace; $tpl->baseClass ?>;
 	
-	<?php $tpl->table_comment ?>class <?php $tpl->model_name ?> extends MVCQuery
+	<?php $tpl->table_comment ?>class <?php $tpl->model_name ?> extends <?php $tpl->baseClass ?>
+	
 	{
 		public $name		= '<?php $tpl->table_name ?>';
 		public $primary		= <?php $tpl->pk_array_str ?>;
