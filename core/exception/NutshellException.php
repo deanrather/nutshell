@@ -27,6 +27,14 @@ namespace nutshell\core\exception
 		const DB_STATEMENT_INVALID		= 2;
 		
 		
+		/*
+		 * Instance Properties
+		 */
+		
+		public $codeDescription	= '';
+		public $code			= '';
+		public $debug			= '';
+		
 		/**
 		 * Receives an Error Code, and optionally one or many debug variables.
 		 * The error code is for displaying to the user and identifying the exception type within the system
@@ -37,8 +45,8 @@ namespace nutshell\core\exception
 			$debug = func_get_args();
 			
 			/**
-			 * If they didn't pass in an exception code,
-			 * treat all input as debug info.
+			 * If they didn't pass in an exception code:
+			 * treat all input as debug info,
 			 * set exception code to 0
 			 */
 			if(!is_int($code))
@@ -50,7 +58,15 @@ namespace nutshell\core\exception
 				array_shift($debug);
 			}
 			
+			// Get the code's description using Reflection
+			$reflection = new \ReflectionClass($this);
+			$constants = $reflection->getConstants();
+			$this->codeDescription = array_search($code, $constants);
+			
+			// Alter the code to be prefixed with the class name
 			$this->code = $this->getCodePrefix().'-'.$code;
+			
+			// store the debug info
 			$this->debug = $debug;
 		}
 		
@@ -117,16 +133,16 @@ namespace nutshell\core\exception
 		 */
 		public function getDescription($format='html')
 		{
-			// TODO Use reflection to get the CODE_NAME (and ideally code docblock) -- See Sandbox
 			$description = array
 			(
-				'ERROR'	=> true,
-				'CLASS'	=> get_class($this),
-				'CODE'	=> $this->code,
-				'FILE'	=> $this->file,
-				'LINE'	=> $this->line,
-				'STACK'	=> "\n".$this->getTraceAsString(),
-				'DEBUG'	=> var_export($this->debug, true)
+				'ERROR'				=> true,
+				'CLASS'				=> get_class($this),
+				'CODE'				=> $this->code,
+				'CODE_DESCRIPTION'	=> $this->codeDescription,
+				'FILE'				=> $this->file,
+				'LINE'				=> $this->line,
+				'STACK'				=> "\n".$this->getTraceAsString(),
+				'DEBUG'				=> var_export($this->debug, true)
 			);
 			
 			if($format=='json')
