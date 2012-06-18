@@ -270,6 +270,10 @@ namespace nutshell
 				{
 					$env = self::DEFAULT_ENVIRONMENT;
 				}
+				if ($env=='dev' && isset($_GET['ns_env']))
+				{
+					$env = $_GET['ns_env'];
+				}
 				define(self::NUTSHELL_ENVIRONMENT, $env);
 			}
 			if (NS_INTERFACE==self::INTERFACE_HTTP)
