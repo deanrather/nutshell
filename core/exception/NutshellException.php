@@ -26,6 +26,9 @@ namespace nutshell\core\exception
 		/** The database statement is malformed. */
 		const DB_STATEMENT_INVALID		= 2;
 		
+		/** A PHP Fatal Error occurred. */
+		const FATAL_ERROR				= 3;
+		
 		
 		/*
 		 * Instance Properties
@@ -278,6 +281,22 @@ namespace nutshell\core\exception
 			}
 		}
 		
+		
+		public static function shutdown()
+		{ 
+			$error=error_get_last();
+			if($error)
+			{
+				self::treatError
+				(
+					self::FATAL_ERROR,
+					$error['message'],
+					$error['file'],
+					$error['line']
+				);
+			}
+		}
+		
 		/**
 		 * This function sets exception/error handlers. Before this call, no error is treated by this class.
 		 * All errors are logged.
@@ -290,6 +309,7 @@ namespace nutshell\core\exception
 		{
 			self::$oldExceptionHandler = set_exception_handler('nutshell\core\exception\NutshellException::treatException');
 			self::$oldErrorHandler = set_error_handler('nutshell\core\exception\NutshellException::treatError');
+			register_shutdown_function('nutshell\core\exception\NutshellException::shutdown'); 
 		}
 	}
 }
