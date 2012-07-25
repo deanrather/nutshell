@@ -128,11 +128,12 @@ namespace nutshell\core\exception
 			(
 				'ERROR'	=> true,
 				'CLASS'	=> get_class($this),
+				'MESSAGE'=>$this->getMessage(),
 				'CODE'	=> $this->code,
 				'FILE'	=> $this->file,
 				'LINE'	=> $this->line,
 				'STACK'	=> "\n".$this->getTraceAsString(),
-				'DEBUG'	=> var_export($this->debug, true)
+				// 'DEBUG'	=> var_export($this->debug, true)
 			);
 			
 			if($format=='json')
