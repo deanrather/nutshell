@@ -73,11 +73,19 @@ namespace nutshell\plugin\mvc
 				if (version_compare(PHP_VERSION,'5.3.3','>='))
 				{
 					//Call the controller action.
-					call_user_func_array(array($this->controller,$this->route->getAction()),$this->route->getArgs());
+					call_user_func_array
+					(
+						array($this->controller,$this->route->getAction()),
+						$this->route->getArgs()
+					);
 				}
 				else if ($this->route->getControl()!=$this->route->getAction())
 				{
-					call_user_func_array(array($this->controller,$this->route->getAction()),$this->route->getArgs());
+					call_user_func_array
+					(
+						array($this->controller,$this->route->getAction()),
+						$this->route->getArgs()
+					);
 				}
 			}
 			else

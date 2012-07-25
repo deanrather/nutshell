@@ -23,7 +23,7 @@ namespace nutshell\plugin\mvc
 		protected $plugin	 = null;
 		
 		/**
-		 * Defautl DB connection
+		 * Default DB connection
 		 * @var DB object
 		 */
 		protected $db	   =null;

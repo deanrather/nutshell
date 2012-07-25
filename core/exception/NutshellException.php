@@ -23,6 +23,21 @@ namespace nutshell\core\exception
 		/** The library pluin could not be found in either Nutshell or Application levels. */
 		const PLUGIN_LIBRARY_NOT_FOUND	= 1;
 		
+		/** The database statement is malformed. */
+		const DB_STATEMENT_INVALID		= 2;
+		
+		/** A PHP Fatal Error occurred. */
+		const FATAL_ERROR				= 3;
+		
+		
+		/*
+		 * Instance Properties
+		 */
+		
+		public $codeDescription	= '';
+		public $code			= '';
+		public $debug			= '';
+		
 		/**
 		 * Receives an Error Code, and optionally one or many debug variables.
 		 * The error code is for displaying to the user and identifying the exception type within the system
@@ -33,8 +48,8 @@ namespace nutshell\core\exception
 			$debug = func_get_args();
 			
 			/**
-			 * If they didn't pass in an exception code,
-			 * treat all input as debug info.
+			 * If they didn't pass in an exception code:
+			 * treat all input as debug info,
 			 * set exception code to 0
 			 */
 			if(!is_int($code))
@@ -46,7 +61,15 @@ namespace nutshell\core\exception
 				array_shift($debug);
 			}
 			
+			// Get the code's description using Reflection
+			$reflection = new \ReflectionClass($this);
+			$constants = $reflection->getConstants();
+			$this->codeDescription = array_search($code, $constants);
+			
+			// Alter the code to be prefixed with the class name
 			$this->code = $this->getCodePrefix().'-'.$code;
+			
+			// store the debug info
 			$this->debug = $debug;
 		}
 		
@@ -55,6 +78,7 @@ namespace nutshell\core\exception
 		 * Static Attributes
 		 */
 		
+		
 		/**
 		* Prevents recursion.
 		* @var bool
@@ -62,34 +86,22 @@ namespace nutshell\core\exception
 		private static $blockRecursion = false;
 		
 		/**
-		 * Error handler used before the class is created.
+		 * Error handler used before the class was created.
 		 * @var bool
 		 */
 		private static $oldErrorHandler = false;
 		
 		/**
-		 * Indicates that errors should be shown. (depends on ns_env environment variable).
+		 * Exception handler used before the class was created.
 		 * @var bool
 		 */
-		private static $echoErrors = false;
-		
-		/**
-		 * All errors that shouldn't be shown in the user interface.
-		 * @var Array
-		 */
-		private static $dontShowErrors = array
-		(
-			E_STRICT => 1
-		);
-		
+		private static $oldExceptionHandler = false;
 		
 		
 		
 		/*
 		 * Member Functions
 		 */
-		
-		
 		
 		/**
 		 * Gets the prefix to be used on error codes.
@@ -108,7 +120,7 @@ namespace nutshell\core\exception
 		
 		
 		/**
-		 * Logs this exception
+		 * Logs the result of getDescription()
 		 */
 		public function log()
 		{
@@ -126,14 +138,14 @@ namespace nutshell\core\exception
 		{
 			$description = array
 			(
-				'ERROR'	=> true,
-				'CLASS'	=> get_class($this),
-				'MESSAGE'=>$this->getMessage(),
-				'CODE'	=> $this->code,
-				'FILE'	=> $this->file,
-				'LINE'	=> $this->line,
-				'STACK'	=> "\n".$this->getTraceAsString(),
-				// 'DEBUG'	=> var_export($this->debug, true)
+				'ERROR'				=> true,
+				'CLASS'				=> get_class($this),
+				'CODE'				=> $this->code,
+				'CODE_DESCRIPTION'	=> $this->codeDescription,
+				'FILE'				=> $this->file,
+				'LINE'				=> $this->line,
+				'STACK'				=> "\n".$this->getTraceAsString(),
+				'DEBUG'				=> var_export($this->debug, true)
 			);
 			
 			if($format=='json')
@@ -170,47 +182,30 @@ namespace nutshell\core\exception
 		
 		
 		/**
-		 * Echoes an error if $echoErrors and not $dontShowErrors[$errno]
-		 * @param int $errno
-		 * @param string $message
-		 */
-		private static function echoError($errno, $message)
-		{
-			if (self::$echoErrors) 
-			{
-				if (!isset(self::$dontShowErrors[$errno]))
-				{
-					echo $message;
-				}
-			}
-		}
-		
-		/**
 		 * Logs a message if Nutshell has a loader.
 		 * @param string $message
 		 */
 		public static function logMessage($message)
 		{
-			if (strlen($message)>0)
+			if (!strlen($message)) return;
+			
+			try
 			{
-				try
-				{	
-					$nutInst = Nutshell::getInstance();
-					if ($nutInst->hasPluginLoader())
-					{
-						$log = $nutInst->plugin->Logger();
-						$log->fatal($message);
-					} 
-					else 
-					{
-						user_error("Failed to load logger: $message", E_USER_ERROR);
-					}
-				}
-				catch (Exception $e) 
+				$nutInst = Nutshell::getInstance();
+				if ($nutInst->hasPluginLoader())
 				{
-					//falling back to the system logger
-					error_log($message);
+					$log = $nutInst->plugin->Logger();
+					$log->fatal($message);
+				} 
+				else 
+				{
+					user_error("Failed to load logger: $message", E_USER_ERROR);
 				}
+			}
+			catch (Exception $e) 
+			{
+				//falling back to the system logger
+				error_log($message);
 			}
 		}
 		
@@ -228,21 +223,23 @@ namespace nutshell\core\exception
 			{
 				self::$blockRecursion = true;
 			
+				// Create the message
 				$message =
 					"ERROR $errno. ".
 					( (strlen($errstr)>0)  ? "Message: $errstr. " : "").
 					( (strlen($errfile)>0) ? "File: $errfile. " : "").
 					( ($errline>0) ? "Line: $errline. " : "") ;
 				
-				try // to log
+				// Log the message
+				self::logMessage($message);
+				
+				// Echo the message
+				if (NS_ENV=='dev') 
 				{
-					self::echoError($errno, $message);
-					self::logMessage($message);		
-				} catch (Exception $e) 
-				{
-					//falling back to the system logger
-					error_log($message);
+					header('HTTP/1.1 500 Application Error');
+					echo $message;
 				}
+				
 				self::$blockRecursion = false;
 			}
 			return false;
@@ -258,11 +255,23 @@ namespace nutshell\core\exception
 			{
 				self::$blockRecursion = true;
 				
-				$message = $exception->getDescription($format);
+				// Create the message
+				if($exception instanceof NutshellException)
+				{
+					$message = $exception->getDescription($format);
+				}
+				else
+				{
+					$message = "NON NUTSHELL EXCEPTION!<br>";
+					$message .= $exception->getTraceAsString();
+					$message = nl2br($exception);
+				}
 				
+				// Log the message
 				self::logMessage($message);
 				
-				if (self::$echoErrors) 
+				// Echo the message
+				if (NS_ENV=='dev') 
 				{
 					header('HTTP/1.1 500 Application Error');
 					echo $message;
@@ -272,18 +281,35 @@ namespace nutshell\core\exception
 			}
 		}
 		
+		
+		public static function shutdown()
+		{ 
+			$error=error_get_last();
+			if($error)
+			{
+				self::treatError
+				(
+					self::FATAL_ERROR,
+					$error['message'],
+					$error['file'],
+					$error['line']
+				);
+			}
+		}
+		
 		/**
 		 * This function sets exception/error handlers. Before this call, no error is treated by this class.
-		 * Errors are shown in the user interface only if NS_ENV (environment variable) is set to "dev". So, errors won't be shown in production but will be logged.
+		 * All errors are logged.
+		 * Errors are shown in the user interface only if NS_ENV (environment variable) is set to "dev". So, errors won't be shown in production.
 		 * 
 		 * Sets the default Exception Handler to treatException()
 		 * Sets the default Error Handler to treatError()
 		 */
 		public static function setHandlers()
 		{
-			set_exception_handler('nutshell\core\exception\NutshellException::treatException');
+			self::$oldExceptionHandler = set_exception_handler('nutshell\core\exception\NutshellException::treatException');
 			self::$oldErrorHandler = set_error_handler('nutshell\core\exception\NutshellException::treatError');
-			self::$echoErrors = (NS_ENV=='dev');
+			register_shutdown_function('nutshell\core\exception\NutshellException::shutdown'); 
 		}
 	}
 }

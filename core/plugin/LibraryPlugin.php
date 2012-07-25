@@ -74,6 +74,8 @@ namespace nutshell\core\plugin
 						require_once($iteration->getPathname());
 					}
 				}
+				
+				$instance->init();
 			}
 			//It must be a singleton. Return the instance.
 			return $GLOBALS['NUTSHELL_PLUGIN_SINGLETON'][$className];

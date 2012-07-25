@@ -24,6 +24,31 @@ namespace nutshell\plugin\modelGenerator
 	{
 		protected $db;
 		
+		private $baseClassNamespace	= 'nutshell\\plugin\\mvc\\model\\';
+		private	$baseClass			= 'CRUD';
+		
+		public function getBaseClassNamespace()
+		{
+		    return $this->baseClassNamespace;
+		}
+		
+		public function setBaseClassNamespace($newBaseClassNamespace)
+		{
+		    $this->baseClassNamespace = $newBaseClassNamespace;
+		    return $this;
+		}
+		
+		public function getBaseClass()
+		{
+		    return $this->baseClass;
+		}
+		
+		public function setBaseClass($newBaseClass)
+		{
+		    $this->baseClass = $newBaseClass;
+		    return $this;
+		}
+		
 		public static function loadDependencies()
 		{
 			
@@ -90,10 +115,10 @@ namespace nutshell\plugin\modelGenerator
 				
 				$column_type = str_replace("'", "\'", $column_type);
 				
-				$rows[] = "				'$column_name' => '$column_type'{$column_comment} ";
+				$rows[] = "\t\t\t'$column_name' => '$column_type'{$column_comment} ";
 			}
 
-			return "array(\n".implode(",\n", $rows).')';
+			return "array\n\t\t(\n".implode(",\n", $rows)."\n\t\t)";
 		}
 
 		/**
@@ -143,7 +168,9 @@ namespace nutshell\plugin\modelGenerator
 						->setKeyVal('pk_array_str',		$pk_array_str)
 						->setKeyVal('primary_ai_str',	$primary_ai_str)
 						->setKeyVal('autoCreate_str',	$autoCreate_str)
-						->setKeyVal('column_definition',$column_definition);
+						->setKeyVal('column_definition',$column_definition)
+						->setKeyVal('baseClass',		$this->getBaseClass())
+						->setKeyVal('baseClassNamespace',$this->getBaseClassNamespace());
 			
 			$template->compile();
 			

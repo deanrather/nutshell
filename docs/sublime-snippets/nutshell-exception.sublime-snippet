@@ -1,0 +1,7 @@
+<snippet>
+	<content><![CDATA[
+use nutshell\core\exception\NutshellException;
+]]></content>
+	<tabTrigger>use-nutshell-exception</tabTrigger>
+	<scope>source.php</scope>
+</snippet>

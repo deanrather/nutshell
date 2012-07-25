@@ -7,19 +7,22 @@
  * 
  * @package application-model
  * @since <?php print date('d/m/Y'); ?>
+ 
  */
-namespace application\model<?php $tpl->folder ?>
+namespace application\model<?php $tpl->folder; ?>
+
 {
-	use nutshell\plugin\mvc\model\CRUD;
+	use <?php $tpl->baseClassNamespace; $tpl->baseClass ?>;
 	
-	<?php $tpl->table_comment ?>class <?php $tpl->model_name ?> extends CRUD
+	<?php $tpl->table_comment ?>class <?php $tpl->model_name ?> extends <?php $tpl->baseClass ?>
+	
 	{
 		public $name		= '<?php $tpl->table_name ?>';
 		public $primary		= <?php $tpl->pk_array_str ?>;
 		public $primary_ai	= <?php $tpl->primary_ai_str ?>;
 		public $autoCreate	= <?php $tpl->autoCreate_str ?>;
 		
-		public $columns    = <?php $tpl->column_definition ?>;
+		public $columns = <?php $tpl->column_definition ?>;
 	}
 }
 <?php print '?>' ?>
