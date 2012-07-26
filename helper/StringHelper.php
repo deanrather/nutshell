@@ -108,6 +108,20 @@ namespace nutshell\helper
 		{
 			return ucfirst(strtolower($classname));
 		}
+		
+		/**
+		 * Takes a table name like "my_table" and reutrns a model name like "MyTable"
+		 */
+		public static function formatModelName($tableName)
+		{
+			$tableName = explode('_', $tableName);
+			$modelName = '';
+			foreach($tableName as $part)
+			{
+				$modelName .= ucfirst($part);
+			}
+			return $modelName;
+		}
 	}
 }
 ?>
