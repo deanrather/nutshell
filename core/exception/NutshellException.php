@@ -145,7 +145,7 @@ namespace nutshell\core\exception
 				'FILE'				=> $this->file,
 				'LINE'				=> $this->line,
 				'STACK'				=> "\n".$this->getTraceAsString(),
-				'DEBUG'				=> var_export($this->debug, true)
+				'DEBUG'				=> print_r($this->debug, true) // don't use var_export. it can cause a recursive error here.
 			);
 			
 			if($format=='json')
@@ -193,7 +193,7 @@ namespace nutshell\core\exception
 				$nutInst = Nutshell::getInstance();
 				if ($nutInst->hasPluginLoader())
 				{
-					die($message); // TODO make smarter
+					die($message); // TODO make smarter. The below line fails if a function definition does not accept the same parameter count as the superclass' function
 					$log = $nutInst->plugin->Logger();
 					$log->fatal($message);
 				} 
