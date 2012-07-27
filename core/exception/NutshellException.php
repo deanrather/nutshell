@@ -188,12 +188,12 @@ namespace nutshell\core\exception
 		public static function logMessage($message)
 		{
 			if (!strlen($message)) return;
-			
 			try
 			{
 				$nutInst = Nutshell::getInstance();
 				if ($nutInst->hasPluginLoader())
 				{
+					die($message); // TODO make smarter
 					$log = $nutInst->plugin->Logger();
 					$log->fatal($message);
 				} 
