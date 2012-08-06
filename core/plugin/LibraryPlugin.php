@@ -69,7 +69,7 @@ namespace nutshell\core\plugin
 				foreach (new DirectoryIterator($dir) as $iteration)
 				{
 					//We don't load folders or files from within folders.
-					if ($iteration->isFile() && !$iteration->isDot())
+					if ($iteration->isFile() && (!substr($iteration->getBasename(), 0, 1)=='.'))
 					{
 						require_once($iteration->getPathname());
 					}

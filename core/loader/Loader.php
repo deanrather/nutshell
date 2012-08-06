@@ -156,7 +156,15 @@ namespace nutshell\core\loader
 				
 				if(!isset($this->classNames[$key]))
 				{
-					throw new NutshellException("Loader can't load key {$key}.");
+					throw new NutshellException
+					(
+						"Loader can't load key {$key}.",
+						$this->classNames,
+						$this->containers,
+						$dirBaseFolderFile,
+						$dirBaseFile,
+						$dir
+					);
 				}
 			}
 
