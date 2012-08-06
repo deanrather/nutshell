@@ -158,11 +158,16 @@ namespace nutshell\plugin\modelGenerator
 			{
 				$table_comment = '// '.$table_comment."\n	";
 			}
+
+			// make sure the linux '/' are converted to namespace '\'
+			// FIXME we need to be able to customise the base namespace, not only application\model\*
+			$namespace = sprintf('application\\model%s', str_replace('/', '\\', $folder));
 			
 			
 			$template	=$this->plugin->Template(__DIR__._DS_.'model.tpl.php');
 			$template	->setKeyVal('table_name',		$table_name)
 						->setKeyVal('folder',			$folder)
+						->setKeyVal('namespace',		$namespace)
 						->setKeyVal('table_comment',	$table_comment)
 						->setKeyVal('model_name',		$model_name)
 						->setKeyVal('pk_array_str',		$pk_array_str)
