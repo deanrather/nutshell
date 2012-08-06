@@ -364,7 +364,7 @@ namespace nutshell\plugin\db\impl
 				} catch (\Exception $e) {
 					// nothing can be done if the error treatment fails.
 				}
-				throw new DbException($error_message);			
+				throw new DbException($error_message,$this->lastQuery);			
 			}
 			
 			return $return;
