@@ -9,7 +9,7 @@
  * @since <?php print date('d/m/Y'); ?>
  
  */
-namespace application\model<?php $tpl->folder; ?>
+namespace <?php $tpl->namespace; ?>
 
 {
 	use <?php $tpl->baseClassNamespace; $tpl->baseClass ?>;
