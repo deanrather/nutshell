@@ -1,0 +1,7 @@
+<snippet>
+	<content><![CDATA[
+\application\helper\DebugHelper::lastSQL();
+]]></content>
+	<tabTrigger>debug-sql</tabTrigger>
+	<scope>source.php</scope>
+</snippet>
