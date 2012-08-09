@@ -136,6 +136,13 @@ namespace nutshell\core\exception
 		 */
 		public function getDescription($format='html')
 		{
+			$debug = $this->debug;
+			if($format != 'array')
+			{
+				// don't use var_export. it can cause a recursive error here.
+				$debug = print_r($this->debug, true); 
+			}
+			
 			$description = array
 			(
 				'ERROR'				=> true,
@@ -145,10 +152,14 @@ namespace nutshell\core\exception
 				'FILE'				=> $this->file,
 				'LINE'				=> $this->line,
 				'STACK'				=> "\n".$this->getTraceAsString(),
-				'DEBUG'				=> print_r($this->debug, true) // don't use var_export. it can cause a recursive error here.
+				'DEBUG'				=> $debug
 			);
 			
-			if($format=='json')
+			if($format=='array')
+			{
+				// don't modify the description object
+			}
+			elseif($format=='json')
 			{
 				$description = json_encode($description);
 			}
@@ -193,7 +204,7 @@ namespace nutshell\core\exception
 				$nutInst = Nutshell::getInstance();
 				if ($nutInst->hasPluginLoader())
 				{
-					die($message); // TODO make smarter. The below line fails if a function definition does not accept the same parameter count as the superclass' function
+					//die($message); // TODO make smarter. The below line fails if a function definition does not accept the same parameter count as the superclass' function
 					$log = $nutInst->plugin->Logger();
 					$log->fatal($message);
 				} 
