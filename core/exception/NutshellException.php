@@ -245,7 +245,8 @@ namespace nutshell\core\exception
 				self::logMessage($message);
 				
 				// Echo the message
-				if (NS_ENV=='dev') 
+				$nutshell = Nutshell::getInstance();
+				if($nutshell->config->application->mode=='development')
 				{
 					header('HTTP/1.1 500 Application Error');
 					echo $message;
@@ -282,7 +283,8 @@ namespace nutshell\core\exception
 				self::logMessage($message);
 				
 				// Echo the message
-				if (NS_ENV=='dev') 
+				$nutshell = Nutshell::getInstance();
+				if($nutshell->config->application->mode=='development')
 				{
 					header('HTTP/1.1 500 Application Error');
 					echo $message;
