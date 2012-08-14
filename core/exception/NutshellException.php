@@ -30,7 +30,7 @@ namespace nutshell\core\exception
 		const PHP_FATAL_ERROR			= 3;
 		
 		/** A PHP Regular Error occurred. */
-		const PHP_ERROR_ERROR			= 4;
+		const PHP_ERROR					= 4;
 		
 		
 		/*
@@ -248,7 +248,7 @@ namespace nutshell\core\exception
 				);
 				
 				// Treat it as an exception
-				throw new NutshellException(self::PHP_ERROR_ERROR, $message);
+				throw new NutshellException(self::PHP_ERROR, $message);
 				
 				self::$blockRecursion = false;
 			}
