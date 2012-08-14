@@ -27,7 +27,10 @@ namespace nutshell\core\exception
 		const DB_STATEMENT_INVALID		= 2;
 		
 		/** A PHP Fatal Error occurred. */
-		const FATAL_ERROR				= 3;
+		const PHP_FATAL_ERROR			= 3;
+		
+		/** A PHP Regular Error occurred. */
+		const PHP_ERROR_ERROR			= 4;
 		
 		
 		/*
@@ -235,22 +238,17 @@ namespace nutshell\core\exception
 				self::$blockRecursion = true;
 			
 				// Create the message
-				$message =
-					"ERROR $errno. ".
-					( (strlen($errstr)>0)  ? "Message: $errstr. " : "").
-					( (strlen($errfile)>0) ? "File: $errfile. " : "").
-					( ($errline>0) ? "Line: $errline. " : "") ;
+				$message = array
+				(
+					"CODE"		=> $errno,
+					"MESSAGE"	=> $errstr,
+					"FILE"		=> $errfile,
+					"LINE"		=> $errline,
+					"CONTEXT"	=> $errcontext
+				);
 				
-				// Log the message
-				self::logMessage($message);
-				
-				// Echo the message
-				$nutshell = Nutshell::getInstance();
-				if($nutshell->config->application->mode=='development')
-				{
-					header('HTTP/1.1 500 Application Error');
-					echo $message;
-				}
+				// Treat it as an exception
+				throw new NutshellException(self::PHP_ERROR_ERROR, $message);
 				
 				self::$blockRecursion = false;
 			}
@@ -294,7 +292,13 @@ namespace nutshell\core\exception
 			}
 		}
 		
-		
+		/**
+		 * This function is called when PHP is shutting down.
+		 * It will get called after a fatal error, so we'll try and handle that here.
+		 * You can't really handle fatal errors, but we can try, and might at least
+		 * get a log out of it.
+		 * @return [type] [description]
+		 */
 		public static function shutdown()
 		{ 
 			$error=error_get_last();
