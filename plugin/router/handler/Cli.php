@@ -16,7 +16,9 @@ namespace nutshell\plugin\router\handler
 	 */
 	class Cli extends PluginExtension
 	{
-		private $route	=null;
+		private $route = null;
+
+		private $pointer = 0;
 		
 		const OPTION_CONTROLLER = 'c';
 		
@@ -28,11 +30,18 @@ namespace nutshell\plugin\router\handler
 		
 		public function __construct()
 		{
+			$this->calculateRoute();
+		}
+		
+		private function calculateRoute()
+		{
+			$controlNameSpace = '';
 			$nodes = $this->request->getNodes();
 			$actionOption = false;
 			
 			//check for the existence of an action flag
-			if($item = $this->request->get(self::OPTION_ACTION)) {
+			if($item = $this->request->get(self::OPTION_ACTION))
+			{
 				array_unshift($nodes, $item);
 				$actionOption = true;
 			}
@@ -41,7 +50,9 @@ namespace nutshell\plugin\router\handler
 			if($item = $this->request->get(self::OPTION_CONTROLLER)) 
 			{
 				array_unshift($nodes, $item);
-			} else if($actionOption) {
+			}
+			else if($actionOption) 
+			{
 				array_unshift($nodes, self::DEFAULT_CONTROLLER);
 			}
 
@@ -50,17 +61,50 @@ namespace nutshell\plugin\router\handler
 			$action = array_shift($nodes);
 			$args = $nodes;
 			
-			if(!$controller) {
+			if(!$controller)
+			{
 				$controller = self::DEFAULT_CONTROLLER;
 			}
 			
-			if(!$action) {
+			if(!$action)
+			{
 				$action = self::DEFAULT_ACTION;
 			}
-			if(is_null($args)) {
+			if(is_null($args))
+			{
 				$args = array();
 			}
-			$this->route = new Route('', $controller, $action, $args);
+
+			if(strpos($controller, '.') !== false) 
+			{
+				$split = explode('.', $controller);
+				// only keep up to the pointer index
+				$split = array_slice($split, 0, $this->pointer + 1);
+				$controller = array_pop($split);
+				$controlNameSpace = $split ? implode('\\', $split) . '\\' : '';
+			}
+
+			if(is_null($this->route))
+			{
+				$this->route = new Route($controlNameSpace, $controller, $action, $args);
+			} else {
+				$this->route->setControlNamespace($controlNameSpace);
+				$this->route->setControl($controller);
+				$this->route->setAction($action);
+				$this->route->setArgs($args);
+			}
+		}
+
+		public function advancePointer()
+		{
+			$this->pointer++;
+			$this->calculateRoute();
+		}
+		
+		public function rewindPointer()
+		{
+			$this->pointer--;
+			$this->calculateRoute();
 		}
 		
 		public function getRoute()
