@@ -297,7 +297,6 @@ namespace nutshell\core\exception
 		 * It will get called after a fatal error, so we'll try and handle that here.
 		 * You can't really handle fatal errors, but we can try, and might at least
 		 * get a log out of it.
-		 * @return [type] [description]
 		 */
 		public static function shutdown()
 		{ 
