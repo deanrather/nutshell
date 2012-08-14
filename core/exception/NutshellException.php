@@ -305,7 +305,7 @@ namespace nutshell\core\exception
 			{
 				self::treatError
 				(
-					self::FATAL_ERROR,
+					self::PHP_FATAL_ERROR,
 					$error['message'],
 					$error['file'],
 					$error['line']
