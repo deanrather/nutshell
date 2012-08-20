@@ -104,7 +104,11 @@ namespace nutshell\core\config
 				return $this;
 			}
 			
-			throw new ConfigException(sprintf('Could not parse argument into a config object: not an instance of %s', self::PARSEABLE_CLASS), ConfigException::CODE_NON_PARSEABLE_STRUCTURE);
+			throw new ConfigException
+			(
+				ConfigException::CODE_NON_PARSEABLE_STRUCTURE,
+				sprintf('Could not parse argument into a config object: not an instance of %s', self::PARSEABLE_CLASS)
+			);
 		}
 		
 		/**
@@ -526,7 +530,16 @@ namespace nutshell\core\config
 				}
 			}
 			
-			throw new ConfigException(sprintf("Failed to find a suitable config file named any of [%s] in any path alternatives [%s]", implode(', ', $basenames), implode(', ', $pathAlternatives),ConfigException::CODE_CONFIG_FILE_NOT_FOUND));
+			throw new ConfigException
+			(
+				ConfigException::CODE_CONFIG_FILE_NOT_FOUND,
+				sprintf
+				(
+					"Failed to find a suitable config file named any of [%s] in any path alternatives [%s]",
+					implode(', ', $basenames),
+					implode(', ', $pathAlternatives)
+				)
+			);
 		}
 		
 		/**
@@ -565,18 +578,18 @@ namespace nutshell\core\config
 					$decodedJSON = json_decode(file_get_contents($file));
 					if($decodedJSON === null) 
 					{
-						throw new ConfigException(sprintf('Invalid JSON document: %s', $file), ConfigException::CODE_INVALID_JSON);
+						throw new ConfigException(ConfigException::CODE_INVALID_JSON, sprintf('Invalid JSON document: %s', $file));
 					}
 					return ConfigRoot::parseRoot($decodedJSON, $extendHandler, $extended);
 				} 
 				else
 				{
-					throw new ConfigException(sprintf('File is not accessible for reading: %s', $file), ConfigException::CODE_INVALID_CONFIG_FILE);
+					throw new ConfigException(ConfigException::CODE_INVALID_CONFIG_FILE, sprintf('File is not accessible for reading: %s', $file));
 				}  
 			} 
 			else 
 			{
-				throw new ConfigException(sprintf('Could not find file: %s', $file), ConfigException::CODE_INVALID_CONFIG_FILE);
+				throw new ConfigException(ConfigException::CODE_INVALID_CONFIG_FILE, sprintf('Could not find file: %s', $file));
 			}
 		}
 	}
