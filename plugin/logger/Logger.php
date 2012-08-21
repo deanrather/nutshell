@@ -222,11 +222,15 @@ namespace nutshell\plugin\logger
 			{
 				if($filter->isLogEnabled($level))
 				{
-					$filter->getWriter()->write($msg, array(
-						Writer::CTX_LOG_LEVEL => $level,
-						Writer::CTX_LOGGER_NAME => $this->loggerName
-					),
-					$extraData
+					$filter->getWriter()->write
+					(
+						$msg,
+						array
+						(
+							Writer::CTX_LOG_LEVEL => $level,
+							Writer::CTX_LOGGER_NAME => $this->loggerName
+						),
+						$extraData
 					);
 				}
 			}
