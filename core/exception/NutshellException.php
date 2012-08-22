@@ -154,13 +154,14 @@ namespace nutshell\core\exception
 				'CODE_DESCRIPTION'	=> $this->codeDescription,
 				'FILE'				=> $this->file,
 				'LINE'				=> $this->line,
-				'STACK'				=> "\n".$this->getTraceAsString(),
-				'DEBUG'				=> $debug
+				'DEBUG'				=> $debug,
+				'STACK'				=> "\n".$this->getTraceAsString()
 			);
 			
 			if($format=='array')
 			{
-				// don't modify the description object
+				$description['STACK'] = $this->getTrace();
+				$description['DEBUG'] = $this->debug;
 			}
 			elseif($format=='json')
 			{
