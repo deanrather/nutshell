@@ -295,6 +295,8 @@ namespace nutshell\plugin\db\impl
 					}
 				}
 			}
+			
+			// Execute the query
 			if ($this->lastQuery['statement'] && $this->lastQuery['statement']->execute())
 			{
 				$this->lastQuery['resultSet']		=$this->lastQuery['statement']->fetchAll();
