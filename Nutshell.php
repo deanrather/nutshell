@@ -5,6 +5,7 @@
  * 
  * @author Guillaume Bodi <guillaume@spinifexgroup.com>
  * @author Timothy Chandler <tim.chandler@spinifexgroup.com>
+ * @author Dean Rather <dean@sudocode.com>
  * @package nutshell
  * @copyright Spinifex Group Pty. Ltd.
  */
@@ -28,11 +29,11 @@ namespace nutshell
 	 */
 	class Nutshell
 	{
-		const VERSION				=	'1.0.0-dev-7';
+		const VERSION				=	'1.0.0-dev-8';
 		const VERSION_MAJOR			=	1;
 		const VERSION_MINOR			=	0;
 		const VERSION_MICRO			=	0;
-		const VERSION_DEV			=	7;
+		const VERSION_DEV			=	8;
 		const NUTSHELL_ENVIRONMENT	=	'NS_ENV';
 		const DEFAULT_ENVIRONMENT	= 	'production';
 		
