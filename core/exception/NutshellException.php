@@ -23,15 +23,16 @@ namespace nutshell\core\exception
 		/** The library pluin could not be found in either Nutshell or Application levels. */
 		const PLUGIN_LIBRARY_NOT_FOUND	= 1;
 		
-		/** The database statement is malformed. */
-		const DB_STATEMENT_INVALID		= 2;
-		
 		/** A PHP Fatal Error occurred. */
 		const PHP_FATAL_ERROR			= 3;
 		
 		/** A PHP Regular Error occurred. */
-		const PHP_ERROR					= 4;
+		const PHP_ERROR_2				= 2;
+		const PHP_ERROR_4				= 4;
+		const PHP_ERROR_8				= 8;
 		
+		/** The database statement is malformed. */
+		const DB_STATEMENT_INVALID		= 100;
 		
 		/*
 		 * Instance Properties
@@ -208,9 +209,8 @@ namespace nutshell\core\exception
 				$nutInst = Nutshell::getInstance();
 				if ($nutInst->hasPluginLoader())
 				{
-					//die($message); // TODO make smarter. The below line fails if a function definition does not accept the same parameter count as the superclass' function
 					$log = $nutInst->plugin->Logger();
-					$log->fatal($message);
+					$log->fatal($message); // todo, sometimes it's not 'fatal'
 				} 
 				else 
 				{
@@ -234,26 +234,19 @@ namespace nutshell\core\exception
 		 */
 		public static function treatError($errno, $errstr = null, $errfile = null, $errline = null, array $errcontext = null)
 		{
-			if (!self::$blockRecursion)
-			{
-				self::$blockRecursion = true;
+			// Create the message
+			$message = array
+			(
+				"CODE"		=> $errno,
+				"MESSAGE"	=> $errstr,
+				"FILE"		=> $errfile,
+				"LINE"		=> $errline,
+				"CONTEXT"	=> $errcontext
+			);
 			
-				// Create the message
-				$message = array
-				(
-					"CODE"		=> $errno,
-					"MESSAGE"	=> $errstr,
-					"FILE"		=> $errfile,
-					"LINE"		=> $errline,
-					"CONTEXT"	=> $errcontext
-				);
-				
-				// Treat it as an exception
-				throw new NutshellException(self::PHP_ERROR, $message);
-				
-				self::$blockRecursion = false;
-			}
-			return false;
+			// Treat it as an exception
+			self::treatException(new NutshellException($errno, $message));
+			
 		}
 		
 		/**
@@ -282,8 +275,7 @@ namespace nutshell\core\exception
 				self::logMessage($message);
 				
 				// Echo the message
-				$nutshell = Nutshell::getInstance();
-				if($nutshell->config->application->mode=='development')
+				if(Nutshell::getInstance()->config->application->mode=='development')
 				{
 					header('HTTP/1.1 500 Application Error');
 					echo $message;
