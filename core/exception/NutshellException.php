@@ -6,6 +6,7 @@ namespace nutshell\core\exception
 {
 	use nutshell\Nutshell;
 	use nutshell\core\Component;
+	use nutshell\core\config\exception\ConfigException;
 	use \Exception;
 
 	/**
@@ -255,15 +256,19 @@ namespace nutshell\core\exception
 				self::$blockRecursion = true;
 				
 				// Create the message
-				if($exception instanceof NutshellException)
+				if($exception instanceof ConfigException)
+				{
+					die('ERROR: ' . $exception->getCode() .' '. $exception->debug[0]);
+				}
+				elseif($exception instanceof NutshellException)
 				{
 					$message = $exception->getDescription($format);
 				}
 				else
 				{
-					$message = "NON NUTSHELL EXCEPTION!<br>";
+					$message = "NON NUTSHELL EXCEPTION! ";
 					$message .= $exception->getTraceAsString();
-					$message = nl2br($exception);
+					$message .= nl2br($exception);
 				}
 				
 				// Log the message
