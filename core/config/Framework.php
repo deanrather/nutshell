@@ -31,9 +31,14 @@ namespace nutshell\core\config
 		
 		public static function loadConfig($configPath, $environment) 
 		{
-			$config = self::hasToRebuild() ? 
-				self::rebuild($configPath, $environment) : 
-				self::loadCachedConfig();
+			if(self::hasToRebuild())
+			{
+				$config = self::rebuild($configPath, $environment);
+			}
+			else
+			{
+				$config = self::loadCachedConfig();
+			}
 			
 			return $config;
 		}
@@ -46,7 +51,7 @@ namespace nutshell\core\config
 			
 			if(!file_exists($folder))
 			{
-				if(!@mkdir($folder))
+				if(!@mkdir($folder, 0755, true))
 				{
 					throw new ConfigException(sprintf("Could not create the config cache folder. Please check the write permission on %s.", dirname($folder)));
 				}

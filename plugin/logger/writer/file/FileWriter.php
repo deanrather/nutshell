@@ -6,10 +6,8 @@
 namespace nutshell\plugin\logger\writer\file
 {
 	use nutshell\core\config\Config;
-	
-	use nutshell\core\exception\NutshellException;
-	
 	use nutshell\plugin\logger\writer\Writer;
+	use nutshell\plugin\logger\exception\LoggerException;
 	
 	/**
 	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
@@ -48,7 +46,7 @@ namespace nutshell\plugin\logger\writer\file
 		/**
 		 * Validate and flatten the path to the log file 
 		 * 
-		 * @throws NutshellException if the log file could not be located or created
+		 * @throws LoggerException if the log file could not be located or created
 		 */
 		protected function validateOutput()
 		{
@@ -56,12 +54,19 @@ namespace nutshell\plugin\logger\writer\file
 			
 			if(!file_exists($realPath))
 			{
-				if(!touch($realPath)) 
+				if(!@touch($realPath))
 				{
-					throw new NutshellException(sprintf('Could not create log file at: %s', $realPath));
+					throw new LoggerException(sprintf('Could not create log file at: %s', $realPath));
 				}
-				if(!preg_match('/^[0-7]{3}$/', $this->mode)) {
-					throw new NutshellException(sprintf('Could not apply invalid permissions set (%s) to log file at: %s', $this->mode, $realPath));
+				
+				if($this->mode === null)
+				{
+					$this->mode = self::DEFAULT_MODE;
+				}
+				
+				if(!preg_match('/^[0-7]{3}$/', $this->mode))
+				{
+					throw new LoggerException(sprintf('Could not apply invalid permissions set (%s) to log file at: %s', $this->mode, $realPath));
 				}
 				
 				@chmod($realPath, octdec($this->mode));
@@ -70,7 +75,7 @@ namespace nutshell\plugin\logger\writer\file
 			{
 				if(!is_writable($realPath)) 
 			  	{
-					throw new NutshellException(sprintf('Could not access log file at : %s for writing', $realPath));
+					throw new LoggerException(sprintf('Could not access log file at : %s for writing', $realPath));
 			  	}
 			}
 			
