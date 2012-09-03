@@ -262,18 +262,18 @@ namespace nutshell
 		{
 			if (!defined(self::NUTSHELL_ENVIRONMENT))
 			{
-				$env=getenv('NS_ENV');
+				$env=getenv(self::NUTSHELL_ENVIRONMENT);
 				if (!$env && function_exists('apache_getenv'))
 				{
-					$env=apache_getenv('NS_ENV');
+					$env=apache_getenv(self::NUTSHELL_ENVIRONMENT);
 				}
 				if (!$env)
 				{
 					$env = self::DEFAULT_ENVIRONMENT;
 				}
-				if ($env=='dev' && isset($_GET['ns_env']))
+				if ($env=='dev' && isset($_GET[self::NUTSHELL_ENVIRONMENT]))
 				{
-					$env = $_GET['ns_env'];
+					$env = $_GET[self::NUTSHELL_ENVIRONMENT];
 				}
 				define(self::NUTSHELL_ENVIRONMENT, $env);
 			}
