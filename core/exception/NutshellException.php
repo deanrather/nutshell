@@ -232,17 +232,11 @@ namespace nutshell\core\exception
 		 */
 		public static function treatError($errno, $errstr = null, $errfile = null, $errline = null, array $errcontext = null)
 		{
-			// Create the message
-			$message = array
-			(
-				"CODE"		=> $errno,
-				"MESSAGE"	=> $errstr,
-				"FILE"		=> $errfile,
-				"LINE"		=> $errline
-			);
-			
-			// Treat it as an exception
-			self::treatException(new NutshellException(self::PHP_ERROR, $message));
+			$exception = new NutshellException(self::PHP_ERROR, $errstr);
+			$exception->code = $errno;
+			$exception->file = $errfile;
+			$exception->line = $errline;
+			self::treatException($exception);
 		}
 		
 		/**
