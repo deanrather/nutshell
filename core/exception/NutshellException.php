@@ -6,6 +6,7 @@ namespace nutshell\core\exception
 {
 	use nutshell\Nutshell;
 	use nutshell\core\Component;
+	use nutshell\core\config\exception\ConfigException;
 	use \Exception;
 
 	/**
@@ -20,19 +21,17 @@ namespace nutshell\core\exception
 		/** The default error code. Please don't use this. Define your own error codes in your Exception Class */
 		const GENERIC_ERROR				= 0;
 		
+		/** A regular PHP error */
+		const PHP_ERROR					= 1;
+		
+		/** A Fatal php error */
+		const PHP_FATAL_ERROR			= 2;
+		
 		/** The library pluin could not be found in either Nutshell or Application levels. */
-		const PLUGIN_LIBRARY_NOT_FOUND	= 1;
-		
-		/** A PHP Fatal Error occurred. */
-		const PHP_FATAL_ERROR			= 3;
-		
-		/** A PHP Regular Error occurred. */
-		const PHP_ERROR_2				= 2;
-		const PHP_ERROR_4				= 4;
-		const PHP_ERROR_8				= 8;
+		const PLUGIN_LIBRARY_NOT_FOUND	= 10;
 		
 		/** The database statement is malformed. */
-		const DB_STATEMENT_INVALID		= 100;
+		const DB_STATEMENT_INVALID		= 20; // todo, the db exception handler should handle this
 		
 		/*
 		 * Instance Properties
@@ -47,7 +46,7 @@ namespace nutshell\core\exception
 		 * The error code is for displaying to the user and identifying the exception type within the system
 		 * The debug variables are for display in dev mode, and for logging
 		 */
-		public function __construct($code, $debug=null)
+		public function __construct($code=0, $debug=null)
 		{
 			$debug = func_get_args();
 			
@@ -144,7 +143,7 @@ namespace nutshell\core\exception
 			if($format != 'array')
 			{
 				// don't use var_export. it can cause a recursive error here.
-				$debug = print_r($this->debug, true); 
+				$debug = print_r($debug, true); 
 			}
 			
 			$description = array
@@ -162,7 +161,6 @@ namespace nutshell\core\exception
 			if($format=='array')
 			{
 				$description['STACK'] = $this->getTrace();
-				$description['DEBUG'] = $this->debug;
 			}
 			elseif($format=='json')
 			{
@@ -240,13 +238,11 @@ namespace nutshell\core\exception
 				"CODE"		=> $errno,
 				"MESSAGE"	=> $errstr,
 				"FILE"		=> $errfile,
-				"LINE"		=> $errline,
-				"CONTEXT"	=> $errcontext
+				"LINE"		=> $errline
 			);
 			
 			// Treat it as an exception
-			self::treatException(new NutshellException($errno, $message));
-			
+			self::treatException(new NutshellException(self::PHP_ERROR, $message));
 		}
 		
 		/**
@@ -260,15 +256,23 @@ namespace nutshell\core\exception
 				self::$blockRecursion = true;
 				
 				// Create the message
-				if($exception instanceof NutshellException)
+				if($exception instanceof ConfigException)
+				{
+					die('ERROR: ' . $exception->getCode() .' '. $exception->debug[0]);
+				}
+				elseif($exception instanceof LoggerException)
+				{
+					die('ERROR: ' . $exception->getCode() .' '. $exception->debug[0]);
+				}
+				elseif($exception instanceof NutshellException)
 				{
 					$message = $exception->getDescription($format);
 				}
 				else
 				{
-					$message = "NON NUTSHELL EXCEPTION!<br>";
+					$message = "NON NUTSHELL EXCEPTION! ";
 					$message .= $exception->getTraceAsString();
-					$message = nl2br($exception);
+					$message .= nl2br($exception);
 				}
 				
 				// Log the message
