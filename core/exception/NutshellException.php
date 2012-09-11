@@ -254,6 +254,11 @@ namespace nutshell\core\exception
 				{
 					die('ERROR: ' . $exception->getCode() .' '. $exception->debug[0]);
 				}
+				elseif($exception->code == E_STRICT)
+				{
+					// The logger fails to load in the case of a "<function name>  should be compatible with that of <parent function name>" error
+					die('ERROR: ' . $exception->getCode() .' '. $exception->debug[0]);
+				}
 				elseif($exception instanceof NutshellException)
 				{
 					$message = $exception->getDescription($format);
