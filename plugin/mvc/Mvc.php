@@ -38,10 +38,16 @@ namespace nutshell\plugin\mvc
 			
 		}
 		
-		public function init()
+		public function init($loadController=false)
 		{
 			//Setup a model loader.
 			$this->modelLoader=new Loader();
+			
+			if(!$loadController)
+			{
+				$this->getModelLoader()->registerContainer('model',APP_HOME.'model'._DS_,'application\model\\');
+				return;
+			}
 			
 			//Get the router handler.
 			$this->router	=$this->plugin->Router->getRouter();

@@ -117,6 +117,9 @@ namespace nutshell\core\loader
 			//Is the object not loaded?
 			if (!isset($this->loaded[$key]))
 			{
+				$dirBaseFolderFile=null;
+				$dirBaseFile=null;
+				$dir=null;
 				foreach($this->containers as $containerKey => &$container)
 				{
 					//No, so we need to load all of it's dependancies and initiate it.
@@ -159,6 +162,7 @@ namespace nutshell\core\loader
 					throw new NutshellException
 					(
 						"Loader can't load key {$key}.",
+						$args,
 						$this->classNames,
 						$this->containers,
 						$dirBaseFolderFile,
