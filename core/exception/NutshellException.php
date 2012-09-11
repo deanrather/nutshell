@@ -21,17 +21,17 @@ namespace nutshell\core\exception
 		/** The default error code. Please don't use this. Define your own error codes in your Exception Class */
 		const GENERIC_ERROR				= 0;
 		
-		/** A PHP Regular Error occurred. */
+		/** A regular PHP error */
 		const PHP_ERROR					= 1;
 		
-		/** The library pluin could not be found in either Nutshell or Application levels. */
-		const PLUGIN_LIBRARY_NOT_FOUND	= 2;
+		/** A Fatal php error */
+		const PHP_FATAL_ERROR			= 2;
 		
-		/** A PHP Fatal Error occurred. */
-		const PHP_FATAL_ERROR			= 3;
+		/** The library pluin could not be found in either Nutshell or Application levels. */
+		const PLUGIN_LIBRARY_NOT_FOUND	= 10;
 		
 		/** The database statement is malformed. */
-		const DB_STATEMENT_INVALID		= 100;
+		const DB_STATEMENT_INVALID		= 20; // todo, the db exception handler should handle this
 		
 		/*
 		 * Instance Properties
@@ -46,7 +46,7 @@ namespace nutshell\core\exception
 		 * The error code is for displaying to the user and identifying the exception type within the system
 		 * The debug variables are for display in dev mode, and for logging
 		 */
-		public function __construct($code, $debug=null)
+		public function __construct($code=0, $debug=null)
 		{
 			$debug = func_get_args();
 			
@@ -257,6 +257,10 @@ namespace nutshell\core\exception
 				elseif($exception->code == E_STRICT)
 				{
 					// The logger fails to load in the case of a "<function name>  should be compatible with that of <parent function name>" error
+					die('ERROR: ' . $exception->getCode() .' '. $exception->debug[0]);
+				}
+				elseif($exception instanceof LoggerException)
+				{
 					die('ERROR: ' . $exception->getCode() .' '. $exception->debug[0]);
 				}
 				elseif($exception instanceof NutshellException)

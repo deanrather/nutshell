@@ -62,15 +62,22 @@ namespace nutshell
 			{
 				die('Nutshell requires PHP version 5.3.3 or higher.');
 			}
-			//Config path check.
+			
+			//App path check.
 			if (!defined('APP_HOME'))
 			{
-				die('Application path not defined. Define application path in your bootsrap by using Nutshell::setAppPath($path).');
+				die("Application path not defined. Define application path in your bootsrap by using Nutshell::setAppPath(\$path). or define('APP_HOME', \$path)");
 			}
 			
 			//Define constants.
 			define('_DS_',DIRECTORY_SEPARATOR);
 			define('NS_HOME',__DIR__._DS_);
+			
+			//Valid App oath check
+			if (substr(APP_HOME, -1) != DIRECTORY_SEPARATOR)
+			{
+				define('APP_HOME', APP_HOME.DIRECTORY_SEPARATOR);
+			}
 			
 			if (isset($_SERVER['argc']) && $_SERVER['argc'] > 0)
 			{
