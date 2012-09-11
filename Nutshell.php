@@ -441,4 +441,3 @@ namespace
 		nutshell\bootstrap();
 	}
 }
-?>
