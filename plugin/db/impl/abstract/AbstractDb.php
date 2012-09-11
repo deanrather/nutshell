@@ -290,6 +290,7 @@ namespace nutshell\plugin\db\impl
 					foreach ($args[1] as &$val)
 					{
 						if(!is_object($this->lastQuery['statement'])) throw new NutshellException(NutshellException::DB_STATEMENT_INVALID, $this->lastQuery);
+						if(is_object($val)) throw new NutshellException(NutshellException::DB_STATEMENT_INVALID, "Cannot bind-param with an object", $val);
 						$this->lastQuery['statement']->bindParam($i,$val);
 						$i++;
 					}
