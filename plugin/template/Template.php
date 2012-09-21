@@ -31,9 +31,9 @@ namespace nutshell\plugin\template
 			
 		}
 		
-		public function init($template)
+		public function init($template=null)
 		{
-			$this->setTemplate($template);
+			if ($template)$this->setTemplate($template);
 			$this->context=new Context();
 		}
 		
