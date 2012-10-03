@@ -27,6 +27,14 @@ namespace nutshell\plugin\session
 		
 		protected $now = null;
 		
+		const DEFAULT_COOKIE_LIFETIME = 0;
+
+		const DEFAULT_COOKIE_PATH = '/';
+
+		const DEFAULT_COOKIE_SECURE_FLAG = false;
+
+		const DEFAULT_COOKIE_HTTPONLY_FLAG = false;
+
 		const DEFAULT_SESSION_TIMEOUT = 1200;
 		
 		const DEFAULT_ID_REGENERATION = 300;
@@ -44,7 +52,7 @@ namespace nutshell\plugin\session
 		protected $idRegenRate = self::DEFAULT_ID_REGENERATION;
 
 		protected $acceptSessionId = false;
-		
+
 		public function init()
 		{
 			$this->now = time();
@@ -58,6 +66,8 @@ namespace nutshell\plugin\session
 			{
 				$this->setId($_COOKIE[$name]);
 			}
+
+			$this->configureCookieParams();
 
 			// start the session
 			$this->start();
@@ -108,6 +118,40 @@ namespace nutshell\plugin\session
 			}
 			
 			return $this;
+		}
+
+		protected function configureCookieParams()
+		{
+			if(!is_null($this->config->cookieParams))
+			{
+				$cookieConfig = array();
+
+				// lifetime
+				$cookieConfig[] = is_null($this->config->cookieParams->lifeTime) ? self::DEFAULT_COOKIE_LIFETIME : $this->config->cookieParams->lifeTime;
+
+				// cookie path
+				$cookieConfig[] = is_null($this->config->cookieParams->path) ? self::DEFAULT_COOKIE_PATH : $this->config->cookieParams->path;
+
+				// cookie domain
+				$domain = null;
+				if(!is_null($this->config->cookieParams->domain))
+				{
+					$domain = $this->config->cookieParams->domain;
+				}
+				else if(isset($_SERVER['HTTP_HOST']))
+				{
+					$domain = $_SERVER['HTTP_HOST'];
+				}
+				$cookieConfig[] = $domain;
+
+				// cookie secure flag
+				$cookieConfig[] = is_null($this->config->cookieParams->secure) ? self::DEFAULT_COOKIE_SECURE_FLAG : $this->config->cookieParams->secure;
+
+				// cookie httponly flag
+				$cookieConfig[] = is_null($this->config->cookieParams->httpOnly) ? self::DEFAULT_COOKIE_HTTPONLY_FLAG : $this->config->cookieParams->httpOnly;
+
+				call_user_func_array('session_set_cookie_params', $cookieConfig);
+			}
 		}
 		
 		abstract protected function initStorage();
