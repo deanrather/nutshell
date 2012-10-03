@@ -68,8 +68,8 @@ namespace nutshell\plugin\session
 				$this->regenerateId();
 			}
 			
-			//check for session expiration
-			if($this->now - $_SESSION[self::SESSION_KEY_LAST_ID_REGEN] > $this->idRegenRate)
+			//check for session id regeneration
+			if($this->idRegenRate != false && ($this->now - $_SESSION[self::SESSION_KEY_LAST_ID_REGEN] > $this->idRegenRate))
 			{
 				//force regenerate a new session ID
 				$this->regenerateId();
