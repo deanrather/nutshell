@@ -42,20 +42,31 @@ namespace nutshell\plugin\session
 		protected $timeout = self::DEFAULT_SESSION_TIMEOUT;
 		
 		protected $idRegenRate = self::DEFAULT_ID_REGENERATION;
+
+		protected $acceptSessionId = false;
 		
 		public function init()
 		{
 			$this->now = time();
 			$this->parseConfig();
 			$this->initStorage();
-			
+
+			$name = session_name();
+
+			// check if we allow for the client to specify its desired session id
+			if($this->acceptSessionId && isset($_COOKIE[$name]) && $_COOKIE[$name])
+			{
+				$this->setId($_COOKIE[$name]);
+			}
+
+			// start the session
 			$this->start();
 			
 			//initialise the last activity timestamp if doesn't exist yet
 			if(!isset($_SESSION[self::SESSION_KEY_LAST_ACTIVITY]))
 			{
-				$_SESSION[self::SESSION_KEY_LAST_ACTIVITY] = 0;
-				$_SESSION[self::SESSION_KEY_LAST_ID_REGEN] = 0;
+				$_SESSION[self::SESSION_KEY_LAST_ACTIVITY] = $this->now;
+				$_SESSION[self::SESSION_KEY_LAST_ID_REGEN] = $this->now;
 			}
 			
 			//check for session expiration
@@ -91,9 +102,9 @@ namespace nutshell\plugin\session
 				$this->setIdRegenRate($this->config->idRegenRate);
 			}
 			
-			if(!is_null($this->config->storage))
+			if(!is_null($this->config->acceptSessionId))
 			{
-				$this->storage = $this->config->storage;
+				$this->acceptSessionId = $this->config->acceptSessionId != false;
 			}
 			
 			return $this;
@@ -125,6 +136,11 @@ namespace nutshell\plugin\session
 		public function getId()
 		{
 			return session_id();
+		}
+
+		protected function setId($sessionId)
+		{
+			session_id($sessionId);
 		}
 		
 		protected function start()
