@@ -27,6 +27,14 @@ namespace nutshell\plugin\session
 		
 		protected $now = null;
 		
+		const DEFAULT_COOKIE_LIFETIME = 0;
+
+		const DEFAULT_COOKIE_PATH = '/';
+
+		const DEFAULT_COOKIE_SECURE_FLAG = false;
+
+		const DEFAULT_COOKIE_HTTPONLY_FLAG = false;
+
 		const DEFAULT_SESSION_TIMEOUT = 1200;
 		
 		const DEFAULT_ID_REGENERATION = 300;
@@ -42,20 +50,33 @@ namespace nutshell\plugin\session
 		protected $timeout = self::DEFAULT_SESSION_TIMEOUT;
 		
 		protected $idRegenRate = self::DEFAULT_ID_REGENERATION;
-		
+
+		protected $acceptSessionId = false;
+
 		public function init()
 		{
 			$this->now = time();
 			$this->parseConfig();
 			$this->initStorage();
-			
+
+			$name = session_name();
+
+			// check if we allow for the client to specify its desired session id
+			if($this->acceptSessionId && isset($_COOKIE[$name]) && $_COOKIE[$name])
+			{
+				$this->setId($_COOKIE[$name]);
+			}
+
+			$this->configureCookieParams();
+
+			// start the session
 			$this->start();
 			
 			//initialise the last activity timestamp if doesn't exist yet
 			if(!isset($_SESSION[self::SESSION_KEY_LAST_ACTIVITY]))
 			{
-				$_SESSION[self::SESSION_KEY_LAST_ACTIVITY] = 0;
-				$_SESSION[self::SESSION_KEY_LAST_ID_REGEN] = 0;
+				$_SESSION[self::SESSION_KEY_LAST_ACTIVITY] = $this->now;
+				$_SESSION[self::SESSION_KEY_LAST_ID_REGEN] = $this->now;
 			}
 			
 			//check for session expiration
@@ -68,8 +89,8 @@ namespace nutshell\plugin\session
 				$this->regenerateId();
 			}
 			
-			//check for session expiration
-			if($this->now - $_SESSION[self::SESSION_KEY_LAST_ID_REGEN] > $this->idRegenRate)
+			//check for session id regeneration
+			if($this->idRegenRate != false && ($this->now - $_SESSION[self::SESSION_KEY_LAST_ID_REGEN] > $this->idRegenRate))
 			{
 				//force regenerate a new session ID
 				$this->regenerateId();
@@ -91,12 +112,46 @@ namespace nutshell\plugin\session
 				$this->setIdRegenRate($this->config->idRegenRate);
 			}
 			
-			if(!is_null($this->config->storage))
+			if(!is_null($this->config->acceptSessionId))
 			{
-				$this->storage = $this->config->storage;
+				$this->acceptSessionId = $this->config->acceptSessionId != false;
 			}
 			
 			return $this;
+		}
+
+		protected function configureCookieParams()
+		{
+			if(!is_null($this->config->cookieParams))
+			{
+				$cookieConfig = array();
+
+				// lifetime
+				$cookieConfig[] = is_null($this->config->cookieParams->lifeTime) ? self::DEFAULT_COOKIE_LIFETIME : $this->config->cookieParams->lifeTime;
+
+				// cookie path
+				$cookieConfig[] = is_null($this->config->cookieParams->path) ? self::DEFAULT_COOKIE_PATH : $this->config->cookieParams->path;
+
+				// cookie domain
+				$domain = null;
+				if(!is_null($this->config->cookieParams->domain))
+				{
+					$domain = $this->config->cookieParams->domain;
+				}
+				else if(isset($_SERVER['HTTP_HOST']))
+				{
+					$domain = $_SERVER['HTTP_HOST'];
+				}
+				$cookieConfig[] = $domain;
+
+				// cookie secure flag
+				$cookieConfig[] = is_null($this->config->cookieParams->secure) ? self::DEFAULT_COOKIE_SECURE_FLAG : $this->config->cookieParams->secure;
+
+				// cookie httponly flag
+				$cookieConfig[] = is_null($this->config->cookieParams->httpOnly) ? self::DEFAULT_COOKIE_HTTPONLY_FLAG : $this->config->cookieParams->httpOnly;
+
+				call_user_func_array('session_set_cookie_params', $cookieConfig);
+			}
 		}
 		
 		abstract protected function initStorage();
@@ -125,6 +180,11 @@ namespace nutshell\plugin\session
 		public function getId()
 		{
 			return session_id();
+		}
+
+		protected function setId($sessionId)
+		{
+			session_id($sessionId);
 		}
 		
 		protected function start()

@@ -30,6 +30,10 @@ namespace nutshell\plugin\mvc
 		{
 			parent::__construct();
 			$this->MVC=$MVC;
+			
+			//Register some fucntions that can be used in the template.
+			$this->template=$this->plugin->Template();
+			$this->templateContext=$this->template->getContext();
 		}
 		
 		public function setTemplate($viewName)
@@ -95,14 +99,12 @@ namespace nutshell\plugin\mvc
 			header(sprintf('Content-Type: %s', $this->mimeType));
 			header(sprintf('%s %s', $this->getProtocol(), $this->status));
 			
-			$template=$this->plugin->Template($this->viewFile);
-			$template->setKeyVal
+			$this->template->setTemplate($this->viewFile);
+			$this->template->setKeyVal
 			(
 				array_keys($this->templateVars),
 				array_values($this->templateVars)
 			);
-			//Register some fucntions that can be used in the template.
-			$this->templateContext=$template->getContext();
 			
 			$scope=$this;
 			$this->templateContext->registerCallback
@@ -116,7 +118,7 @@ namespace nutshell\plugin\mvc
 					print $template->compile();
 				}
 			);
-			print $template->compile();
+			print $this->template->compile();
 		}
 		
 		public function setVar($key,$value)

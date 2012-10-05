@@ -190,7 +190,11 @@ namespace nutshell\core\config
 					}
 					else
 					{
-						throw new ConfigException(sprintf('Could not extend config object: trying to extend/overwrite a Config node'), ConfigException::CODE_INVALID_NODE_EXTENSION);
+						throw new ConfigException
+						(
+							ConfigException::CODE_INVALID_NODE_EXTENSION,
+							sprintf('Could not extend config object: trying to extend/overwrite a Config node')
+						);
 					} 
 				}
 			}
@@ -205,6 +209,7 @@ namespace nutshell\core\config
 		 */
 		protected function extendFromPath($alternatives, $environment = null)
 		{
+			if(!is_array($alternatives)) throw new ConfigException(ConfigException::CODE_INVALID_NODE_EXTENSION, 'extendFromPath requires alternatives');
 			$useDefaultEnvironment = true;
 			
 			foreach($alternatives as $alternativePath)
@@ -579,6 +584,10 @@ namespace nutshell\core\config
 					if($decodedJSON === null) 
 					{
 						throw new ConfigException(ConfigException::CODE_INVALID_JSON, sprintf('Invalid JSON document: %s', $file));
+					}
+					if(! (isset($decodedJSON->config) && is_object($decodedJSON->config)) ) 
+					{
+						throw new ConfigException(ConfigException::CODE_INVALID_JSON, sprintf('Config file must contain "config" object: %s', $file));
 					}
 					return ConfigRoot::parseRoot($decodedJSON, $extendHandler, $extended);
 				} 

@@ -25,12 +25,12 @@ namespace nutshell\plugin\mvc
 		
 		public static function loadDependencies()
 		{
-			require(__DIR__.'/Http.php');
-			require(__DIR__.'/MvcConnect.php');
-			require(__DIR__.'/Model.php');
-			require(__DIR__.'/View.php');
-			require(__DIR__.'/Controller.php');
-			require(__DIR__.'/model/CRUD.php');
+			require_once(__DIR__.'/Http.php');
+			require_once(__DIR__.'/MvcConnect.php');
+			require_once(__DIR__.'/Model.php');
+			require_once(__DIR__.'/View.php');
+			require_once(__DIR__.'/Controller.php');
+			require_once(__DIR__.'/model/CRUD.php');
 		}
 		
 		public static function registerBehaviours()
