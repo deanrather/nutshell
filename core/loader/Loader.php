@@ -180,7 +180,7 @@ namespace nutshell\core\loader
 			
 			if (in_array('nutshell\behaviour\Loadable', $interfaces))
 			{
-				#Initiate
+				// Initiate
 				$this->loaded[$key] = 'Loading';
 				$localInstance      = $className::getInstance($args);
 				$this->loaded[$key] = $localInstance;
