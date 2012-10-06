@@ -82,7 +82,7 @@ if (!class_exists('ArrayObject'))
 			return $this;
 		}
 		
-		#Magic to make it all work.
+		// Magic to make it all work.
 		
 		public function __set($key,$value)
 		{
@@ -118,7 +118,7 @@ if (!class_exists('ArrayObject'))
 		 */
 		const ARRAY_AS_PROPS	=2;
 		
-		#FLAGS
+		// FLAGS
 		
 		/**
 		 * Sets the behavior flags.
@@ -161,7 +161,7 @@ if (!class_exists('ArrayObject'))
 			return $this->__private_flags;
 		}
 		
-		#SORTING
+		// SORTING
 		
 		public function asort()
 		{
@@ -193,7 +193,7 @@ if (!class_exists('ArrayObject'))
 			uksort($this->__private_data,$callback);
 		}
 		
-		#ITERATOR CLASS
+		// ITERATOR CLASS
 		
 		/**
 		 * Sets the iterator classname for the ArrayObject.
@@ -218,7 +218,7 @@ if (!class_exists('ArrayObject'))
 			return $this->__private_iteratorClass;
 		}
 		
-		#ARRAY SPECIFICS
+		// ARRAY SPECIFICS
 		
 		/**
 		 * Appends a new value as the last element.

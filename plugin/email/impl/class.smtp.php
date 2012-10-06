@@ -169,7 +169,7 @@ class SMTP {
    * @return bool success
    */
   public function StartTLS() {
-    $this->error = null; # to avoid confusion
+    $this->error = null; // to avoid confusion
 
     if(!$this->connected()) {
       $this->error = array("error" => "Called StartTLS() without being connected");

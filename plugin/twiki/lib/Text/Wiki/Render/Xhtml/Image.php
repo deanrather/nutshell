@@ -119,7 +119,7 @@ class Text_Wiki_Render_Xhtml_Image extends Text_Wiki_Render {
             } elseif ($src[0] == '.') {
             	// reg at dav-muz dot net -- 2005-03-07
 				// is a local file on relative path.
-				$imageFile = $src; # ...don't do anything because it's perfect!
+				$imageFile = $src; // ...don't do anything because it's perfect!
 			} else {
                 // is a local file on absolute path.
                 $imageFile = $_SERVER['DOCUMENT_ROOT'] . $src;
