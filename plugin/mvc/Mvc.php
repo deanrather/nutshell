@@ -161,6 +161,18 @@ namespace nutshell\plugin\mvc
 		{
 			return $this->modelLoader;
 		}
+		
+		public function __get($key)
+		{
+			if ($key=='model')
+			{
+				return $this->getModelLoader();
+			}
+			else
+			{
+				return parent::__get($key);
+			}
+		}
 	}
 }
 ?>
