@@ -416,10 +416,6 @@ namespace nutshell\plugin\format
 			unlink($this->_work_file_name);
 		}
 		 
-		/**
-		 * This funcion deletes the file from disk.
-		 * If the file is open, it closes first.
-		 */
 		public final function read()
 		{
 			$this->close_file();
