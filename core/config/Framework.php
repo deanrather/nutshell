@@ -38,6 +38,10 @@ namespace nutshell\core\config
 			else
 			{
 				$config = self::loadCachedConfig();
+				if($config->application->configReload)
+				{
+					$config = self::rebuild($configPath, $environment);
+				}
 			}
 			
 			return $config;
