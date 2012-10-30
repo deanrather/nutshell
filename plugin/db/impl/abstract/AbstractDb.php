@@ -135,7 +135,7 @@ namespace nutshell\plugin\db\impl
 			}
 			catch(PDOException $exception)
 			{
-				throw new DbException($exception->getMessage(), $exception->getCode());
+				throw new DbException($exception->getMessage(), $exception->getCode(), $options);
 			}
 			
 			return true;
