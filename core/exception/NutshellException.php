@@ -155,7 +155,11 @@ namespace nutshell\core\exception
 				'FILE'				=> $this->file,
 				'LINE'				=> $this->line,
 				'DEBUG'				=> $debug,
-				'STACK'				=> "\n".$this->getTraceAsString()
+				'STACK'				=> "\n".$this->getTraceAsString(),
+                                'SERVER'                        => $_SERVER,
+                                'POST'                          => $_POST,
+                                'GET'                           => $_GET,
+                                'RAW'                           => Nutshell::getInstance()->request->getRaw()
 			);
 			
 			if($format=='array')
