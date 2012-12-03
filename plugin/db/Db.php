@@ -37,6 +37,7 @@ namespace nutshell\plugin\db
 				include_once(__DIR__.'/impl/Oracle.php');
 				include_once(__DIR__.'/impl/MSSQL.php');
 				include_once(__DIR__.'/impl/ODBC.php');
+				include_once(__DIR__.'/impl/Mongo.php');
 				
 				//register all the handlers
 				self::$handlers[AbstractDb::HANDLER_DBLIB] 	= 'MSSQL';
@@ -51,6 +52,8 @@ namespace nutshell\plugin\db
 				self::$handlers[AbstractDb::HANDLER_ODBC] 	= 'ODBC';
 				
 				self::$handlers[AbstractDb::HANDLER_SQLITE] = 'SQLite';
+
+				self::$handlers[impl\Mongo::HANDLER_MONGO] = 'Mongo';
 			}
 		}
 		
@@ -67,7 +70,6 @@ namespace nutshell\plugin\db
 		protected static function setupConnection($connectionName) 
 		{
 			$pluginConfig = Db::config();
-			
 			if ($connectionParams = $pluginConfig->connections->{$connectionName})
 			{
 				$handlerConfig = $connectionParams->handler;
