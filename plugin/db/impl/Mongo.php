@@ -147,6 +147,17 @@ namespace nutshell\plugin\db\impl
 		}
 
 		/**
+		 * Changes the active database
+		 * @param  string $database the name of the DB to load
+		 * @return Mongo           the current object
+		 */
+		public function selectDb($database)
+		{
+			$this->databaseHandle =	$this->connection->selectDB($database);
+			return $this;
+		}
+
+		/**
 		 * Ignored
 		 */
 		public function setCharset($charset) {
