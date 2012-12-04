@@ -11,6 +11,51 @@ namespace nutshell\plugin\db\impl
 
 	/**
 	 * NOTE: This class REQUIRES MongoDb PECL extension
+	 *
+	 * On Mongo query objects:
+	 *
+	 * - All query filters are associative arrays. The most basic form is an exact match:
+	 * array('foo' => 'bar')
+	 * will match all documents having a "foo" key and a value of "bar" for this key
+	 *
+	 * - A query can work on several fields at once
+	 * array('foo' => 'bar', 'baz' => 'boz')
+	 *
+	 * - Mongo uses strict type validation
+	 * array('foo' => 1)
+	 * will not match array('foo' => '1') since 1 (integer) is not the same as '1' (string)
+	 *
+	 * - Mongo uses $ prefixed operators for comparison or other functionality:
+	 * + $gt: greater than (scalar)
+	 * + $gte: greater than or equal (scalar)
+	 * + $lt: lower than (scalar)
+	 * + $lte: lower than or equal (scalar)
+	 * + $in: in a list (array)
+	 * + $nin: not in a list (array)
+	 * + $exists: has the specified key (boolean, existence or non existence check)
+	 *
+	 * - Mongo does not support LIKE statement, but uses regular expressions
+	 * A regular expression must be passed as a MongoRegex object
+	 * array('foo' => new MongoRegex('/^bar/i'))
+	 * matches all foo keys starting by bar, case insensitive
+	 *
+	 * - It is possible to combine multiple conditions on the same key by wrapping
+	 * in an array
+	 * array('foo' => array('$gt' => 1, '$lt' => 10))
+	 * translates into ($foo > 1 && $foo < 10)
+	 *
+	 * - querying on embedded objects can be done via dot notation
+	 * array('address.state' => 'NSW')
+	 *
+	 * - querying on a property that is multivalued will check that the searched 
+	 * value is part of the array
+	 * array('colours' => 'blue')
+	 * will match the document 
+	 * array('colours' => ['blue', 'yellow', 'red'])
+	 * and
+	 * array('colours' => 'blue')
+	 * as well
+	 * 
 	 * 
 	 * @author Guillaume Bodi <bodi.giyomu@gmail.com>
 	 */
@@ -165,11 +210,28 @@ namespace nutshell\plugin\db\impl
 			}
 		}
 
+		/**
+		 * Fetches the collection object matching the passed name.
+		 * The method will always return a valid collection object, even if the
+		 * collection does not exist yet (implicit creation).
+		 * @param  string $collectionName	the name of the collection to use
+		 * @return MongoCollection			the collection object
+		 */
 		public function getCollection($collectionName)
 		{
 			return $this->databaseHandle->selectCollection($collectionName);
 		}
 
+		/**
+		 * Performs a find query (select)
+		 * @param  string $collection the collection to run the find query onto
+		 * @param  array  $query      a mongo compatible query (an associative array)
+		 * @param  array  $fields     a mongo fieldset (associative array of fields to return/inhibit)
+		 * @param  array  $sortFields associative array of fields to sort by
+		 * @param  integer $limit     maximum number of documents to return
+		 * @param  integer $offset     number of documents to skip before collecting results
+		 * @return array             the result set of the query
+		 */
 		public function find($collection, $query = array(), $fields = array(), $sortFields = array(), $limit = null, $offset = null)
 		{
 			$resultSet = array();
@@ -204,6 +266,14 @@ namespace nutshell\plugin\db\impl
 			}
 		}
 
+		/**
+		 * Insert a new object in the specified collection.
+		 * The object is modified and gains an _id key (if it wasn't already defined)
+		 * after a successful insert.
+		 * 
+		 * @param  string $collection collection name to run the query onto
+		 * @param  array $object     the new object to insert
+		 */
 		public function insert($collection, $object)
 		{
 			try {
@@ -215,6 +285,13 @@ namespace nutshell\plugin\db\impl
 			}
 		}
 
+		/**
+		 * This method inserts or updates completely an object.
+		 * The db document will be updated if it has an _id key and
+		 * a matching _id key is found in the collection
+		 * @param  string $collection collection name to run the query onto
+		 * @param  array $object     the new object to insert or update
+		 */
 		public function save($collection, $object)
 		{
 			try {
@@ -226,6 +303,15 @@ namespace nutshell\plugin\db\impl
 			}
 		}
 
+		/**
+		 * Updates partially one or many objects
+		 * 
+		 * @param  string $collection collection name to run the query onto
+		 * @param  array   $query       the filter to use for updating
+		 * @param  array   $update      associative array of the values to update
+		 * @param  boolean $multiUpdate whether to run the update on all elements
+		 *                              of the matching set or just the first (defaults to true)
+		 */
 		public function update($collection, $query = array(), $update = array(), $multiUpdate = true)
 		{
 			try {
@@ -239,6 +325,13 @@ namespace nutshell\plugin\db\impl
 			}
 		}
 
+		/**
+		 * Remove documents matching the query filter
+		 * @param  string $collection collection name to run the query onto
+		 * @param  array   $query       the filter to use for deleting
+		 * @param  boolean $justOne    whether to remove only the first matching document
+		 *                             defaults to false
+		 */
 		public function delete($collection, $query, $justOne = false)
 		{
 			try {
