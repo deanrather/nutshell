@@ -9,6 +9,8 @@ namespace nutshell\plugin\formatParser
 
 		const DEFAULT_ESCAPE_CHARACTER = '\\';
 
+		const CALLBACK_POST_HEADERS_READ = 'post_headers_read';
+
 		protected $headers = array();
 
 		protected $fieldDelimiter = null;
@@ -21,8 +23,11 @@ namespace nutshell\plugin\formatParser
 
 		protected $escapeCharacter = self::DEFAULT_ESCAPE_CHARACTER;
 
-		public function __construct($values = array()) {
-			parent::__construct($values);
+		protected $options = array();
+
+		public function __construct($args = array()) {
+			parent::__construct($args);
+			$this->options = $args;
 		}
 
 		public function setRecordDelimiter($delimiter)
@@ -68,6 +73,13 @@ namespace nutshell\plugin\formatParser
 		protected function readHeaders(&$content)
 		{
 			$this->headers = $this->readValues($this->readRawRecord($content));
+			if(
+				isset($this->options[self::CALLBACK_POST_HEADERS_READ]) 
+				&& is_callable($this->options[self::CALLBACK_POST_HEADERS_READ])
+			)
+			{
+				$this->headers = call_user_func($this->options[self::CALLBACK_POST_HEADERS_READ], $this->headers);
+			}
 		}
 
 		protected function readValues($rawRecord)
