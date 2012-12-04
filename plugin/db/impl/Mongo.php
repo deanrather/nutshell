@@ -226,10 +226,10 @@ namespace nutshell\plugin\db\impl
 			}
 		}
 
-		public function update($collection, $query = array(), $update = array(), $multiUpdate = false)
+		public function update($collection, $query = array(), $update = array(), $multiUpdate = true)
 		{
 			try {
-				$this->getCollection($collection)->update($query, $update, array(
+				$this->getCollection($collection)->update($query, array('$set' => $update), array(
 					'multiple' => $multiUpdate == true
 				));
 			}
