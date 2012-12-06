@@ -221,6 +221,12 @@ namespace nutshell\plugin\db\impl
 			}
 		}
 
+		public function runCommand($command, $options = array())
+		{
+			return $this->databaseHandle->command($command, $options);
+		}
+
+
 		/**
 		 * Fetches the collection object matching the passed name.
 		 * The method will always return a valid collection object, even if the
