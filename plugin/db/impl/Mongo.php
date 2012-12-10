@@ -361,5 +361,13 @@ namespace nutshell\plugin\db\impl
 				throw new DbException($me->getMessage(), $me);
 			}
 		}
+
+		/**
+		 * @alias nutshell\plugin\db\impl\Mongo::delete
+		 */
+		public function remove($collection, $query, $justOne = false)
+		{
+			return $this->delete($collection, $query, $justOne);
+		}
 	}
 }
