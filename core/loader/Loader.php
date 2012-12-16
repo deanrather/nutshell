@@ -156,9 +156,8 @@ namespace nutshell\core\loader
 				//Load class dependencies
 				if (in_array('nutshell\behaviour\Native', $interfaces))
 				{
-					$classname::loadDependencies();
 					$classname::registerBehaviours();
-				}	
+				}
 			}
 			return $interfaces;
 		}

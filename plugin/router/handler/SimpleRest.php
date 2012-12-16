@@ -7,7 +7,7 @@ namespace nutshell\plugin\router\handler
 {
 	use nutshell\plugin\router\Router;
 	use nutshell\plugin\router\Route;
-	use nutshell\plugin\router\handler\Http;
+	use nutshell\plugin\router\handler\base\Http;
 	
 	/**
 	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
@@ -77,8 +77,5 @@ namespace nutshell\plugin\router\handler
 			return $this->route;
 		}
 	}
-	
-	//register the handler
-	Router::registerHandler('simpleRest', __NAMESPACE__ . '\SimpleRest');
 }
 ?>

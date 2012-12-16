@@ -3,7 +3,7 @@
  * @package nutshell-plugin
  * @author guillaume
  */
-namespace nutshell\plugin\router\handler
+namespace nutshell\plugin\router\handler\base
 {
 	use nutshell\plugin\router\Route;
 
