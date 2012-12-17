@@ -5,7 +5,6 @@
  */
 namespace nutshell\plugin\transfer
 {
-	use nutshell\behaviour\ChildFactory;
 	use nutshell\behaviour\Singleton;
 
 	use nutshell\core\plugin\Plugin;
@@ -61,7 +60,7 @@ namespace nutshell\plugin\transfer
 			$oFtp->close();
 		</pre>
 	 */
-	class Transfer extends Plugin implements Native, Singleton, ChildFactory
+	class Transfer extends Plugin implements Native, Singleton
 	{
 		
 		private static $engines = array(
