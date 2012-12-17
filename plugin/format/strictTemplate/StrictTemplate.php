@@ -5,7 +5,7 @@
  * Imagine if somehow an evaluated function accesses nutshell and then config and then database config and then ...
  * As the name suggests, SCOPE here has to be very STRICT.
  */
-namespace nutshell\plugin\format\stricttemplate
+namespace nutshell\plugin\format\strictTemplate
 {
 	
 	/**

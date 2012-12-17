@@ -46,7 +46,7 @@ namespace nutshell\plugin\format
 			ob_start();
 			try 
 			{
-				\nutshell\plugin\format\stricttemplate\evalInStrictNameSpace('?>'  . $this->templateStr, $record, $caseInsensitive);
+				\nutshell\plugin\format\strictTemplate\evalInStrictNameSpace('?>'  . $this->templateStr, $record, $caseInsensitive);
 				$output = ob_get_clean();
 				$this->templateErrorMessage = '';
 			} catch (NutshellException $e)
