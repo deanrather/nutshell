@@ -57,6 +57,12 @@ namespace nutshell\plugin\template
 			return $this;
 		}
 		
+		public function setKeyValArray(Array $keyVals)
+		{
+			$this->context->setKeyValArray($keyVals);
+			return $this;
+		}
+		
 		public function compile($clear=true)
 		{
 			$tpl=$this->context;

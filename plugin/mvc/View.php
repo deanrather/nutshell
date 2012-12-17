@@ -113,7 +113,7 @@ namespace nutshell\plugin\mvc
 				function($viewName,$viewKeyVals=array()) use ($scope)
 				{
 					$template=$scope->plugin->Template($scope->buildViewPath($viewName));
-					$scope->templateContext->setKeyVals(array_keys($viewKeyVals),array_values($viewKeyVals));
+					$scope->templateContext->setKeyValArray($viewKeyVals);
 					$template->setContext($scope->templateContext);
 					print $template->compile();
 				}
