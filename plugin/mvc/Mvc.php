@@ -23,16 +23,6 @@ namespace nutshell\plugin\mvc
 		private $router			=null;
 		private $route			=null;
 		
-		public static function loadDependencies()
-		{
-			require_once(__DIR__.'/Http.php');
-			require_once(__DIR__.'/MvcConnect.php');
-			require_once(__DIR__.'/Model.php');
-			require_once(__DIR__.'/View.php');
-			require_once(__DIR__.'/Controller.php');
-			require_once(__DIR__.'/model/CRUD.php');
-		}
-		
 		public static function registerBehaviours()
 		{
 			

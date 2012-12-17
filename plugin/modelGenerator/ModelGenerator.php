@@ -49,11 +49,6 @@ namespace nutshell\plugin\modelGenerator
 		    return $this;
 		}
 		
-		public static function loadDependencies()
-		{
-			
-		}
-		
 		public static function registerBehaviours()
 		{
 			
