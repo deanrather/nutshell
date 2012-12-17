@@ -1,5 +1,5 @@
 <?php
-namespace nutshell\plugin\cache
+namespace nutshell\plugin\cache\impl
 {
 	abstract class NutshellCache
 	{

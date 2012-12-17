@@ -11,6 +11,10 @@ namespace nutshell\plugin\cache
 	use nutshell\Nutshell;
 	use nutshell\core\exception\NutshellException;
 	
+	use nutshell\plugin\cache\impl\NutshellCache;
+	use nutshell\plugin\cache\impl\NutshellFileCache;
+	use nutshell\plugin\cache\impl\NutshellMemCache;
+	
 	/**
 	 * @package nutshell-plugin
 	 * @author guillaume
@@ -22,13 +26,6 @@ namespace nutshell\plugin\cache
 		 * @var NutshellCache
 		 */
 		protected $oCacheManager = null;
-		
-		public static function loadDependencies()
-		{
-			include_once(__DIR__.'/impl/NutshellCache.php');
-			include_once(__DIR__.'/impl/NutshellFileCache.php');
-			include_once(__DIR__.'/impl/NutshellMemCache.php');
-		}
 		
 		public static function registerBehaviours()
 		{
