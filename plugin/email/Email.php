@@ -38,18 +38,6 @@ namespace nutshell\plugin\email
 		
 		const CONFIG_SMTP_SECURITY = 'security';
 		
-		protected static $dependenciesLoaded = false;
-		
-		public static function loadDependencies() 
-		{
-			if(!self::$dependenciesLoaded) 
-			{
-				require_once __DIR__ . _DS_ . 'impl' . _DS_ . 'class.phpmailer.php';
-				require_once __DIR__ . _DS_ . 'exception' . _DS_ . 'EmailException.php';
-				self::$dependenciesLoaded = true;
-			}
-		}
-		
 		public static function registerBehaviours() 
 		{
 			

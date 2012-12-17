@@ -1,4 +1,5 @@
 <?php
+namespace nutshell\plugin\email\impl;
 /*~ class.smtp.php
 .---------------------------------------------------------------------------.
 |  Software: PHPMailer - PHP email class                                    |
