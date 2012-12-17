@@ -21,11 +21,6 @@ namespace nutshell\plugin\template
 		private $context		=null;
 		private $compiled		=null;
 		
-		public static function loadDependencies()
-		{
-			require('Context.php');
-		}
-		
 		public static function registerBehaviours()
 		{
 			
