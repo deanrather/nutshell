@@ -72,22 +72,6 @@ namespace nutshell\plugin\transfer
 			'web-dav' => 'WebDav',
 		);
 		
-		public static function loadDependencies()
-		{
-			include_once __DIR__ . '/exception/TransferException.php';
-
-			//abstract engine base
-			include_once __DIR__ . '/engine/Base.php';
-			
-			include_once __DIR__ . '/engine/FTP.php';
-			include_once __DIR__ . '/engine/FTPS.php';
-			
-			//abstract, required for SFTP and SCP
-			include_once __DIR__ . '/engine/SSH.php';
-			include_once __DIR__ . '/engine/SFTP.php';
-			include_once __DIR__ . '/engine/SCP.php';
-		}
-		
 		public static function registerBehaviours()
 		{
 			

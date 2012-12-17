@@ -18,11 +18,6 @@ namespace nutshell\plugin\url
 	{
 		private $nodes=array();
 		
-		public static function loadDependencies()
-		{
-			
-		}
-		
 		public static function registerBehaviours()
 		{
 			
