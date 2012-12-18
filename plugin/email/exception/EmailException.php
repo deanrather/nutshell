@@ -5,13 +5,13 @@
  */
 namespace nutshell\plugin\email\exception
 {
-	use nutshell\core\exception\NutshellException;
+	use nutshell\core\exception\PluginException;
 
 	/**
 	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
 	 * @package nutshell-plugin
 	 */
-	class EmailException extends NutshellException
+	class EmailException extends PluginException
 	{
 		
 	} 
