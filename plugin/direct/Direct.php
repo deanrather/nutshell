@@ -6,7 +6,7 @@
 namespace nutshell\plugin\direct
 {
 	use nutshell\plugin\mvc\Controller;
-	use nutshell\core\exception\NutshellException;
+	use nutshell\plugin\direct\exception\DirectException;
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Singleton;
@@ -45,7 +45,7 @@ namespace nutshell\plugin\direct
 			}
 			else
 			{
-				throw new NutshellException('Invalid API Reference. "'.$APIRef.'" has not been defined in config.');
+				throw new DirectException(DirectException::INVALID_API_REFERENCE, $APIRef.'" has not been defined in config.');
 			}
 		}
 	}

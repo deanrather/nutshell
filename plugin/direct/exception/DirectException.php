@@ -3,12 +3,12 @@
  * @package nutshell-plugin
  * @author Dean Rather
  */
-namespace nutshell\plugin\archiver\exception
+namespace nutshell\plugin\direct\exception
 {
 	use nutshell\core\exception\PluginException;
 
 	class DirectException extends PluginException
 	{
-		
+		const INVALID_API_REFERENCE = 1;
 	}
 }
