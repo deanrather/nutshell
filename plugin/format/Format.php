@@ -3,7 +3,7 @@ namespace nutshell\plugin\format
 {
 	use nutshell\behaviour\AbstractFactory;
 	use nutshell\core\plugin\Plugin;
-	use nutshell\core\exception\NutshellException;
+	use nutshell\plugin\format\exception\FormatException;
 
 	/**
 	 * This plugins has been ported from the "format" model of leadgen 1.
@@ -93,7 +93,7 @@ namespace nutshell\plugin\format
 			{
 				$error_msg = "Engine $engine isn't supported.";
 				$this->plugin->Logger->fatal($error_msg); // just to be sure that the error message will be in the log.
-				throw new NutshellException($error_msg);
+				throw new FormatException(FormatException::UNSUPPORTED_ENGINE, $error_msg);
 			}
 		}
 	}	
