@@ -3,7 +3,7 @@
  * @package nutshell-plugin
  * @author Dean Rather
  */
-namespace nutshell\plugin\archiver\exception
+namespace nutshell\plugin\hipHop\exception
 {
 	use nutshell\core\exception\PluginException;
 
