@@ -25,9 +25,6 @@ namespace nutshell\core\exception
 		/** A Fatal php error */
 		const PHP_FATAL_ERROR			= 2;
 		
-		/** The database statement is malformed. */
-		const DB_STATEMENT_INVALID		= 20; // todo, the db exception handler should handle this
-		
 		/*
 		 * Instance Properties
 		 */

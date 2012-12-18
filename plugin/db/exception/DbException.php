@@ -13,6 +13,7 @@ namespace nutshell\plugin\db\exception
 	 */
 	class DbException extends PluginException
 	{
-		
-	} 
+		/** The database statement is malformed. */
+		const INVALID_STATEMENT = 1;
+	}
 }
