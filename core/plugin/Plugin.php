@@ -9,7 +9,7 @@ namespace nutshell\core\plugin
 	use nutshell\behaviour\Loadable;
 
 	use nutshell\Nutshell;
-	use nutshell\core\exception\NutshellException;
+	use nutshell\core\exception\PluginException;
 	use nutshell\core\Component;
 	use nutshell\core\config\Config;
 	use nutshell\core\HookManager;
@@ -41,7 +41,7 @@ namespace nutshell\core\plugin
 		 * @access public
 		 * @static
 		 * @param Array $args - Args to be passed to the plugin constructor.
-		 * @throws NutshellException - If one of the base behaviours is not implemented.
+		 * @throws PluginException - If one of the base behaviours is not implemented.
 		 * @return nutshell\core\plugin\Plugin
 		 */
 		public static function getInstance(Array $args=array())
@@ -83,8 +83,7 @@ namespace nutshell\core\plugin
 //					}
 					else
 					{
-//						throw new Exception('Invalid plugin. Plugin must implement one of either "Factory", "Singleton" or "Abstractable" interfaces.');
-						throw new NutshellException('Invalid plugin. Plugin must implement one of either "Factory", "Singleton" or "AbstractFactory" interfaces.');
+						throw new PluginException(PluginException::INVALID_PLUGIN, 'Plugin must implement one of either "Factory", "Singleton" or "AbstractFactory" interfaces.');
 					}
 				}
 			}

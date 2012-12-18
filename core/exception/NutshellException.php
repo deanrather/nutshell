@@ -25,9 +25,6 @@ namespace nutshell\core\exception
 		/** A Fatal php error */
 		const PHP_FATAL_ERROR			= 2;
 		
-		/** The library pluin could not be found in either Nutshell or Application levels. */
-		const PLUGIN_LIBRARY_NOT_FOUND	= 10;
-		
 		/** The database statement is malformed. */
 		const DB_STATEMENT_INVALID		= 20; // todo, the db exception handler should handle this
 		
