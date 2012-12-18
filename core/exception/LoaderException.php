@@ -9,6 +9,12 @@ namespace nutshell\core\exception
 
 	class LoaderException extends NutshellException
 	{
+		const CANNOT_AUTOLOAD_CLASS = 1;
+		
+		const CANNOT_LOAD_KEY = 2;
+		
+		const CANNOT_LOAD_CLASS = 3;
+		
 		
 	}
 }
