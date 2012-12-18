@@ -3,7 +3,7 @@ namespace nutshell\plugin\formatParser
 {
 	use nutshell\behaviour\AbstractFactory;
 	use nutshell\core\plugin\Plugin;
-	use nutshell\core\exception\NutshellException;
+	use nutshell\plugin\formatParser\exception\FormatParserException;
 
 	use nutshell\Nutshell;
 
@@ -50,7 +50,7 @@ namespace nutshell\plugin\formatParser
 			{
 				$error_msg = "Engine $engine isn't supported.";
 				Nutshell::getInstance()->plugin->Logger->fatal($error_msg); // just to be sure that the error message will be in the log.
-				throw new NutshellException($error_msg);
+				throw new FormatParserException(FormatParserException::ENGINE_NOT_SUPPORTED, $error_msg);
 			}
 		}
 	}	

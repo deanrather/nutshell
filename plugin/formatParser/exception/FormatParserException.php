@@ -5,14 +5,14 @@
  */
 namespace nutshell\plugin\formatParser\exception
 {
-	use nutshell\core\exception\NutshellException;
+	use nutshell\core\exception\PluginException;
 
 	/**
 	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
 	 * @package nutshell-plugin
 	 */
-	class FormatParserException extends NutshellException
+	class FormatParserException extends PluginException
 	{
-		
+		const ENGINE_NOT_SUPPORTED = 1;
 	} 
 }
