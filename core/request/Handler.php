@@ -1,7 +1,7 @@
 <?php
 namespace nutshell\core\request
 {
-	use nutshell\core\exception\NutshellException;
+	use nutshell\core\exception\RequestException;
 	
 	abstract class Handler
 	{
@@ -50,7 +50,7 @@ namespace nutshell\core\request
 			}
 			else
 			{
-				throw new NutshellException('Invalid request set. No args given.');
+				throw new RequestException(RequestException::MUST_PROVIDE_ARGS, 'Invalid request set. No args given.');
 			}
 			return $this;
 		}

@@ -9,6 +9,6 @@ namespace nutshell\core\exception
 
 	class RequestException extends NutshellException
 	{
-		
+		const MUST_PROVIDE_ARGS = 1;
 	}
 }

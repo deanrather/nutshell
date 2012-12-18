@@ -3,7 +3,7 @@ namespace nutshell\core\request
 {
 	use nutshell\Nutshell;
 	use nutshell\core\Component;
-	use nutshell\core\exception\NutshellException;
+	use nutshell\core\exception\RequestException;
 	use nutshell\core\request\handler\Http;
 	use nutshell\core\request\handler\Cli;
 	use nutshell\core\request\handler\Cgi;
@@ -57,7 +57,7 @@ namespace nutshell\core\request
 		 * 
 		 * @access public
 		 * @return Request $this
-		 * @throws NutshellException
+		 * @throws RequestException
 		 */
 		public function set()
 		{
@@ -68,7 +68,7 @@ namespace nutshell\core\request
 			}
 			else
 			{
-				throw new NutshellException('Invalid request set. No args given.');
+				throw new RequestException(RequestException::MUST_PROVIDE_ARGS, 'Invalid request set. No args given.');
 			}
 			return $this;
 		}
