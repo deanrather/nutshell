@@ -5,14 +5,14 @@
  */
 namespace nutshell\plugin\archiver\exception 
 {
-	use nutshell\core\exception\NutshellException;
+	use nutshell\core\exception\PluginException;
 
 	/**
 	 * 
 	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
 	 * @package nutshell-plugin
 	 */
-	class ArchiverException extends NutshellException
+	class ArchiverException extends PluginException
 	{
 		
 	}
