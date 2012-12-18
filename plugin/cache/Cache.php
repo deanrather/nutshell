@@ -37,14 +37,7 @@ namespace nutshell\plugin\cache
 			if ($type=='file')
 			{
 				$this->oCacheManager = new NutshellFileCache();
-				
-				try 
-				{
-					$configCacheFolder = '';//$configCacheFolder = $this->config->plugin->cache->absolutePath;
-				} catch (NutshellException $e) 
-				{
-					$configCacheFolder = '';
-				}
+				$configCacheFolder = '';
 				
 				// in the case that no folder has been provided, give a default
 				if (strlen($configCacheFolder)==0)
