@@ -3,14 +3,10 @@
  * @package nutshell
  * @author Guillaume Bodi <guillaume@spinifexgroup.com>
  */
-namespace nutshell\core\config\exception
+namespace nutshell\core\exception
 {
 	use nutshell\core\exception\NutshellException;
 
-	/**
-	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
-	 * @package nutshell
-	 */
 	class ConfigException extends NutshellException
 	{
 		const INVALID_JSON = 1;
@@ -30,13 +26,5 @@ namespace nutshell\core\config\exception
 		const CANNOT_WRITE_FILE = 8;
 		
 		const FOLDER_NON_EXIST = 9;
-		
-		const  = ;
-		const  = ;
-		const  = ;
-		const  = ;
-		const  = ;
-		const  = ;
-		const  = ;
 	}
 }

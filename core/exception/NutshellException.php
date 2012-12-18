@@ -1,6 +1,7 @@
 <?php
 /**
  * @package nutshell
+ * @author Dean Rather
  */
 namespace nutshell\core\exception
 {
@@ -8,10 +9,7 @@ namespace nutshell\core\exception
 	use nutshell\core\Component;
 	use nutshell\core\config\exception\ConfigException;
 	use \Exception;
-
-	/**
-	 * @package nutshell
-	 */
+	
 	class NutshellException extends Exception
 	{
 		/*
