@@ -25,6 +25,10 @@ namespace nutshell\core\exception
 		/** A Fatal php error */
 		const PHP_FATAL_ERROR			= 2;
 		
+		const INVALID_APP_PATH			= 10;
+		const INVALID_PROPERTY			= 11;
+		const READ_ONLY					= 12;
+		
 		/*
 		 * Instance Properties
 		 */
