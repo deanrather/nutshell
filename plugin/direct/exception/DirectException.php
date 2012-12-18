@@ -10,5 +10,6 @@ namespace nutshell\plugin\direct\exception
 	class DirectException extends PluginException
 	{
 		const INVALID_API_REFERENCE = 1;
+		const INVALID_PROVIDER_TYPE = 2;
 	}
 }
