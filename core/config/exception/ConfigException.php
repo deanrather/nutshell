@@ -13,14 +13,30 @@ namespace nutshell\core\config\exception
 	 */
 	class ConfigException extends NutshellException
 	{
-		const CODE_INVALID_JSON = 1;
+		const INVALID_JSON = 1;
 		
-		const CODE_INVALID_CONFIG_FILE = 2;
+		const INVALID_CONFIG_FILE = 2;
 		
-		const CODE_CONFIG_FILE_NOT_FOUND = 3;
+		const CONFIG_FILE_NOT_FOUND = 3;
 		
-		const CODE_INVALID_NODE_EXTENSION = 4;
+		const INVALID_NODE_EXTENSION = 4;
 		
-		const CODE_NON_PARSEABLE_STRUCTURE = 5;
+		const NON_PARSEABLE_STRUCTURE = 5;
+		
+		const CYCLIC_CONFIG_ERROR = 6;
+		
+		const CANNOT_CREATE_FOLDER = 7;
+		
+		const CANNOT_WRITE_FILE = 8;
+		
+		const FOLDER_NON_EXIST = 9;
+		
+		const  = ;
+		const  = ;
+		const  = ;
+		const  = ;
+		const  = ;
+		const  = ;
+		const  = ;
 	}
 }

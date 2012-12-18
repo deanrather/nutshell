@@ -106,7 +106,7 @@ namespace nutshell\core\config
 			
 			throw new ConfigException
 			(
-				ConfigException::CODE_NON_PARSEABLE_STRUCTURE,
+				ConfigException::NON_PARSEABLE_STRUCTURE,
 				sprintf('Could not parse argument into a config object: not an instance of %s', self::PARSEABLE_CLASS)
 			);
 		}
@@ -192,7 +192,7 @@ namespace nutshell\core\config
 					{
 						throw new ConfigException
 						(
-							ConfigException::CODE_INVALID_NODE_EXTENSION,
+							ConfigException::INVALID_NODE_EXTENSION,
 							sprintf('Could not extend config object: trying to extend/overwrite a Config node')
 						);
 					} 
@@ -209,7 +209,7 @@ namespace nutshell\core\config
 		 */
 		protected function extendFromPath($alternatives, $environment = null)
 		{
-			if(!is_array($alternatives)) throw new ConfigException(ConfigException::CODE_INVALID_NODE_EXTENSION, 'extendFromPath requires alternatives');
+			if(!is_array($alternatives)) throw new ConfigException(ConfigException::INVALID_NODE_EXTENSION, 'extendFromPath requires alternatives');
 			$useDefaultEnvironment = true;
 			
 			foreach($alternatives as $alternativePath)
@@ -537,7 +537,7 @@ namespace nutshell\core\config
 			
 			throw new ConfigException
 			(
-				ConfigException::CODE_CONFIG_FILE_NOT_FOUND,
+				ConfigException::CONFIG_FILE_NOT_FOUND,
 				sprintf
 				(
 					"Failed to find a suitable config file named any of [%s] in any path alternatives [%s]",
@@ -583,22 +583,22 @@ namespace nutshell\core\config
 					$decodedJSON = json_decode(file_get_contents($file));
 					if($decodedJSON === null) 
 					{
-						throw new ConfigException(ConfigException::CODE_INVALID_JSON, sprintf('Invalid JSON document: %s', $file));
+						throw new ConfigException(ConfigException::INVALID_JSON, sprintf('Invalid JSON document: %s', $file));
 					}
 					if(! (isset($decodedJSON->config) && is_object($decodedJSON->config)) ) 
 					{
-						throw new ConfigException(ConfigException::CODE_INVALID_JSON, sprintf('Config file must contain "config" object: %s', $file));
+						throw new ConfigException(ConfigException::INVALID_JSON, sprintf('Config file must contain "config" object: %s', $file));
 					}
 					return ConfigRoot::parseRoot($decodedJSON, $extendHandler, $extended);
 				} 
 				else
 				{
-					throw new ConfigException(ConfigException::CODE_INVALID_CONFIG_FILE, sprintf('File is not accessible for reading: %s', $file));
+					throw new ConfigException(ConfigException::INVALID_CONFIG_FILE, sprintf('File is not accessible for reading: %s', $file));
 				}  
 			} 
 			else 
 			{
-				throw new ConfigException(ConfigException::CODE_INVALID_CONFIG_FILE, sprintf('Could not find file: %s', $file));
+				throw new ConfigException(ConfigException::INVALID_CONFIG_FILE, sprintf('Could not find file: %s', $file));
 			}
 		}
 	}

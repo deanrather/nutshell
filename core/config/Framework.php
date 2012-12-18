@@ -57,16 +57,16 @@ namespace nutshell\core\config
 			{
 				if(!@mkdir($folder, 0755, true))
 				{
-					throw new ConfigException(sprintf("Could not create the config cache folder. Please check the write permission on %s.", dirname($folder)));
+					throw new ConfigException(ConfigException::CANNOT_CREATE_FOLDER, sprintf("Could not create the config cache folder. Please check the write permission on %s.", dirname($folder)));
 				}
 			}
 			else if(!is_dir($folder))
 			{
-				throw new ConfigException(sprintf("%s does not resolve to a directory.", $folder));
+				throw new ConfigException(ConfigException::FOLDER_NON_EXIST, sprintf("%s does not resolve to a directory.", $folder));
 			}
 			else if((PHP_OS=="linux" && !is_executable($folder)) || !is_writeable($folder))
 			{
-				throw new ConfigException(sprintf("Nutshell requires write and execute permission on %s", $folder));
+				throw new ConfigException(ConfigException::CANNOT_WRITE_FILE, sprintf("Nutshell requires write and execute permission on %s", $folder));
 			}
 			
 			
@@ -76,17 +76,17 @@ namespace nutshell\core\config
 			{
 				if(!is_writeable($folder))
 				{
-					throw new ConfigException(sprintf("%s is not a writeable directory.", $folder));
+					throw new ConfigException(ConfigException::CANNOT_WRITE_FILE, sprintf("%s is not a writeable directory.", $folder));
 				}
 				$rebuildCache = true;
 			}
 			else if(!is_file($file)) 
 			{
-				throw new ConfigException(sprintf("%s does not resolve to a regular file.", $file));
+				throw new ConfigException(ConfigException::CONFIG_FILE_NOT_FOUND, sprintf("%s does not resolve to a regular file.", $file));
 			}
 			else if(!is_readable($file) || !is_writeable($file)) 
 			{
-				throw new ConfigException(sprintf("Nutshell requires read and write permissions on %s.", $file));
+				throw new ConfigException(ConfigException::CANNOT_WRITE_FILE, sprintf("Nutshell requires read and write permissions on %s.", $file));
 			}
 			else if(self::forceRebuild() || time() - filemtime($file) > self::CONFIG_EXPIRATION)
 			{
@@ -118,7 +118,7 @@ namespace nutshell\core\config
 			
 			if(file_put_contents(self::getCachedConfigFile(), $configFile->__toString()) === false)
 			{
-				throw new ConfigException(sprintf("Failed to write to file %s.", self::getCachedConfigFile()));
+				throw new ConfigException(ConfigException::CANNOT_WRITE_FILE, sprintf("Failed to write to file %s.", self::getCachedConfigFile()));
 			}
 			
 			return $config;
@@ -144,7 +144,7 @@ namespace nutshell\core\config
 						}
 						catch(ConfigException $e)
 						{
-							if(!in_array($e->getCode(), array(ConfigException::CODE_CONFIG_FILE_NOT_FOUND)))
+							if(!in_array($e->getCode(), array(ConfigException::CONFIG_FILE_NOT_FOUND)))
 							{
 								throw $e;
 							}
