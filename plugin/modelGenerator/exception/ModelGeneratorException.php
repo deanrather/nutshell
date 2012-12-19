@@ -9,6 +9,6 @@ namespace nutshell\plugin\modelGenerator\exception
 
 	class ModelGeneratorException extends PluginException
 	{
-		
+		const DB_NOT_CONFIGURED = 1;
 	}
 }

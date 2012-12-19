@@ -14,7 +14,7 @@ namespace nutshell\plugin\modelGenerator
 	use nutshell\behaviour\Singleton;
 	use nutshell\Nutshell;
 	use nutshell\helper\StringHelper;
-	use nutshell\core\exception\NutshellException;
+	use nutshell\plugin\modelGenerator\exception\ModelGeneratorException;
 
 	/**
 	 * @author joao
@@ -62,7 +62,7 @@ namespace nutshell\plugin\modelGenerator
 			}
 			else
 			{
-				throw new NutshellException('Model generator can\'t find a db connection.');
+				throw new ModelGeneratorException(ModelGeneratorException::DB_NOT_CONFIGURED, 'Model generator can\'t find a db connection.');
 			} 
 		}
 		
