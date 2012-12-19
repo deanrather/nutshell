@@ -8,6 +8,7 @@ namespace nutshell\plugin\archiver
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\AbstractFactory;
+	use nutshell\plugin\archiver\exception\ArchiverException;
 	
 	/**
 	 * 
@@ -31,7 +32,7 @@ namespace nutshell\plugin\archiver
 			}
 			else
 			{
-				throw new ArchiverException(sprintf("Archiving engine not supported or misspelt: %s", $engine));
+				throw new ArchiverException(ArchiverException::UNSUPPORTED_ENGINE, sprintf("Archiving engine not supported or misspelt: %s", $engine));
 			}
 		}
 	}
