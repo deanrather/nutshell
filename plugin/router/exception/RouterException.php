@@ -14,6 +14,9 @@ namespace nutshell\plugin\router\exception
 	 */
 	class RouterException extends PluginException
 	{
-		
+		const CANNOT_RE_REGISTER_HANDLER = 1;
+		const CONFIGURATION_MISSING = 2;
+		const MISCONFIGURED = 3;
+		const HANDLER_MISSING = 4;
 	}
 }

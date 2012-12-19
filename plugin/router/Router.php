@@ -55,7 +55,7 @@ namespace nutshell\plugin\router
 			}
 			else 
 			{
-				throw new RouterException(sprintf("A handler is already registered for the key: %s (%s)", $key, self::$appHandlers[$key]));
+				throw new RouterException(RouterException::CANNOT_RE_REGISTER_HANDLER, sprintf("A handler is already registered for the key: %s (%s)", $key, self::$appHandlers[$key]));
 			}
 		}
 		
@@ -65,7 +65,7 @@ namespace nutshell\plugin\router
 			$globalMode = $this->config->mode;
 			if(!$globalMode) 
 			{
-				throw new RouterException('No router mode configuration could be found');
+				throw new RouterException(RouterException::CONFIGURATION_MISSING, 'No router mode configuration could be found');
 			}
 			
 			if(is_array($globalMode)) 
@@ -80,7 +80,7 @@ namespace nutshell\plugin\router
 				}
 				if(!$mode) 
 				{
-					throw new RouterException('No router mode configuration option could satisfy the request');
+					throw new RouterException(RouterException::MISCONFIGURED, 'No router mode configuration option could satisfy the request');
 				}
 			} 
 			else 
@@ -102,7 +102,7 @@ namespace nutshell\plugin\router
 					return;
 				}
 			}
-			throw new RouterException(sprintf('No implementation could be found for Router handler class: %s', $mode));
+			throw new RouterException(RouterException::HANDLER_MISSING, sprintf('No implementation could be found for Router handler class: %s', $mode));
 		}
 		
 		protected function satisfiesOption($option) 
