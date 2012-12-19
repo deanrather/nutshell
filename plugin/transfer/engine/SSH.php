@@ -1,7 +1,7 @@
 <?php
 namespace nutshell\plugin\transfer\engine
 {
-	use nutshell\core\exception\NutshellException;
+	use nutshell\plugin\transfer\exception\TransferException;
 
 	class SSH extends Base
 	{

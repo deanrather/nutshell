@@ -5,14 +5,14 @@
  */
 namespace nutshell\plugin\transfer\exception 
 {
-	use nutshell\core\exception\NutshellException;
+	use nutshell\core\exception\PluginException;
 
 	/**
 	 * 
 	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
 	 * @package nutshell-plugin
 	 */
-	class TransferException extends NutshellException
+	class TransferException extends PluginException
 	{
 		
 	}
