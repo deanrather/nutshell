@@ -9,6 +9,7 @@ namespace nutshell\plugin\veryLargeQuery\exception
 
 	class VeryLargeQueryException extends PluginException
 	{
-		
+		const PDO_EXCEPTION = 1;
+		const CANNOT_CONNECT_TO_DB = 2;
 	}
 }
