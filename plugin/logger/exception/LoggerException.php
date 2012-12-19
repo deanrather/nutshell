@@ -13,6 +13,8 @@ namespace nutshell\plugin\logger\exception
 	 */
 	class LoggerException extends NutshellException
 	{
-		
+		const INVALID_LEVEL = 1;
+		const MISSING_OPTION = 2;
+		const INVALID_WRITER = 3;
 	} 
 }
