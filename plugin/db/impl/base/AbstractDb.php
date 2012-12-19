@@ -133,7 +133,7 @@ namespace nutshell\plugin\db\impl\base
 			}
 			catch(PDOException $exception)
 			{
-				throw new DbException($exception->getMessage(), $exception->getCode(), $options);
+				throw new DbException(DbException::PDO_EXCEPTION, $exception->getMessage(), $exception->getCode(), $options);
 			}
 			
 			return true;
@@ -269,7 +269,7 @@ namespace nutshell\plugin\db\impl\base
 			}
 			else if (empty($args[0]) && empty($this->lastQuery['sql']))
 			{
-				throw new DbException('Unable to execute statement. Query was empty!');
+				throw new DbException(DbException::INVALID_STATEMENT, 'Unable to execute statement. Query was empty!');
 			}
 			if (isset($args[1]))
 			{
