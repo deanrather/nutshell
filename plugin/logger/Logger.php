@@ -39,30 +39,6 @@ namespace nutshell\plugin\logger
 		
 		protected $parentLogger = null;
 		
-		/**
-		 * 
-		 * 
-		 */
-		public static function loadDependencies()
-		{
-			
-			include_once(__DIR__.'/Level.php');
-			
-			include_once(__DIR__.'/exception/LoggerException.php');
-			
-			include_once(__DIR__.'/writer/Writer.php');
-			include_once(__DIR__.'/writer/Pattern.php');
-			
-			include_once(__DIR__.'/Filter.php');
-			
-			include_once(__DIR__.'/writer/console/ConsoleWriter.php');
-			
-			include_once(__DIR__.'/writer/db/DbWriter.php');
-			
-			include_once(__DIR__.'/writer/file/FileWriter.php');
-			include_once(__DIR__.'/writer/file/DailyFileWriter.php');
-		}
-		
 		public static function registerBehaviours()
 		{
 			
