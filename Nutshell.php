@@ -120,6 +120,9 @@ namespace nutshell
 				header('X-Nutshell-Version:'.self::VERSION);
 			}
 			
+			//Set system timezone to UTC.
+			date_default_timezone_set('UTC');
+			
 			//Get the system environment before doing anything.
 			$this->getEnvironment();
 			
