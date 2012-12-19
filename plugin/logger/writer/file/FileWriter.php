@@ -56,7 +56,7 @@ namespace nutshell\plugin\logger\writer\file
 			{
 				if(!@touch($realPath))
 				{
-					throw new LoggerException(sprintf('Could not create log file at: %s', $realPath));
+					throw new LoggerException(LoggerException::CANNOT_WRITE_LOG, sprintf('Could not create log file at: %s', $realPath));
 				}
 				
 				if($this->mode === null)
@@ -66,7 +66,7 @@ namespace nutshell\plugin\logger\writer\file
 				
 				if(!preg_match('/^[0-7]{3}$/', $this->mode))
 				{
-					throw new LoggerException(sprintf('Could not apply invalid permissions set (%s) to log file at: %s', $this->mode, $realPath));
+					throw new LoggerException(LoggerException::CANNOT_WRITE_LOG, sprintf('Could not apply invalid permissions set (%s) to log file at: %s', $this->mode, $realPath));
 				}
 				
 				@chmod($realPath, octdec($this->mode));
@@ -75,7 +75,7 @@ namespace nutshell\plugin\logger\writer\file
 			{
 				if(!is_writable($realPath)) 
 			  	{
-					throw new LoggerException(sprintf('Could not access log file at : %s for writing', $realPath));
+					throw new LoggerException(LoggerException::CANNOT_WRITE_LOG, sprintf('Could not access log file at : %s for writing', $realPath));
 			  	}
 			}
 			
