@@ -6,6 +6,7 @@
 namespace nutshell\plugin\mvcCrud
 {
 	use nutshell\plugin\mvc\Model;
+	use nutshell\plugin\mvcCrud\exception\MvcCrudException;
 	/**
 	 * @author Timothy Chandler <tim.chandler@spinifexgroup.com>
 	 * @package nutshell-plugin
@@ -46,18 +47,18 @@ namespace nutshell\plugin\mvcCrud
 				}
 				else
 				{
-					throw new Exception('DB connection not defined in config.');
+					throw new MvcCrudException(MvcCrudException::DB_NOT_CONFIGURED, 'DB connection not defined in config.');
 				}
 			}
 			else
 			{
-				throw new Exception('CRUD Model is misconfigured. Name, Primary Key and Columns must be defined.');
+				throw new MvcCrudException(MvcCrudException::CRUD_MISCONFIGURED, 'CRUD Model is misconfigured. Name, Primary Key and Columns must be defined.');
 			}
 		}
 		
 		protected function configure() {
 			if (!is_array($this->primary)){
-				throw new Exception('Primary Key has to be an array.');
+				throw new MvcCrudException(MvcCrudException::PRIMARY_KEY_MISCONFIGURED, 'Primary Key has to be an array.');
 			}
 				
 			$this->columnNames = array_keys($this->columns);
@@ -232,7 +233,7 @@ die($query);
 			}
 			else
 			{
-		 		throw new Exception('$whereKeyVals is invalid. Specify an array of key value pairs or a single numeric for primay key match.');
+		 		throw new MvcCrudException(MvcCrudException::INVALID_WHEREKEYVALS, '$whereKeyVals is invalid. Specify an array of key value pairs or a single numeric for primay key match.');
 			}
 		}
 		
