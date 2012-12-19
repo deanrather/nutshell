@@ -49,7 +49,7 @@ namespace nutshell\plugin\formatParser
 			}
 			else
 			{
-				throw new FormatParserException(sprintf('File not found or not readable: %s', $path));
+				throw new FormatParserException(FormatParserException::FILE_READ_ERROR, sprintf('File not found or not readable: %s', $path));
 			}
 		}
 	}

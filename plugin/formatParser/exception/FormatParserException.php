@@ -14,5 +14,6 @@ namespace nutshell\plugin\formatParser\exception
 	class FormatParserException extends PluginException
 	{
 		const ENGINE_NOT_SUPPORTED = 1;
+		const FILE_READ_ERROR = 2;
 	} 
 }
