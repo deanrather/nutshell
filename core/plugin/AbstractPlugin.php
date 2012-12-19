@@ -9,7 +9,7 @@ namespace nutshell\core\plugin
 	use nutshell\behaviour\Loadable;
 
 	use nutshell\Nutshell;
-	use nutshell\core\exception\Exception;
+	use nutshell\core\exception\PluginException;
 	use nutshell\core\Component;
 	use nutshell\core\config\Config;
 	use nutshell\core\HookManager;
@@ -113,7 +113,7 @@ namespace nutshell\core\plugin
 			}
 			else
 			{
-				throw new Exception('Plugin ".$pluginName." tried to define the behaviour "'.$behaviourName.'". But this behaviour has already been defined.');
+				throw new PluginException(PluginException::CANNOT_REDEFINE_BEHAVIOR, 'Plugin ".$pluginName." tried to define the behaviour "'.$behaviourName.'". But this behaviour has already been defined.');
 			}
 		}
 		

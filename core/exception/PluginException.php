@@ -17,5 +17,7 @@ namespace nutshell\core\exception
 		const NO_PARENT_PLUGIN = 3;
 		
 		const INCORRECT_CONTEXT = 4;
+		
+		const CANNOT_REDEFINE_BEHAVIOR = 5;
 	}
 }
