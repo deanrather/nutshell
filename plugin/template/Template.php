@@ -5,7 +5,7 @@
  */
 namespace nutshell\plugin\template
 {
-	use nutshell\core\exception\NutshellException;
+	use nutshell\plugin\template\exception\TemplateException;
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Factory;
@@ -42,12 +42,12 @@ namespace nutshell\plugin\template
 				}
 				else
 				{
-					throw new NutshellException('Unable to load template. File is unreadable. FILE: "'.$template.'".');
+					throw new TemplateException(TemplateException::CANNOT_READ_FILE, 'Unable to load template. File is unreadable. FILE: "'.$template.'".');
 				}
 			}
 			else
 			{
-				throw new NutshellException('Unable to load template. File is missing. FILE: "'.$template.'".');
+				throw new TemplateException(TemplateException::FILE_MISSING, 'Unable to load template. File is missing. FILE: "'.$template.'".');
 			}
 		}
 		
