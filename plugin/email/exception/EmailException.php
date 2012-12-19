@@ -13,6 +13,7 @@ namespace nutshell\plugin\email\exception
 	 */
 	class EmailException extends PluginException
 	{
-		
+		const UNSUPPORTED_SEND_MODE = 1;
+		const UNDEFINED_SEND_CONFIGURATION = 2;
 	} 
 }

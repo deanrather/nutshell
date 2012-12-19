@@ -120,13 +120,13 @@ namespace nutshell\plugin\email
 							break;
 						
 						default:
-							throw new EmailException(sprintf('Unsupported send mode "%s"', $sendParams->{self::CONFIG_MODE}));
+							throw new EmailException(EmailException::UNSUPPORTED_SEND_MODE, sprintf('Unsupported send mode "%s"', $sendParams->{self::CONFIG_MODE}));
 							break;
 					}
 				} 
 				else 
 				{
-					throw new EmailException(sprintf('Undefined send configuration "%s"', $sendConfigName));
+					throw new EmailException(EmailException::UNDEFINED_SEND_CONFIGURATION, sprintf('Undefined send configuration "%s"', $sendConfigName));
 				}
 			}
 			
