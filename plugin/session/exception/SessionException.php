@@ -13,6 +13,9 @@ namespace nutshell\plugin\session\exception
 	 */
 	class SessionException extends PluginException
 	{
-		
+		const CONNECTOR_FAILED = 1;
+		const CONNECTOR_DEFINITION_MISSING = 2;
+		const HANDLER_MISCONFIGURED = 3;
+		CONST UNKNOWN_STORAGE_ENGINE = 4;
 	}
 }
