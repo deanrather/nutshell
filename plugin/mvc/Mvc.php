@@ -10,7 +10,7 @@ namespace nutshell\plugin\mvc
 	use nutshell\behaviour\Singleton;
 	use nutshell\core\loader\Loader;
 	use nutshell\plugin\router\Router;
-	use nutshell\core\exception\NutshellException;
+	use nutshell\plugin\mvc\exception\MvcException;
 	
 	/**
 	 * @author guillaume
@@ -80,7 +80,7 @@ namespace nutshell\plugin\mvc
 			}
 			else
 			{
-				throw new NutshellException('MVC Exception. Unable to execute action. The action "'.$this->route->getAction().'" is not defined or is not a public method.');
+				throw new MvcException(MvcException::ACTION_NOT_DEFINED, 'Unable to execute action. The action "'.$this->route->getAction().'" is not defined or is not a public method.');
 			}
 		}
 		
@@ -141,7 +141,7 @@ namespace nutshell\plugin\mvc
 				else
 				{
 					$files=implode("<br>", $triedFiles);
-					throw new NutshellException("MVC Exception. Unable to load controller. <br>None of the following files exist:<br>$files");
+					throw new MvcException(MvcException::INVALID_FILE, "Unable to load controller. <br>None of the following files exist:<br>$files");
 				}
 			}
 			include($file);
