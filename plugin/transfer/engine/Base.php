@@ -27,11 +27,11 @@ namespace nutshell\plugin\transfer\engine
 			else if(is_string($arg))
 			{
 				//TODO: read from the config file
-				throw new TransferException('Not yet implemented');
+				throw new TransferException(TransferException::NOT_YET_IMPLEMENTED, 'Not yet implemented');
 			}
 			else
 			{
-				throw new TransferException(sprintf('Unsupported engine constructor argument %s', print_r($arg, true)));
+				throw new TransferException(TransferException::UNSUPPORTED_ENGINE, sprintf('Unsupported engine constructor argument %s', print_r($arg, true)));
 			}
 		}
 		
@@ -55,7 +55,7 @@ namespace nutshell\plugin\transfer\engine
 		 */
 		public function put($local, $remote)
 		{
-			throw new TransferException('The %s engine does not implement the put method.', get_class($this));
+			throw new TransferException(TransferException::UNSUPPORTED_METHOD, 'The %s engine does not implement the put method.', get_class($this));
 		}
 		
 		/**
@@ -89,7 +89,7 @@ namespace nutshell\plugin\transfer\engine
 			}
 			if ($notSent)
 			{
-				throw new TransferException($error_message);
+				throw new TransferException(TransferException::SEND_FAILED, $error_message);
 			}
 		}
 		
@@ -127,7 +127,7 @@ namespace nutshell\plugin\transfer\engine
 		 */
 		public function fetch($remote, $local)
 		{
-			throw new TransferException('The %s engine does not implement the fetch method.', get_class($this));
+			throw new TransferException(TransferException::UNSUPPORTED_METHOD, 'The %s engine does not implement the fetch method.', get_class($this));
 		}
 		
 		/**
@@ -139,7 +139,7 @@ namespace nutshell\plugin\transfer\engine
 		 */		
 		public function delete($remote, $recursive = false)
 		{
-			throw new TransferException('The %s engine does not implement the delete method.', get_class($this));
+			throw new TransferException(TransferException::UNSUPPORTED_METHOD, 'The %s engine does not implement the delete method.', get_class($this));
 		}
 		
 		/**
@@ -151,7 +151,7 @@ namespace nutshell\plugin\transfer\engine
 		 */
 		public function rename($remotePath, $newRemotePath)
 		{
-			throw new TransferException('The %s engine does not implement the rename method.', get_class($this));
+			throw new TransferException(TransferException::UNSUPPORTED_METHOD, 'The %s engine does not implement the rename method.', get_class($this));
 		}
 		
 		/**
@@ -164,7 +164,7 @@ namespace nutshell\plugin\transfer\engine
 		 */
 		public function chmod($remote, $permissions, $recursive = false)
 		{
-			throw new TransferException('The %s engine does not implement the chmod method.', get_class($this));
+			throw new TransferException(TransferException::UNSUPPORTED_METHOD, 'The %s engine does not implement the chmod method.', get_class($this));
 		}
 		
 		/**
@@ -175,7 +175,7 @@ namespace nutshell\plugin\transfer\engine
 		 */
 		public function dirlist($remote)
 		{
-			throw new TransferException('The %s engine does not implement the dirlist method.', get_class($this));
+			throw new TransferException(TransferException::UNSUPPORTED_METHOD, 'The %s engine does not implement the dirlist method.', get_class($this));
 		}
 		
 		/**
@@ -186,7 +186,7 @@ namespace nutshell\plugin\transfer\engine
 		 */
 		public function fileExists($remote)
 		{
-			throw new TransferException('The %s engine does not implement the fileExists method.', get_class($this));
+			throw new TransferException(TransferException::UNSUPPORTED_METHOD, 'The %s engine does not implement the fileExists method.', get_class($this));
 		}
 		
 		/**
@@ -196,7 +196,7 @@ namespace nutshell\plugin\transfer\engine
 		 */
 		public function close()
 		{
-			throw new TransferException('The %s engine does not implement the close method.', get_class($this));
+			throw new TransferException(TransferException::UNSUPPORTED_METHOD, 'The %s engine does not implement the close method.', get_class($this));
 		}
 		
 		public static function doNothingErrorHandler($no,$str,$file,$line) 

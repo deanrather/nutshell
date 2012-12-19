@@ -67,7 +67,7 @@ namespace nutshell\plugin\transfer\engine
 			//test the connection status
 			if($connection === false)
 			{
-				throw new TransferException(sprintf('Could not connect to the FTP server on host %s', $this->host));
+				throw new TransferException(TransferException::FTP_CONNECTION_FAILED, sprintf('Could not connect to the FTP server on host %s', $this->host));
 			}
 			
 			$this->plugin->Logger('nutshell.plugin.transfer.ftp')->debug('Connection succeeded.');
@@ -86,7 +86,7 @@ namespace nutshell\plugin\transfer\engine
 			$this->plugin->Logger('nutshell.plugin.transfer.ftp')->info(sprintf('Authenticating on host %s as user %s...', $this->host, $this->user));
 			
 			if(!@ftp_login($connection, $this->user, $this->password)) {
-				throw new TransferException(sprintf('Could not connect to the FTP server on host %s as user %s', $this->host, $this->user));
+				throw new TransferException(TransferException::FTP_CONNECTION_FAILED, sprintf('Could not connect to the FTP server on host %s as user %s', $this->host, $this->user));
 			}
 			
 			$this->plugin->Logger('nutshell.plugin.transfer.ftp')->debug('Authentication succeeded.');
@@ -103,12 +103,12 @@ namespace nutshell\plugin\transfer\engine
 			
 			if(!in_array($this->mode, array(self::TRANSFER_MODE_ACTIVE, self::TRANSFER_MODE_PASSIVE)))
 			{
-				throw new TransferException(sprintf('Unknown connection mode %s', $this->mode));
+				throw new TransferException(TransferException::UNKNOWN_CONNECTION_MODE, sprintf('Unknown connection mode %s', $this->mode));
 			}
 			
 			if(!@ftp_pasv($connection, $this->mode == self::TRANSFER_MODE_PASSIVE))
 			{
-				throw new TransferException(sprintf('Failed to set the connection mode to %s', $this->mode));
+				throw new TransferException(TransferException::CANNOT_SET_CONNECTION_MODE, sprintf('Failed to set the connection mode to %s', $this->mode));
 			}
 			
 			$this->plugin->Logger('nutshell.plugin.transfer.ftp')->debug('Connection mode configured.');
@@ -133,7 +133,7 @@ namespace nutshell\plugin\transfer\engine
 				//transfers the file in binary mode to avoid ASCII mode corruption
 				if(!@ftp_fput($this->connection, $remote, $local, FTP_BINARY))
 				{
-					throw new TransferException(sprintf('Transfer of file handle to %s failed', $remote));
+					throw new TransferException(TransferException::SEND_FAILED, sprintf('Transfer of file handle to %s failed', $remote));
 				}
 			}
 			else if(is_string($local))
@@ -144,18 +144,18 @@ namespace nutshell\plugin\transfer\engine
 				//check for file existence
 				if(!is_readable($local))
 				{
-					throw new TransferException(sprintf('File %s not be found or not accessible', $local));
+					throw new TransferException(TransferException::FILE_NOT_FOUND, sprintf('File %s not be found or not accessible', $local));
 				}
 				
 				//transfers the file in binary mode to avoid ASCII mode corruption
 				if(!@ftp_put($this->connection, $remote, $local, FTP_BINARY))
 				{
-					throw new TransferException(sprintf('Transfer of file %s to %s failed', $local, $remote));
+					throw new TransferException(TransferException::SEND_FAILED, sprintf('Transfer of file %s to %s failed', $local, $remote));
 				}
 			}
 			else
 			{
-				throw new TransferException(sprintf('Invalid parameter %s: expected string or file handle', parse_r($local, true)));
+				throw new TransferException(TransferException::INVALID_PARAMETER, sprintf('Invalid parameter %s: expected string or file handle', parse_r($local, true)));
 			}
 			
 			$this->plugin->Logger('nutshell.plugin.transfer.ftp')->info(sprintf('File transfered to %s successfully.', $remote));
@@ -176,7 +176,7 @@ namespace nutshell\plugin\transfer\engine
 				//transfers the file in binary mode to avoid ASCII mode corruption
 				if(!@ftp_fget($this->connection, $local, $remote, FTP_BINARY))
 				{
-					throw new TransferException(sprintf('Transfer of  %s to file handle failed', $remote));
+					throw new TransferException(TransferException::SEND_FAILED, sprintf('Transfer of  %s to file handle failed', $remote));
 				}
 			}
 			else if(is_string($local))
@@ -191,17 +191,17 @@ namespace nutshell\plugin\transfer\engine
 					//transfers the file in binary mode to avoid ASCII mode corruption
 					if(!@ftp_get($this->connection, $local, $remote, FTP_BINARY))
 					{
-						throw new TransferException(sprintf('Transfer of file %s to %s failed', $local, $remote));
+						throw new TransferException(TransferException::SEND_FAILED, sprintf('Transfer of file %s to %s failed', $local, $remote));
 					}
 				}
 				else 
 				{
-					throw new TransferException(sprintf('File %s not be found or not writable', $local));
+					throw new TransferException(TransferException::FILE_NOT_WRITABLE, sprintf('File %s not be found or not writable', $local));
 				}
 			}
 			else
 			{
-				throw new TransferException(sprintf('Invalid parameter %s: expected string or file handle', parse_r($local, true)));
+				throw new TransferException(TransferException::INVALID_PARAMETER, sprintf('Invalid parameter %s: expected string or file handle', parse_r($local, true)));
 			}
 			
 			$this->plugin->Logger('nutshell.plugin.transfer.ftp')->info(sprintf('File %s fetched successfully.', $remote));
@@ -216,12 +216,12 @@ namespace nutshell\plugin\transfer\engine
 			
 			if($recursive)
 			{
-				throw new TransferException('Not yet implemented');
+				throw new TransferException(TransferException::NOT_YET_IMPLEMENTED, 'Not yet implemented');
 			}
 			
 			if(!@ftp_delete($this->connection, $remote))
 			{
-				throw new TransferException(sprintf('Deletion of file %s failed', $remote));
+				throw new TransferException(TransferException::CANNOT_DELETE, sprintf('Deletion of file %s failed', $remote));
 			}
 			
 			$this->plugin->Logger('nutshell.plugin.transfer.ftp')->info(sprintf('File %s deleted successfully.', $remote));

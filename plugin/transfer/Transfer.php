@@ -99,7 +99,7 @@ namespace nutshell\plugin\transfer
 					return new $className($args);	
 				}
 			}
-			throw new TransferException(sprintf("Archiving engine not supported or misspelt: %s", $engine));
+			throw new TransferException(TransferException::UNSUPPORTED_ENGINE, sprintf("Archiving engine not supported or misspelt: %s", $engine));
 		}
 	}
 }

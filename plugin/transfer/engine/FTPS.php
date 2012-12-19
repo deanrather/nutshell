@@ -1,6 +1,7 @@
 <?php
 namespace nutshell\plugin\transfer\engine
 {
+	use nutshell\plugin\transfer\exception\TransferException;
 	/**
 	 * FTP - SSL Class
 	 */
@@ -23,7 +24,7 @@ namespace nutshell\plugin\transfer\engine
 			//test the connection status
 			if($connection === false)
 			{
-				throw new TransferException(sprintf('Could not connect to the FTP SSL server on host %s', $this->host));
+				throw new TransferException(TransferException::FTP_CONNECTION_FAILED, sprintf('Could not connect to the FTP SSL server on host %s', $this->host));
 			}
 				
 			$this->plugin->Logger('nutshell.plugin.transfer.ftps')->debug('Connection succeeded.');
