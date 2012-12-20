@@ -208,7 +208,7 @@ namespace nutshell\core\exception
 				if ($nutInst->hasPluginLoader())
 				{
 					$log = $nutInst->plugin->Logger();
-					$log->fatal($message); // todo, sometimes it's not 'fatal'
+					$log->fatal($message);
 				} 
 				else 
 				{
