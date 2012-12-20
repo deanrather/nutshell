@@ -1,8 +1,6 @@
 <?php
 namespace nutshell\plugin\db\impl\base
 {
-	use nutshell\core\exception\NutshellException;
-
 	use nutshell\Nutshell;
 	use \PDO;
 	use \PDOException;
@@ -135,7 +133,7 @@ namespace nutshell\plugin\db\impl\base
 			}
 			catch(PDOException $exception)
 			{
-				throw new DbException($exception->getMessage(), $exception->getCode(), $options);
+				throw new DbException(DbException::PDO_EXCEPTION, $exception->getMessage(), $exception->getCode(), $options);
 			}
 			
 			return true;
@@ -271,7 +269,7 @@ namespace nutshell\plugin\db\impl\base
 			}
 			else if (empty($args[0]) && empty($this->lastQuery['sql']))
 			{
-				throw new DbException('Unable to execute statement. Query was empty!');
+				throw new DbException(DbException::INVALID_STATEMENT, 'Unable to execute statement. Query was empty!');
 			}
 			if (isset($args[1]))
 			{
@@ -289,8 +287,8 @@ namespace nutshell\plugin\db\impl\base
 					$this->lastQuery['params']=&$args[1];
 					foreach ($args[1] as &$val)
 					{
-						if(!is_object($this->lastQuery['statement'])) throw new NutshellException(NutshellException::DB_STATEMENT_INVALID, $this->lastQuery);
-						if(is_object($val)) throw new NutshellException(NutshellException::DB_STATEMENT_INVALID, "Cannot bind-param with an object", $val);
+						if(!is_object($this->lastQuery['statement'])) throw new DbException(DbException::INVALID_STATEMENT, $this->lastQuery);
+						if(is_object($val)) throw new DbException(DbException::INVALID_STATEMENT, "Cannot bind-param with an object", $val);
 						$this->lastQuery['statement']->bindParam($i,$val);
 						$i++;
 					}

@@ -5,7 +5,7 @@
 namespace nutshell\core\plugin
 {
 	use nutshell\Nutshell;
-	use nutshell\core\exception\NutshellException;
+	use nutshell\core\exception\PluginException;
 	use nutshell\helper\ObjectHelper;
 	
 	use \DirectoryIterator;
@@ -56,9 +56,9 @@ namespace nutshell\core\plugin
 				}
 				else
 				{
-					throw new NutshellException
+					throw new PluginException
 					(
-						NutshellException::PLUGIN_LIBRARY_NOT_FOUND,
+						PluginException::LIBRARY_NOT_FOUND,
 						NS_HOME.'plugin'._DS_.$plugin._DS_,
 						APP_HOME.'plugin'._DS_.$plugin._DS_
 					);

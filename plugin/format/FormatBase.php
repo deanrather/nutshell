@@ -1,7 +1,7 @@
 <?php
 namespace nutshell\plugin\format
 {
-	use nutshell\core\exception\NutshellException;
+	use nutshell\plugin\format\exception\FormatException;
 	
 	/** 
 	 * This class is a base for (is extended by) all formating classes.
@@ -201,7 +201,7 @@ namespace nutshell\plugin\format
 		/**
 		 * This function sets the character encoding when saving.
 		 * @param string $str
-		 * @throws NutshellException
+		 * @throws FormatException
 		 */
 		public function setEncoding($str)
 		{
@@ -211,7 +211,7 @@ namespace nutshell\plugin\format
 			}
 			else
 			{
-				throw new NutshellException("$str isn't a valid character encoding.");
+				throw new FormatException(FormatException::INVALID_ENCODING, "$str isn't a valid character encoding.");
 			}
 		}
 
@@ -259,7 +259,7 @@ namespace nutshell\plugin\format
 			if (array_key_exists($value,self::getAvailableLineBreaks())) {
 				$this->_format_config_line_break = $value;
 			} else {
-				throw new NutshellException('Invalid parameter');
+				throw new FormatException(FormatException::INVALID_PARAMETER, 'Invalid parameter');
 			}
 			return $this;
 		}
@@ -344,7 +344,7 @@ namespace nutshell\plugin\format
 			
 			$this->file_handle = fopen($this->_work_file_name, 'w');
 			if (!$this->file_handle) {
-				throw new NutshellException("Can't open the file {$this->_work_file_name} for edition.");
+				throw new FormatException(FormatException::CANNOT_OPEN_FILE, "Can't open the file {$this->_work_file_name} for edition.");
 			}
 			$this->initHandler();
 		}
@@ -450,7 +450,7 @@ namespace nutshell\plugin\format
 		 */
 		public function encode($record)
 		{
-			throw new NutshellException("Format->encode has not been implemented in this format");
+			throw new FormatException(FormatException::ENCODE_NOT_IMPLEMENTED, "Format->encode has not been implemented in this format");
 		}
 		 
 		protected static function updateLineBreaks($toStyle, $txt) {

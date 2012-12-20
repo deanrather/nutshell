@@ -1,7 +1,6 @@
 <?php
 namespace nutshell\plugin\transfer\engine
 {
-	use nutshell\core\exception\NutshellException;
 	use nutshell\plugin\transfer\exception\TransferException;
 	
 	class SFTP extends SSH
@@ -29,7 +28,7 @@ namespace nutshell\plugin\transfer\engine
 		{
 			if(!$this->sftpHandle = ssh2_sftp($this->connection))
 			{
-				throw new TransferException('Unable to start a SFTP context');
+				throw new TransferException(TransferException::CANNOT_START_CONTEXT, 'Unable to start a SFTP context');
 			}
 		}
 		
@@ -52,13 +51,13 @@ namespace nutshell\plugin\transfer\engine
 				//check that the file is readable
 				if(!is_readable($local))
 				{
-					throw new TransferException(sprintf('File %s cannot be found of is not readable', $local));
+					throw new TransferException(TransferException::FILE_NOT_FOUND, sprintf('File %s cannot be found of is not readable', $local));
 				}
 				
 				//create the local handle
 				if(!$flocal = fopen($local, 'rb'))
 				{
-					throw new TransferException(sprintf('Failed to open local file %s in reading', $local));
+					throw new TransferException(TransferException::CANNOT_READ_FILE, sprintf('Failed to open local file %s in reading', $local));
 				}
 			}
 			else if (is_resource($local))
@@ -74,7 +73,7 @@ namespace nutshell\plugin\transfer\engine
 			}
 			else
 			{
-				throw new TransferException(sprintf('Invalid parameter %s: expected string or file handle', parse_r($local, true)));
+				throw new TransferException(TransferException::INVALID_PARAMETER, sprintf('Invalid parameter %s: expected string or file handle', parse_r($local, true)));
 			}
 			
 			//open the remote file descriptor
@@ -101,7 +100,7 @@ namespace nutshell\plugin\transfer\engine
 			}
 			else
 			{
-				throw new TransferException(sprintf('Failed to open remote file %s in writing', $remote));
+				throw new TransferException(TransferException::FILE_NOT_WRITABLE, sprintf('Failed to open remote file %s in writing', $remote));
 			}
 			
 			$this->plugin->Logger('nutshell.plugin.transfer.sftp')->debug(sprintf('File transfered to %s successfully.', $remote));
@@ -127,13 +126,13 @@ namespace nutshell\plugin\transfer\engine
 				$dir = dirname($local);
 				if(!(is_writable($local) || is_dir($dir) && is_writable($dir)))
 				{
-					throw new TransferException(sprintf('File %s cannot be created or is not writable', $local));
+					throw new TransferException(TransferException::FILE_NOT_WRITABLE, sprintf('File %s cannot be created or is not writable', $local));
 				}
 				
 				//create the local handle
 				if(!$flocal = fopen($local, 'wb'))
 				{
-					throw new TransferException(sprintf('Failed to open local file %s in writing', $local));
+					throw new TransferException(TransferException::FILE_NOT_WRITABLE, sprintf('Failed to open local file %s in writing', $local));
 				}
 			}
 			else if (is_resource($local))
@@ -149,7 +148,7 @@ namespace nutshell\plugin\transfer\engine
 			}
 			else
 			{
-				throw new TransferException(sprintf('Invalid parameter %s: expected string or file handle', parse_r($local, true)));
+				throw new TransferException(TransferException::INVALID_PARAMETER, sprintf('Invalid parameter %s: expected string or file handle', parse_r($local, true)));
 			}
 			
 			//open the remote file descriptor
@@ -176,7 +175,7 @@ namespace nutshell\plugin\transfer\engine
 			}
 			else
 			{
-				throw new TransferException(sprintf('Failed to open remote file %s in reading', $remote));
+				throw new TransferException(TransferException::FILE_NOT_FOUND, sprintf('Failed to open remote file %s in reading', $remote));
 			}
 			
 			$this->plugin->Logger('nutshell.plugin.transfer.sftp')->debug(sprintf('File transfered from %s successfully.', $remote));
@@ -191,12 +190,12 @@ namespace nutshell\plugin\transfer\engine
 			
 			if($recursive)
 			{
-				throw new TransferException('Not yet implemented');
+				throw new TransferException(TransferException::NOT_YET_IMPLEMENTED, 'Not yet implemented');
 			}
 			
 			if(!ssh2_sftp_unlink($this->sftpHandle, $remote))
 			{
-				throw new TransferException(sprintf('Deletion of file %s failed', $remote));
+				throw new TransferException(TransferException::CANNOT_DELETE, sprintf('Deletion of file %s failed', $remote));
 			}
 			
 			$this->plugin->Logger('nutshell.plugin.transfer.sftp')->debug(sprintf('File %s deleted successfully.', $remote));

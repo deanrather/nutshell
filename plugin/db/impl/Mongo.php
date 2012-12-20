@@ -131,7 +131,7 @@ namespace nutshell\plugin\db\impl
 			}
 			catch(MongoException $exception)
 			{
-				throw new DbException($exception->getMessage(), $exception->getCode(), $options);
+				throw new DbException(DbException::MONGO_EXCEPTION, $exception->getMessage(), $exception->getCode(), $options);
 			}
 		}
 
@@ -273,7 +273,7 @@ namespace nutshell\plugin\db\impl
 			}
 			catch(MongoException $me)
 			{
-				throw new DbException($me->getMessage(), $me->getCode(), $me);
+				throw new DbException(DbException::MONGO_EXCEPTION, $me->getMessage(), $me->getCode(), $me);
 			}
 		}
 
@@ -292,7 +292,7 @@ namespace nutshell\plugin\db\impl
 			}
 			catch(MongoException $me)
 			{
-				throw new DbException($me->getMessage(), $me);
+				throw new DbException(DbException::MONGO_EXCEPTION, $me->getMessage(), $me);
 			}
 		}
 
@@ -310,7 +310,7 @@ namespace nutshell\plugin\db\impl
 			}
 			catch(MongoException $me)
 			{
-				throw new DbException($me->getMessage(), $me);
+				throw new DbException(DbException::MONGO_EXCEPTION, $me->getMessage(), $me);
 			}
 		}
 
@@ -332,7 +332,7 @@ namespace nutshell\plugin\db\impl
 			}
 			catch(MongoException $me)
 			{
-				throw new DbException($me->getMessage(), $me);
+				throw new DbException(DbException::MONGO_EXCEPTION, $me->getMessage(), $me);
 			}
 		}
 
@@ -352,7 +352,7 @@ namespace nutshell\plugin\db\impl
 			}
 			catch(MongoException $me)
 			{
-				throw new DbException($me->getMessage(), $me);
+				throw new DbException(DbException::MONGO_EXCEPTION, $me->getMessage(), $me);
 			}
 		}
 	}

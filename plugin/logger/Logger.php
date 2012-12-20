@@ -7,13 +7,12 @@ namespace nutshell\plugin\logger
 {
 	use nutshell\core\plugin\Plugin;
 	
-	use nutshell\core\exception\NutshellException;
-	
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\AbstractFactory;
 	
 	use nutshell\plugin\logger\Filter;
 	use nutshell\plugin\logger\Level;
+	use nutshell\plugin\logger\exception\LoggerException;
 	
 	use nutshell\plugin\logger\writer\Writer;
 	
@@ -90,13 +89,13 @@ namespace nutshell\plugin\logger
 				{
 					if ($writer->writer === null)
 					{
-						throw new LoggerException(sprintf("Incorrect logger definition."));
+						throw new LoggerException(LoggerException::INCORRECT_LOGGER_DEFINITION, sprintf("Incorrect logger definition."));
 					}
 					
 					$writerConfig = $this->config->writers->{$writer->writer};
 					if ($writerConfig === null)
 					{
-						throw new LoggerException(sprintf("Could not locate a writer definition named: %s", $writer->writer));
+						throw new LoggerException(LoggerException::INCORRECT_LOGGER_DEFINITION, sprintf("Could not locate a writer definition named: %s", $writer->writer));
 					}
 					$this->filters[$writer->writer] = new Filter(
 						$this,
@@ -107,7 +106,7 @@ namespace nutshell\plugin\logger
 			}
 			else
 			{
-				throw new LoggerException(sprintf("No writers defined for logger: %s", $this->loggerName));
+				throw new LoggerException(LoggerException::NO_WRITER_FOUND, sprintf("No writers defined for logger: %s", $this->loggerName));
 			}
 		}
 		

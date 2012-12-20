@@ -36,7 +36,7 @@ namespace nutshell\plugin\logger\writer\db
 			
 			if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $this->table))
 			{
-				throw new LoggerException(sprintf("Invalid table name for DbWriter: %s", $this->table));
+				throw new LoggerException(LoggerException::INVALID_TABLE_NAME, sprintf("Invalid table name for DbWriter: %s", $this->table));
 			}
 			
 			$this->activeConnector = Nutshell::getInstance()->plugin->Db->{$this->connector};
@@ -65,7 +65,7 @@ EOL
 			}
 			catch(\Exception $e)
 			{
-				throw LoggerException(sprintf("Could not log message %s", $msg), 0, $e);
+				throw LoggerException(LoggerException::COULD_NOT_LOG, sprintf("Could not log message %s", $msg), 0, $e);
 			}
 		}
 		
@@ -97,7 +97,7 @@ EOL
 			}
 			catch(\Exception $e)
 			{
-				throw LoggerException(sprintf("Could not log message %s", $msg), 0, $e);
+				throw LoggerException(LoggerException::COULD_NOT_LOG, sprintf("Could not log message %s", $msg), 0, $e);
 			}
 			
 		}

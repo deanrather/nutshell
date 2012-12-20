@@ -9,7 +9,6 @@ namespace nutshell\plugin\db
 
 	use nutshell\Nutshell;
 	use nutshell\core\plugin\Plugin;
-	use nutshell\core\exception\NutshellException;
 	use nutshell\behaviour\Singleton;
 	use nutshell\behaviour\AbstractFactory;
 	use nutshell\plugin\db\impl\base\AbstractDb;
@@ -49,7 +48,7 @@ namespace nutshell\plugin\db
 				
 				if(!class_exists($className, true)) 
 				{
-					throw new DbException(sprintf('Expected DB handler implementation could not be found: %s', $className));
+					throw new DbException(DbException::INVALID_IMPLEMENTATION, sprintf('Expected DB handler implementation could not be found: %s', $className));
 				}
 				
 				//grabbing the connection parameters
@@ -64,7 +63,7 @@ namespace nutshell\plugin\db
 				
 				if(!$connection->isConnected())
 				{
-					throw new DbException(sprintf("Failed to initiate connection for %s", $connectionName));
+					throw new DbException(DbException::CONNECTION_FAILED, sprintf("Failed to initiate connection for %s", $connectionName));
 				}
 				
 				if($charset = $connectionParams->charset) 
@@ -77,7 +76,7 @@ namespace nutshell\plugin\db
 			} 
 			else
 			{
-				throw new DbException(sprintf("Undefined connection: no configuration for connection named %s", $connectionName));
+				throw new DbException(DbException::INVALID_CONFIGURATION, sprintf("Undefined connection: no configuration for connection named %s", $connectionName));
 			}
 		}
 		

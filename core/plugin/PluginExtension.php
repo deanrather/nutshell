@@ -5,7 +5,7 @@
 namespace nutshell\core\plugin
 {
 	use nutshell\Nutshell;
-	use nutshell\core\exception\NutshellException;
+	use nutshell\core\exception\PluginException;
 	use nutshell\core\Component;
 	use nutshell\helper\ObjectHelper;
 	
@@ -36,13 +36,13 @@ namespace nutshell\core\plugin
 				}
 				else
 				{
-					throw new NutshellException('Unable to find parent plugin.');
+					throw new PluginException(PluginException::NO_PARENT_PLUGIN, 'Unable to find parent plugin.');
 				}
 				return $NSParts[0].'\\'.$NSParts[1].'\\'.$NSParts[2];
 			}
 			else
 			{
-				throw new NutshellException('Attempted to use PluginExtension outside of plugin context.');
+				throw new PluginException(PluginException::INCORRECT_CONTEXT, 'Attempted to use PluginExtension outside of plugin context.');
 			}
 		}
 	}

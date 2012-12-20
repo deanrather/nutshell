@@ -1,6 +1,7 @@
 <?php
 /**
  * @package nutshell
+ * @author Dean Rather
  */
 namespace nutshell\core\exception
 {
@@ -8,10 +9,7 @@ namespace nutshell\core\exception
 	use nutshell\core\Component;
 	use nutshell\core\config\exception\ConfigException;
 	use \Exception;
-
-	/**
-	 * @package nutshell
-	 */
+	
 	class NutshellException extends Exception
 	{
 		/*
@@ -27,11 +25,9 @@ namespace nutshell\core\exception
 		/** A Fatal php error */
 		const PHP_FATAL_ERROR			= 2;
 		
-		/** The library pluin could not be found in either Nutshell or Application levels. */
-		const PLUGIN_LIBRARY_NOT_FOUND	= 10;
-		
-		/** The database statement is malformed. */
-		const DB_STATEMENT_INVALID		= 20; // todo, the db exception handler should handle this
+		const INVALID_APP_PATH			= 10;
+		const INVALID_PROPERTY			= 11;
+		const READ_ONLY					= 12;
 		
 		/*
 		 * Instance Properties
@@ -212,7 +208,7 @@ namespace nutshell\core\exception
 				if ($nutInst->hasPluginLoader())
 				{
 					$log = $nutInst->plugin->Logger();
-					$log->fatal($message); // todo, sometimes it's not 'fatal'
+					$log->fatal($message);
 				} 
 				else 
 				{

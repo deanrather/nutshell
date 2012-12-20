@@ -25,7 +25,7 @@ namespace nutshell\plugin\archiver\engine
 			$this->archive = new ZipArchive();
 			if($this->archive->open($this->fileName, ZIPARCHIVE::CREATE) !== true)
 			{
-				throw new ArchiverException(sprintf("Failed to open archive located at: %s", $this->fileName));
+				throw new ArchiverException(ArchiverException::CANNOT_OPEN_ARCHIVE, sprintf("Failed to open archive located at: %s", $this->fileName));
 			}
 		}
 		
@@ -37,7 +37,7 @@ namespace nutshell\plugin\archiver\engine
 			$saveName = is_null($saveCopyAsFileName) ? $this->fileName : $saveCopyAsFileName;
 			if(!$this->archive->close())
 			{
-				throw new ArchiverException(sprintf("Failed to write archive %s to disk", $saveName));
+				throw new ArchiverException(ArchiverException::CANNOT_WRITE_FILE, sprintf("Failed to write archive %s to disk", $saveName));
 			}
 		}
 		
@@ -65,7 +65,7 @@ namespace nutshell\plugin\archiver\engine
 			$archivePath = self::pathFilter($archivePath);
 			if(!file_exists($realPath) ||!$this->archive->addFile($realPath, $archivePath))
 			{
-				throw new ArchiverException(sprintf("Failed to add entry: %s", $realPath));
+				throw new ArchiverException(ArchiverException::CANNOT_ADD_ENTRY, sprintf("Failed to add entry: %s", $realPath));
 			}
 		}
 		
@@ -78,7 +78,7 @@ namespace nutshell\plugin\archiver\engine
 			$archivePath = self::pathFilter($archivePath);
 			if(!$this->archive->deleteName($archivePath))
 			{
-				throw new ArchiverException(sprintf("Failed to remove entry: %s", $archivePath));
+				throw new ArchiverException(ArchiverException::CANNOT_REMOVE_ENTRY, sprintf("Failed to remove entry: %s", $archivePath));
 			}
 		}
 		
@@ -96,7 +96,7 @@ namespace nutshell\plugin\archiver\engine
 			}
 			if(!$this->archive->renameName($archivePath, $newArchivePath))
 			{
-				throw new ArchiverException(sprintf("Failed to rename entry %s to %s", $archivePath, $newArchivePath));
+				throw new ArchiverException(ArchiverException::CANNOT_RENAME_ENTRY, sprintf("Failed to rename entry %s to %s", $archivePath, $newArchivePath));
 			}
 		}
 		
@@ -127,7 +127,7 @@ namespace nutshell\plugin\archiver\engine
 			
 			if(!$res)
 			{
-				throw new ArchiverException(sprintf("Extraction to %s failed", $destination));
+				throw new ArchiverException(ArchiverException::EXTRACTION_FAILED, sprintf("Extraction to %s failed", $destination));
 			}
 		}
 	}

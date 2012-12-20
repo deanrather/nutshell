@@ -1,7 +1,7 @@
 <?php
 namespace nutshell\plugin\transfer\engine
 {
-	use nutshell\core\exception\NutshellException;
+	use nutshell\plugin\transfer\exception\TransferException;
 
 	class SSH extends Base
 	{
@@ -62,7 +62,7 @@ namespace nutshell\plugin\transfer\engine
 			//test the connection status
 			if($connection === false)
 			{
-				throw new TransferException(sprintf('Could not connect to the SSH server on host %s', $this->host));
+				throw new TransferException(TransferException::SSH_CANNOT_CONNECT, sprintf('Could not connect to the SSH server on host %s', $this->host));
 			}
 				
 			$this->plugin->Logger('nutshell.plugin.transfer.ssh')->debug('Connection succeeded.');
@@ -89,7 +89,7 @@ namespace nutshell\plugin\transfer\engine
 					$this->authenticatePwd($connection);
 					break;
 				default:
-					throw new TransferException('Unknown authentication mode %s', $this->authmode);
+					throw new TransferException(TransferException::UNKNOWN_AUTHENTIDATION_MODE, 'Unknown authentication mode %s', $this->authmode);
 					break;
 			}
 		}
@@ -100,26 +100,26 @@ namespace nutshell\plugin\transfer\engine
 			
 			if(!is_readable($this->pubkeyfile))
 			{
-				throw new TransferException(sprintf('Public key file %s does not exist or is not readable', $this->pubkeyfile));
+				throw new TransferException(TransferException::PUBLIC_KEY_NOT_FOUND, sprintf('Public key file %s does not exist or is not readable', $this->pubkeyfile));
 			}
 			
 			if(!is_readable($this->keyfile))
 			{
-				throw new TransferException(sprintf('Private key file %s does not exist or is not readable', $this->keyfile));
+				throw new TransferException(TransferException::PRIVATE_KEY_NOT_FOUND, sprintf('Private key file %s does not exist or is not readable', $this->keyfile));
 			}
 			
 			if(!is_null($this->password))
 			{
 				//authenticate with password protected key
 				if(!@ssh2_auth_pubkey_file($connection, $this->user, $this->pubkeyfile, $this->keyfile, $this->password)) {
-					throw new TransferException(sprintf('Could not connect to the SSH server on host %s as user %s', $this->host, $this->user));
+					throw new TransferException(TransferException::SSH_CANNOT_CONNECT, sprintf('Could not connect to the SSH server on host %s as user %s', $this->host, $this->user));
 				}
 			}
 			else
 			{
 				//authenticate with unprotected key
 				if(!@ssh2_auth_pubkey_file($connection, $this->user, $this->pubkeyfile, $this->keyfile)) {
-					throw new TransferException(sprintf('Could not connect to the SSH server on host %s as user %s', $this->host, $this->user));
+					throw new TransferException(TransferException::SSH_CANNOT_CONNECT, sprintf('Could not connect to the SSH server on host %s as user %s', $this->host, $this->user));
 				}
 			}
 			
@@ -131,7 +131,7 @@ namespace nutshell\plugin\transfer\engine
 			$this->plugin->Logger('nutshell.plugin.transfer.ssh')->info(sprintf('Authenticating on host %s as user %s...', $this->host, $this->user));
 			
 			if(!@ssh2_auth_password($connection, $this->user, $this->password)) {
-				throw new TransferException(sprintf('Could not connect to the SSH server on host %s as user %s', $this->host, $this->user));
+				throw new TransferException(TransferException::SSH_CANNOT_CONNECT, sprintf('Could not connect to the SSH server on host %s as user %s', $this->host, $this->user));
 			}
 			
 			$this->plugin->Logger('nutshell.plugin.transfer.ssh')->debug('Authentication succeeded.');

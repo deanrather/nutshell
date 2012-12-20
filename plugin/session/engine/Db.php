@@ -39,12 +39,12 @@ namespace nutshell\plugin\Session\engine
 				}
 				catch(\Exception $e)
 				{
-					throw new SessionException(sprintf("Could not instantiate %s database connector for session handler: %s", $this->config->connector, $e->getMessage()), 0, $e);
+					throw new SessionException(SessionException::CONNECTOR_FAILED, sprintf("Could not instantiate %s database connector for session handler: %s", $this->config->connector, $e->getMessage()), 0, $e);
 				}
 			}
 			else
 			{
-				throw new SessionException(sprintf("Could not find a database connector definition in the config."));
+				throw new SessionException(SessionException::CONNECTOR_DEFINITION_MISSING, sprintf("Could not find a database connector definition in the config."));
 			}
 			
 			if(!is_null($this->config->table))
@@ -55,12 +55,12 @@ namespace nutshell\plugin\Session\engine
 				}
 				else 
 				{
-					throw new SessionException(sprintf("Invalid table definition name in the database session handler config: %s", $this->config->table));
+					throw new SessionException(SessionException::HANDLER_MISCONFIGURED, sprintf("Invalid table definition name in the database session handler config: %s", $this->config->table));
 				}
 			}
 			else
 			{
-				throw new SessionException(sprintf("Could not find a table definition in the database session handler config."));
+				throw new SessionException(SessionException::HANDLER_MISCONFIGURED, sprintf("Could not find a table definition in the database session handler config."));
 			}
 		}
 		

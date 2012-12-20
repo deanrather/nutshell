@@ -7,7 +7,7 @@ namespace nutshell\plugin\logger
 {
 	use nutshell\plugin\logger\Logger;
 	use nutshell\plugin\logger\writer\Writer;
-	use nutshell\core\exception\NutshellException;
+	use nutshell\plugin\logger\exception\LoggerException;
 	
 	/**
 	 * @package nutshell-plugin
@@ -32,7 +32,7 @@ namespace nutshell\plugin\logger
 			}
 			else 
 			{
-				throw new NutshellException("Invalid argument for level, must be an integer");
+				throw new LoggerException(LoggerException::INVALID_LEVEL, "Invalid argument for level, must be an integer", $level);
 			}
 		}
 		

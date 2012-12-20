@@ -8,7 +8,7 @@ namespace nutshell\core\loader
 
 	use nutshell\helper\ObjectHelper;
 
-	use nutshell\core\exception\NutshellException;
+	use nutshell\core\exception\LoaderException;
 
 	use nutshell\core\Component;
 	use nutshell\plugin;
@@ -77,7 +77,7 @@ namespace nutshell\core\loader
 			// 	}
 			// 	else
 			// 	{
-			// 		throw new NutshellException('Unable to autoload class "'.$namespace.'\\'.$className.'".');
+			// 		throw new ('Unable to autoload class "'.$namespace.'\\'.$className.'".');
 			// 	}
 			// }
 			// //Check for a plugin behaviour.
@@ -97,7 +97,7 @@ namespace nutshell\core\loader
 				}
 				else
 				{
-					throw new NutshellException('Unable to autoload class "'.$namespace.$className.'".');
+					throw new LoaderException(LoaderException::CANNOT_AUTOLOAD_CLASS, 'Unable to autoload class "'.$namespace.$className.'".');
 				}
 			}
 			//When all else fails...
@@ -121,7 +121,7 @@ namespace nutshell\core\loader
 				}
 				else
 				{
-					throw new NutshellException('Unable to autoload class "'.$namespace.'\\'.$className.'".');
+					throw new LoaderException(LoaderException::CANNOT_AUTOLOAD_CLASS, 'Unable to autoload class "'.$namespace.'\\'.$className.'".');
 				}
 			}
 		}
@@ -206,8 +206,9 @@ namespace nutshell\core\loader
 				
 				if(!isset($this->classNames[$key]))
 				{
-					throw new NutshellException
+					throw new LoaderException
 					(
+						LoaderException::CANNOT_LOAD_KEY, 
 						"Loader can't load key {$key}.",
 						$this->classNames,
 						$this->containers,
@@ -238,8 +239,12 @@ namespace nutshell\core\loader
 			}
 			else
 			{
-				throw new NutshellException('Loader failed to load class "'.$className.'". This is likely because the container '
-									.'handle you\'re using to handle the loading with doesn\'t impement the "Loadable" behaviour.');
+				throw new LoaderException
+				(
+					LoaderException::CANNOT_LOAD_CLASS, 
+					'Loader failed to load class "'.$className.'". This is likely because the container '
+					.'handle you\'re using to handle the loading with doesn\'t impement the "Loadable" behaviour.'
+				);
 			}
 		}
 

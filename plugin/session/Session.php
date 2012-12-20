@@ -61,7 +61,7 @@ namespace nutshell\plugin\session
 				}
 				else
 				{
-		 			throw new SessionException(sprintf("Unknown session storage engine: %s", $storageEngine));
+		 			throw new SessionException(SessionException::UNKNOWN_STORAGE_ENGINE, sprintf("Unknown session storage engine: %s", $storageEngine));
 				}
 			}
 			return self::$instance;
