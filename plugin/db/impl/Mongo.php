@@ -221,6 +221,12 @@ namespace nutshell\plugin\db\impl
 			}
 		}
 
+		public function runCommand($command, $options = array())
+		{
+			return $this->databaseHandle->command($command, $options);
+		}
+
+
 		/**
 		 * Fetches the collection object matching the passed name.
 		 * The method will always return a valid collection object, even if the
@@ -354,6 +360,14 @@ namespace nutshell\plugin\db\impl
 			{
 				throw new DbException(DbException::MONGO_EXCEPTION, $me->getMessage(), $me);
 			}
+		}
+
+		/**
+		 * @alias nutshell\plugin\db\impl\Mongo::delete
+		 */
+		public function remove($collection, $query, $justOne = false)
+		{
+			return $this->delete($collection, $query, $justOne);
 		}
 	}
 }
