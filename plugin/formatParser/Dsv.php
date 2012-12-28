@@ -85,7 +85,7 @@ namespace nutshell\plugin\formatParser
 		protected function readValues($rawRecord)
 		{
 			$values = array();
-			$rawSplit = split($this->fieldDelimiter, $rawRecord);
+			$rawSplit = explode($this->fieldDelimiter, $rawRecord);
 			$accumulator = array();
 
 			foreach($rawSplit as $val)
@@ -152,7 +152,7 @@ namespace nutshell\plugin\formatParser
 
 			$rawRecordStack = array();
 			do {
-				list($head, $content) = split($this->recordDelimiter, $content, 2);
+				list($head, $content) = explode($this->recordDelimiter, $content, 2);
 				$rawRecordStack[] = $head;
 			} while(!$this->isComplete(
 				implode($this->recordDelimiter, $rawRecordStack)

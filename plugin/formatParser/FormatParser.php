@@ -38,7 +38,6 @@ namespace nutshell\plugin\formatParser
 	
 		public static function runFactory($engine, $args = null)
 		{
-			self::loadDependencies();
 			$engine = strtolower($engine);
 			$engines = self::getAvailableFormats();
 			if(isset($engines[$engine]))
