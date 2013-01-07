@@ -140,7 +140,7 @@ namespace nutshell\plugin\mvcCrud
 			VALUES
 				({$placeholders});
 SQL;
-die($query);
+
 			return $this->db->insert($query,$record);
 		}
 		
