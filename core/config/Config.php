@@ -5,7 +5,7 @@
 */
 namespace nutshell\core\config
 {
-	use nutshell\core\config\exception\ConfigException;
+	use nutshell\core\exception\ConfigException;
 	use nutshell\core\Component;
 	use \Iterator;
 	

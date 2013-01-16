@@ -7,7 +7,7 @@ namespace nutshell\core\exception
 {
 	use nutshell\Nutshell;
 	use nutshell\core\Component;
-	use nutshell\core\config\exception\ConfigException;
+	use nutshell\core\exception\ConfigException;
 	use \Exception;
 	
 	class NutshellException extends Exception
@@ -280,7 +280,10 @@ namespace nutshell\core\exception
 				// Echo the message
 				if(Nutshell::getInstance()->config->application->mode=='development')
 				{
-					header('HTTP/1.1 500 Application Error');
+					if(NS_INTERFACE != Nutshell::INTERFACE_CLI)
+					{
+						header('HTTP/1.1 500 Application Error');
+					}
 					echo $message;
 				}
 					
