@@ -141,6 +141,19 @@ namespace nutshell\core\exception
 				// don't use var_export. it can cause a recursive error here.
 				$debug = print_r($debug, true); 
 			}
+
+			$options = array(
+				'SERVER',
+				'POST',
+				'GET',
+				'RAW'
+			);
+
+			$optionsConfig = Nutshell::getInstance()->config->core->exception->details;
+			if(is_array($optionsConfig))
+			{
+				$options = $optionsConfig;
+			}
 			
 			$description = array
 			(
@@ -152,11 +165,27 @@ namespace nutshell\core\exception
 				'LINE'				=> $this->line,
 				'DEBUG'				=> $debug,
 				'STACK'				=> "\n".$this->getTraceAsString(),
-                                'SERVER'                        => $_SERVER,
-                                'POST'                          => $_POST,
-                                'GET'                           => $_GET,
-                                'RAW'                           => Nutshell::getInstance()->request->getRaw()
 			);
+
+			if(in_array('SERVER', $options))
+			{
+				$description['SERVER'] = $_SERVER;
+			}
+
+			if(in_array('POST', $options))
+			{
+				$description['POST'] = $_POST;
+			}
+
+			if(in_array('GET', $options))
+			{
+				$description['GET'] = $_GET;
+			}
+
+			if(in_array('RAW', $options))
+			{
+				$description['RAW'] = Nutshell::getInstance()->request->getRaw();
+			}
 			
 			if($format=='array')
 			{
