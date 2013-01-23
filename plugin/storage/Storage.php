@@ -6,7 +6,7 @@
 namespace nutshell\plugin\storage
 {
 	use nutshell\core\plugin\Plugin;
-	use nutshell\core\exception\NutshellException;
+	use nutshell\plugin\storage\exception\StorageException;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\AbstractFactory;
 	
@@ -21,13 +21,6 @@ namespace nutshell\plugin\storage
 		
 		private static $handlers=array();
 		
-		public static function loadDependencies()
-		{
-			require_once(__DIR__.'/Engine.php');
-			require_once(__DIR__.'/AbstractBucket.php');
-			
-		}
-		
 		public static function registerBehaviours()
 		{
 			
@@ -35,7 +28,6 @@ namespace nutshell\plugin\storage
 		
 		public static function runFactory($handler)
 		{
-			self::loadDependencies();
 			$handler=strtolower($handler);
 			if (isset(self::$handlers[$handler]))return self::$handlers[$handler];
 			$file=__DIR__._DS_.self::ENGINE_DIR._DS_.$handler._DS_.ucfirst($handler).'.php';
@@ -47,7 +39,7 @@ namespace nutshell\plugin\storage
 			}
 			else
 			{
-				throw new NutshellException('Invalid storage handler "'.$handler.'".');
+				throw new StorageException(StorageException::INVALID_HANDLER, 'Invalid storage handler "'.$handler.'".');
 			}
 		}
 	}

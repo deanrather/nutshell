@@ -5,7 +5,6 @@
  */
 namespace nutshell\plugin\storage\engine\file
 {
-	use nutshell\core\exception\NutshellException;
 	use nutshell\plugin\storage\Engine;
 	use nutshell\plugin\storage\engine\file\Bucket;
 	/**

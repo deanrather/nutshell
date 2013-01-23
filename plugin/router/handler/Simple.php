@@ -7,7 +7,7 @@ namespace nutshell\plugin\router\handler
 {
 	use nutshell\plugin\router\Router;
 	
-	use nutshell\plugin\router\handler\Http;
+	use nutshell\plugin\router\handler\base\Http;
 	use nutshell\plugin\router\Route;
 	
 	/**
@@ -104,8 +104,5 @@ namespace nutshell\plugin\router\handler
 			return $this->route;
 		}
 	}
-	
-	//register the handler
-	Router::registerHandler('simple', __NAMESPACE__ . '\Simple');
 }
 ?>

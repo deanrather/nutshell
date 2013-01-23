@@ -7,8 +7,6 @@ namespace nutshell\plugin\logger
 {
 	use nutshell\core\plugin\Plugin;
 	
-	use nutshell\core\exception\NutshellException;
-	
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\AbstractFactory;
 	

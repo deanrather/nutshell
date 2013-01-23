@@ -338,7 +338,7 @@ namespace nutshell
 			$path = realpath($path);
 			if(is_null($path)) 
 			{
-				throw new NutshellException('Invalid application path');
+				throw new NutshellException(NutshellException::INVALID_APP_PATH, 'Application path cannot be null.');
 			}
 			define('APP_HOME', $path . DIRECTORY_SEPARATOR);
 		}
@@ -389,7 +389,7 @@ namespace nutshell
 			}
 			else
 			{
-				throw new NutshellException('Attempted to get invalid property "'.$key.'" from core.');
+				throw new NutshellException(NutshellException::INVALID_PROPERTY, 'Attempted to get invalid property "'.$key.'" from core.');
 			}
 		}
 		
@@ -404,7 +404,7 @@ namespace nutshell
 		 */
 		public function __set($key,$val)
 		{
-			throw new NutshellException('Sorry, nutshell core is read only!');
+			throw new NutshellException(NutshellException::READ_ONLY, 'Sorry, nutshell core is read only!');
 		}
 		
 		/**

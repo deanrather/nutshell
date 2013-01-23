@@ -8,7 +8,7 @@ namespace nutshell\core\loader
 
 	use nutshell\helper\ObjectHelper;
 
-	use nutshell\core\exception\NutshellException;
+	use nutshell\core\exception\LoaderException;
 
 	use nutshell\core\Component;
 	use nutshell\plugin;
@@ -54,7 +54,34 @@ namespace nutshell\core\loader
 		{
 			$namespace=ObjectHelper::getNamespace($className);
 			$className=ObjectHelper::getBaseClassName($className);
-			//Check for a plugin behaviour.
+			
+			
+			//Check for an application plugin's library class.
+			// if (strstr($namespace,'plugin\\'))
+			// {
+			// 	$namespaceParts	=explode('\\',$namespace);
+			// 	$where			=array_shift($namespaceParts);
+			// 	$filePath		=false;
+			// 	if ($where==='nutshell')
+			// 	{
+			// 		$filePath=NS_HOME.implode(_DS_,$namespaceParts)._DS_.$className.'.php';
+			// 	}
+			// 	else if ($where==='application')
+			// 	{
+			// 		$filePath=APP_HOME.implode(_DS_,$namespaceParts)._DS_.$className.'.php';
+			// 	}
+			// 	if (is_file($filePath))
+			// 	{
+			// 		//Invoke the plugin.
+			// 		require_once($filePath);
+			// 	}
+			// 	else
+			// 	{
+			// 		throw new ('Unable to autoload class "'.$namespace.'\\'.$className.'".');
+			// 	}
+			// }
+			// //Check for a plugin behaviour.
+			// else 
 			if (strstr($namespace,'behaviour\\'))
 			{
 				list(,,$plugin)	=explode('\\',$namespace);
@@ -70,7 +97,31 @@ namespace nutshell\core\loader
 				}
 				else
 				{
-					throw new NutshellException('Unable to autoload class "'.$namespace.$className.'".');
+					throw new LoaderException(LoaderException::CANNOT_AUTOLOAD_CLASS, 'Unable to autoload class "'.$namespace.$className.'".');
+				}
+			}
+			//When all else fails...
+			else
+			{
+				$namespaceParts	=explode('\\',$namespace);
+				$where			=array_shift($namespaceParts);
+				$filePath		=false;
+				if ($where==='nutshell')
+				{
+					$filePath=NS_HOME.implode(_DS_,$namespaceParts)._DS_.$className.'.php';
+				}
+				else if ($where==='application')
+				{
+					$filePath=APP_HOME.implode(_DS_,$namespaceParts)._DS_.$className.'.php';
+				}
+				if (is_file($filePath))
+				{
+					//Invoke the plugin.
+					require($filePath);
+				}
+				else
+				{
+					throw new LoaderException(LoaderException::CANNOT_AUTOLOAD_CLASS, 'Unable to autoload class "'.$namespace.'\\'.$className.'".');
 				}
 			}
 		}
@@ -105,9 +156,8 @@ namespace nutshell\core\loader
 				//Load class dependencies
 				if (in_array('nutshell\behaviour\Native', $interfaces))
 				{
-					$classname::loadDependencies();
 					$classname::registerBehaviours();
-				}	
+				}
 			}
 			return $interfaces;
 		}
@@ -156,8 +206,9 @@ namespace nutshell\core\loader
 				
 				if(!isset($this->classNames[$key]))
 				{
-					throw new NutshellException
+					throw new LoaderException
 					(
+						LoaderException::CANNOT_LOAD_KEY, 
 						"Loader can't load key {$key}.",
 						$this->classNames,
 						$this->containers,
@@ -188,8 +239,12 @@ namespace nutshell\core\loader
 			}
 			else
 			{
-				throw new NutshellException('Loader failed to load class "'.$className.'". This is likely because the container '
-									.'handle you\'re using to handle the loading with doesn\'t impement the "Loadable" behaviour.');
+				throw new LoaderException
+				(
+					LoaderException::CANNOT_LOAD_CLASS, 
+					'Loader failed to load class "'.$className.'". This is likely because the container '
+					.'handle you\'re using to handle the loading with doesn\'t impement the "Loadable" behaviour.'
+				);
 			}
 		}
 

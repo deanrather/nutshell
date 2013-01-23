@@ -1,5 +1,5 @@
 <?php
-namespace nutshell\plugin\cache
+namespace nutshell\plugin\cache\impl
 {
 	use \DirectoryIterator;
 	use nutshell\Nutshell;

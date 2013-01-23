@@ -5,7 +5,7 @@
  */
 namespace nutshell\helper
 {
-	use nutshell\core\exception\NutshellException;
+	use nutshell\core\exception\HelperException;
 
 	use \ArrayObject;
 	
@@ -161,7 +161,7 @@ namespace nutshell\helper
 		/**
 		 * This method recursively encondes an array or an object into an ArrayObject.
 		 * @param mixed $arrayObject
-		 * @throws NutshellException
+		 * @throws HelperException
 		 */
 		public static function encodeIntoArrayObject($objectOrArray, $maxRecursionLevel = 5, $recursionLevel = 0)
 		{
@@ -186,7 +186,7 @@ namespace nutshell\helper
 			}
 			else
 			{
-				throw new NutshellException("encodeIntoObjectArray expects an array or an object.");
+				throw new HelperException(HelperException::INVALID_DATA_TYPE, "encodeIntoObjectArray expects an array or an object.");
 			}
 		}
 	}

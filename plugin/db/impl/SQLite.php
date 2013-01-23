@@ -4,6 +4,7 @@ namespace nutshell\plugin\db\impl
 	use \PDO;
 	use \PDOException;
 	
+	use nutshell\plugin\db\impl\base\AbstractDb;
 	use nutshell\plugin\db\exception\DbException;
 	
 	/**

@@ -112,8 +112,5 @@ namespace nutshell\plugin\router\handler
 			return $this->route;
 		}
 	}
-	
-	//register the handler
-	Router::registerHandler('cli', __NAMESPACE__ . '\Cli');
 }
 ?>

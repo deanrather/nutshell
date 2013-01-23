@@ -6,7 +6,6 @@
 namespace nutshell\plugin\mvcCrud
 {
 	use nutshell\core\plugin\LibraryPlugin;
-	use nutshell\core\exception\NutshellException;
 	
 	/**
 	 * @author Timothy Chandler <tim.chandler@spinifexgroup.com>

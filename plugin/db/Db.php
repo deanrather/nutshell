@@ -9,10 +9,9 @@ namespace nutshell\plugin\db
 
 	use nutshell\Nutshell;
 	use nutshell\core\plugin\Plugin;
-	use nutshell\core\exception\NutshellException;
 	use nutshell\behaviour\Singleton;
 	use nutshell\behaviour\AbstractFactory;
-	use nutshell\plugin\db\impl\AbstractDb;
+	use nutshell\plugin\db\impl\base\AbstractDb;
 	
 	/**
 	 * @author Guillaume Bodi <guillaume@spinifexgroup.com>
@@ -23,39 +22,6 @@ namespace nutshell\plugin\db
 		protected static $connections = array();
 		
 		protected static $handlers = array();
-		
-		protected static $dependenciesLoaded = false;
-		
-		public static function loadDependencies()
-		{
-			if(!self::$dependenciesLoaded)
-			{
-				include_once(__DIR__.'/exception/DbException.php');
-				include_once(__DIR__.'/impl/abstract/AbstractDb.php');
-				include_once(__DIR__.'/impl/MySQL.php');
-				include_once(__DIR__.'/impl/SQLite.php');
-				include_once(__DIR__.'/impl/Oracle.php');
-				include_once(__DIR__.'/impl/MSSQL.php');
-				include_once(__DIR__.'/impl/ODBC.php');
-				include_once(__DIR__.'/impl/Mongo.php');
-				
-				//register all the handlers
-				self::$handlers[AbstractDb::HANDLER_DBLIB] 	= 'MSSQL';
-				self::$handlers[AbstractDb::HANDLER_SYBASE] = 'MSSQL';
-				self::$handlers[AbstractDb::HANDLER_MSSQL] 	= 'MSSQL';
-				
-				self::$handlers[AbstractDb::HANDLER_MYSQL] 	= 'MySQL';
-				
-				self::$handlers[AbstractDb::HANDLER_ORACLE] = 'Oracle';
-				self::$handlers[AbstractDb::HANDLER_OCI] 	= 'Oracle';
-				
-				self::$handlers[AbstractDb::HANDLER_ODBC] 	= 'ODBC';
-				
-				self::$handlers[AbstractDb::HANDLER_SQLITE] = 'SQLite';
-
-				self::$handlers[impl\Mongo::HANDLER_MONGO] = 'Mongo';
-			}
-		}
 		
 		public static function registerBehaviours()
 		{
@@ -78,18 +44,9 @@ namespace nutshell\plugin\db
 					$handlerConfig = $pluginConfig->defaultHandler;
 				}
 				
-				$className = null;
+				$className = 'nutshell\plugin\db\impl\\'.$handlerConfig;
 				
-				if (isset(self::$handlers[$handlerConfig])) 
-				{
-					$className = sprintf('nutshell\plugin\db\impl\%s', $handlerConfig);
-				} 
-				else 
-				{
-					throw new DbException(sprintf('Unsupported DB handler: %s', $handlerConfig));
-				}
-				
-				if(!class_exists($className, false)) 
+				if(!class_exists($className, true)) 
 				{
 					throw new DbException(sprintf('Expected DB handler implementation could not be found: %s', $className));
 				}
@@ -132,7 +89,6 @@ namespace nutshell\plugin\db
 		
 		public static function runFactory($connectionName)
 		{
-			self::loadDependencies();
 			if (!array_key_exists($connectionName, self::$connections))
 			{
 				self::$connections[$connectionName] = self::setupConnection($connectionName);

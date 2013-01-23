@@ -6,7 +6,7 @@
 namespace nutshell\plugin\direct
 {
 	use nutshell\plugin\mvc\Controller;
-	use nutshell\core\exception\NutshellException;
+	use nutshell\plugin\direct\exception\DirectException;
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Singleton;
@@ -19,19 +19,10 @@ namespace nutshell\plugin\direct
 	{
 		private $services=array();
 		
-		public static function loadDependencies()
-		{
-			require(__DIR__.'/ProviderController.php');
-			require(__DIR__.'/MvcProviderController.php');
-			require(__DIR__.'/Responder.php');
-			require(__DIR__.'/Service.php');
-			require(__DIR__.'/behaviour/Pollable.php');
-			require(__DIR__.'/behaviour/Remotable.php');
-		}
-		
 		public static function registerBehaviours()
 		{
-			
+			require(__DIR__.'/behaviour/Pollable.php');
+			require(__DIR__.'/behaviour/Remotable.php');
 		}
 		
 		public function init()
@@ -54,7 +45,7 @@ namespace nutshell\plugin\direct
 			}
 			else
 			{
-				throw new NutshellException('Invalid API Reference. "'.$APIRef.'" has not been defined in config.');
+				throw new DirectException(DirectException::INVALID_API_REFERENCE, $APIRef.'" has not been defined in config.');
 			}
 		}
 	}

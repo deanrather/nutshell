@@ -6,7 +6,7 @@
 namespace nutshell\plugin\storage
 {
 	use nutshell\core\plugin\PluginExtension;
-	use nutshell\core\exception\NutshellException;
+	use nutshell\plugin\storage\exception\StorageException;
 	
 	/**
 	 * @package nutshell-plugin
@@ -48,7 +48,7 @@ namespace nutshell\plugin\storage
 			}
 			else
 			{
-				throw new NutshellException('Path has not been set.');
+				throw new StorageException(StorageException::PATH_NOT_SET'Path has not been set.');
 			}
 		}
 		

@@ -27,49 +27,35 @@ namespace nutshell\plugin\router
 		
 		private $handler=null;
 		
+		/**
+		 * @deprecated
+		 */
 		private static $handlers = array();
 		
-		public static function loadDependencies()
-		{
-			require(__DIR__.'/Route.php');
-			require(__DIR__.'/exception/RouterException.php');
-			require(__DIR__.'/handler/abstract/Http.php');
-			require(__DIR__.'/handler/Cli.php');
-			require(__DIR__.'/handler/Simple.php');
-			require(__DIR__.'/handler/SimpleRest.php');
-			require(__DIR__.'/handler/Advanced.php');
-			
-			//try to load user handlers
-			$userHandlerDir = APP_HOME . 'plugin' . _DS_ . 'router' . _DS_ . 'handler'; 
-			if(is_dir($userHandlerDir))
-			{
-				if($userHandlers = glob($userHandlerDir . _DS_ . '*.php'))
-				{
-					foreach($userHandlers as $userHandler)
-					{
-						if(is_file($userHandler))
-						{
-							require_once($userHandler);
-						}
-					}
-				}
-			}
-		}
+		private static $appHandlers = array();
 		
 		public static function registerBehaviours()
 		{
 			
 		}
 		
-		public static function registerHandler($key, $class) 
+		/**
+		 * @deprecated
+		 */
+		public static function registerHandler($key, $class)
 		{
-			if(!isset(self::$handlers[$key])) 
+			return self::registerAppHandler($key, $class);
+		}
+		
+		public static function registerAppHandler($key, $class) 
+		{
+			if(!isset(self::$appHandlers[$key])) 
 			{
-				self::$handlers[$key] = $class;
+				self::$appHandlers[$key] = $class;
 			}
 			else 
 			{
-				throw new RouterException(sprintf("A handler is already registered for the key: %s (%s)", $key, self::$handlers[$key]));
+				throw new RouterException(sprintf("A handler is already registered for the key: %s (%s)", $key, self::$appHandlers[$key]));
 			}
 		}
 		
@@ -102,23 +88,21 @@ namespace nutshell\plugin\router
 				$mode = $globalMode;
 			}
 			
-			//reads the mode from the config file and try to mach
-			if(!isset(self::$handlers[$mode])) 
+			$className='nutshell\plugin\router\handler\\'.$mode;
+			if (class_exists($className,true))
 			{
-				throw new RouterException(sprintf('No router mode configuration could be found or the selected mode does not match any of the available handlers: %s', $mode));
+				$this->handler=new $className();
+				return;
 			}
-			
-			//loads the class name
-			$handlerClass = self::$handlers[$mode];
-			
-			//checks that a class suitably named has been loaded
-			if(!class_exists($handlerClass)) 
+			else
 			{
-				throw new RouterException(sprintf('No implementation could be found for Router handler class: %s', $handlerClass));
+				if (isset(self::$appHandlers[$globalMode]))
+				{
+					$this->handler=new $appHandlers[$mode]();
+					return;
+				}
 			}
-			
-			//initialise the handler
-			$this->handler = new $handlerClass();
+			throw new RouterException(sprintf('No implementation could be found for Router handler class: %s', $mode));
 		}
 		
 		protected function satisfiesOption($option) 

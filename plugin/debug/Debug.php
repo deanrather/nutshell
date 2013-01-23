@@ -15,11 +15,6 @@ namespace nutshell\plugin\debug
 	 */
 	class Debug extends Plugin implements Native,Factory
 	{
-		public static function loadDependencies()
-		{
-			
-		}
-		
 		public static function registerBehaviours()
 		{
 			

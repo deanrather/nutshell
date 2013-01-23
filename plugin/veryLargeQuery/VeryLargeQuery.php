@@ -85,16 +85,6 @@ namespace nutshell\plugin\verylargequery
 		 */
 		protected $charEncoding = '';
 		
-		public static function loadDependencies()
-		{
-		
-		}
-		
-		public static function registerBehaviours()
-		{
-		
-		}
-		
 		public function init()
 		{
 				

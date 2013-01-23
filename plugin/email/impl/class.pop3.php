@@ -1,4 +1,5 @@
 <?php
+namespace nutshell\plugin\email\impl;
 /*~ class.pop3.php
 .---------------------------------------------------------------------------.
 |  Software: PHPMailer - PHP email class                                    |

@@ -21,11 +21,6 @@ namespace nutshell\plugin\template
 		private $context		=null;
 		private $compiled		=null;
 		
-		public static function loadDependencies()
-		{
-			require('Context.php');
-		}
-		
 		public static function registerBehaviours()
 		{
 			
@@ -59,6 +54,12 @@ namespace nutshell\plugin\template
 		public function setKeyVal($key,$val)
 		{
 			$this->context->setKeyVals($key,$val);
+			return $this;
+		}
+		
+		public function setKeyValArray(Array $keyVals)
+		{
+			$this->context->setKeyValArray($keyVals);
 			return $this;
 		}
 		

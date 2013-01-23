@@ -1,4 +1,5 @@
 <?php
+namespace nutshell\plugin\twiki\lib;
 // vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
 /**
  * Parse structured wiki text and render into arbitrary formats such as XHTML.

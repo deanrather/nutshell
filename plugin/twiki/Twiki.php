@@ -4,6 +4,8 @@ namespace nutshell\plugin\twiki
 	use nutshell\core\plugin\Plugin;
 	use nutshell\behaviour\Native;
 	use nutshell\behaviour\Singleton;
+	use nutshell\plugin\twiki\lib\Text_Wiki;
+	
 
 	/**
 	 * Twiki means TEXTUAL Wiki. This plugin is based on the PEAR textual wiki.
@@ -11,23 +13,13 @@ namespace nutshell\plugin\twiki
 	 * Known bugs:
 	 *    '<code>' and '</code> can't be placed in the very same line such as '<code> ... </code>'. The wiki crashes in this case. 
 	 */
-	class Twiki extends Plugin implements Native,Singleton
+	class Twiki extends Plugin implements Singleton
 	{
 		protected $wiki;
 
-		public static function loadDependencies()
-		{
-			require_once(__DIR__.'/lib/Text/Wiki.php');
-		}
-
-		public static function registerBehaviours()
-		{
-			
-		}
-
 		public function init()
 		{
-			$this->wiki = new \Text_Wiki();
+			$this->wiki = new Text_Wiki();
 		}
 		
 		/**

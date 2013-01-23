@@ -23,18 +23,6 @@ namespace nutshell\plugin\session
 	{
 		protected static $instance = null;
 		
-		public static function loadDependencies()
-		{
-			include_once(__DIR__ . '/Handler.php');
-			
-			include_once(__DIR__ . '/exception/SessionException.php');
-			
-			include_once(__DIR__ . '/behaviour/NamedSession.php');
-			
-			include_once(__DIR__ . '/engine/File.php');
-			include_once(__DIR__ . '/engine/Db.php');
-		}
-		
 		public static function registerBehaviours()
 		{
 			static::registerBehaviour

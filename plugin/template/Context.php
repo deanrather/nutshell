@@ -23,6 +23,9 @@ namespace nutshell\plugin\template
 			
 		}
 		
+		/**
+		 * @deprecated - use setKeyValArray instead.
+		 */
 		public function setKeyVals($key,$val)
 		{
 			if (!is_array($key))	$key=array($key);
@@ -38,6 +41,15 @@ namespace nutshell\plugin\template
 			{
 				throw new NutshellException('Invalid keyval lengths. Keys and values should contain the same number of items.');
 			}
+		}
+		
+		public function setKeyValArray($keyVals)
+		{
+			foreach ($keyVals as $key=>$val)
+			{
+				$this->keyVals[$key]=$val;
+			}
+			return $this;
 		}
 		
 		public function setKeyVal($key,$val)

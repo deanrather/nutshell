@@ -3,7 +3,7 @@ namespace nutshell\plugin\formatParser
 {
 	use nutshell\behaviour\AbstractFactory;
 	use nutshell\core\plugin\Plugin;
-	use nutshell\core\exception\NutshellException;
+	use nutshell\plugin\formatParser\exception\FormatParserException;
 
 	use nutshell\Nutshell;
 
@@ -13,7 +13,8 @@ namespace nutshell\plugin\formatParser
 		/**
 		 * This function returns all available formats.
 		 */
-		public static function getAvailableFormats() {
+		public static function getAvailableFormats()
+		{
 			return array
 			(
 				// engine name (or format name) => class name
@@ -25,17 +26,6 @@ namespace nutshell\plugin\formatParser
 			);
 		}
 		
-		public static function loadDependencies()
-		{
-			include_once __DIR__ . _DS_ . 'exception' . _DS_ . 'FormatParserException.php';
-			include_once __DIR__ . _DS_ . 'FormatParserBase.php';
-			include_once __DIR__ . _DS_ . 'Dsv.php';
-			include_once __DIR__ . _DS_ . 'Csv.php';
-			include_once __DIR__ . _DS_ . 'Psv.php';
-			// include_once __DIR__ . _DS_ . 'Json.php';
-			include_once __DIR__ . _DS_ . 'Tsv.php';
-		}
-			
 		public static function registerBehaviours()
 		{
 				
@@ -60,7 +50,7 @@ namespace nutshell\plugin\formatParser
 			{
 				$error_msg = "Engine $engine isn't supported.";
 				Nutshell::getInstance()->plugin->Logger->fatal($error_msg); // just to be sure that the error message will be in the log.
-				throw new NutshellException($error_msg);
+				throw new FormatParserException(FormatParserException::ENGINE_NOT_SUPPORTED, $error_msg);
 			}
 		}
 	}	
