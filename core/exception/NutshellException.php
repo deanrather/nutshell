@@ -7,7 +7,7 @@ namespace nutshell\core\exception
 {
 	use nutshell\Nutshell;
 	use nutshell\core\Component;
-	use nutshell\core\config\exception\ConfigException;
+	use nutshell\core\exception\ConfigException;
 	use \Exception;
 	
 	class NutshellException extends Exception
