@@ -145,14 +145,16 @@ namespace nutshell\plugin\formatParser
 
 		protected function readRawRecord(&$content)
 		{
-			if($content === '')
+			if(is_null($content) || $content === '')
 			{
 				return null;
 			}
 
 			$rawRecordStack = array();
 			do {
-				list($head, $content) = explode($this->recordDelimiter, $content, 2);
+				$tmp = explode($this->recordDelimiter, $content, 2);
+				$head = array_shift($tmp);
+				$content = array_shift($tmp);
 				$rawRecordStack[] = $head;
 			} while(!$this->isComplete(
 				implode($this->recordDelimiter, $rawRecordStack)
@@ -189,7 +191,6 @@ namespace nutshell\plugin\formatParser
 					
 					// we just need to make sure that the string delimiter count is even
 					return substr_count($rawRecordString, $this->stringDelimiter) % 2 == 0;
-
 			}
 
 			return false;
