@@ -46,20 +46,6 @@ namespace nutshell\plugin\format
 				'phptemplate'	=> 'PHPTemplate'
 			);
 		}
-		
-		public static function loadDependencies()
-		{
-			include_once __DIR__ . _DS_ .'FormatBase.php';
-			include_once __DIR__ . _DS_ .'Dsv.php';
-			include_once __DIR__ . _DS_ .'Csv.php';
-			include_once __DIR__ . _DS_ .'Psv.php';
-			include_once __DIR__ . _DS_ .'Json.php';
-			include_once __DIR__ . _DS_ .'Tsv.php';
-			include_once __DIR__ . _DS_ .'Xml.php';
-			include_once __DIR__ . _DS_ .'Adf.php';
-			include_once __DIR__ . _DS_ .'PHPTemplate.php';
-			include_once __DIR__ . _DS_ .'strictTemplate'. _DS_. 'StrictTemplate.php';
-		}
 			
 		public static function registerBehaviours()
 		{
@@ -70,18 +56,9 @@ namespace nutshell\plugin\format
 		{
 				
 		}
-	
-		/*
-		public function __call($engine, $args)
-		{
-			$params = isset($args[0]) ? $args[0] : null;
-			return self::runFactory($engine, $params);
-		}
-		*/
-	
+		
 		public static function runFactory($engine, $args = null)
 		{
-			self::loadDependencies();
 			$engine = strtolower($engine);
 			$engines = self::getAvailableFormats();
 			if(isset($engines[$engine]))
