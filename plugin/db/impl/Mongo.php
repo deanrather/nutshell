@@ -249,7 +249,7 @@ namespace nutshell\plugin\db\impl
 		 * @param  integer $offset     number of documents to skip before collecting results
 		 * @return array             the result set of the query
 		 */
-		public function find($collection, $query = array(), $fields = array(), $sortFields = array(), $limit = null, $offset = null)
+		public function find($collection, $query = array(), $fields = array(), $sortFields = null, $limit = null, $offset = null)
 		{
 			$resultSet = array();
 
@@ -368,6 +368,18 @@ namespace nutshell\plugin\db\impl
 		public function remove($collection, $query, $justOne = false)
 		{
 			return $this->delete($collection, $query, $justOne);
+		}
+		
+		public function count($collection,$query=null)
+		{
+			try
+			{
+				return $this->getCollection($collection)->count($query);
+			}
+			catch(MongoException $me)
+			{
+				throw new DbException(DbException::MONGO_EXCEPTION, $me->getMessage(), $me);
+			}
 		}
 	}
 }
