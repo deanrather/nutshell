@@ -12,6 +12,11 @@ namespace nutshell\core\exception
 	
 	class NutshellException extends Exception
 	{
+
+		const DEFAULT_EXCEPTION_HANDLER = 'nutshell\core\exception\NutshellException::treatException';
+
+		const DEFAULT_ERROR_HANDLER = 'nutshell\core\exception\NutshellException::treatError';
+
 		/*
 		 * Error Codes
 		 */
@@ -341,6 +346,13 @@ namespace nutshell\core\exception
 			}
 		}
 		
+
+		public static function setDefaultHandlers()
+		{
+			register_shutdown_function('nutshell\core\exception\NutshellException::shutdown'); 
+			self::setHandlers();
+		}
+
 		/**
 		 * This function sets exception/error handlers. Before this call, no error is treated by this class.
 		 * All errors are logged.
@@ -351,9 +363,32 @@ namespace nutshell\core\exception
 		 */
 		public static function setHandlers()
 		{
-			self::$oldExceptionHandler = set_exception_handler('nutshell\core\exception\NutshellException::treatException');
-			self::$oldErrorHandler = set_error_handler('nutshell\core\exception\NutshellException::treatError');
-			register_shutdown_function('nutshell\core\exception\NutshellException::shutdown'); 
+			$nutshell = Nutshell::getInstance();
+
+			// set handler can be called because the config is loaded, so test
+			// before doing anything
+			if(is_null($nutshell->config))
+			{
+				$exceptionHandler = self::DEFAULT_EXCEPTION_HANDLER;
+				$errorHandler = self::DEFAULT_ERROR_HANDLER;
+			}
+			else
+			{
+				$exceptionHandler = $nutshell->config->core->exception->handlers->exception;
+				$errorHandler = $nutshell->config->core->exception->handlers->error;
+			}
+
+			printf("Setting exception handler to %s\n", $exceptionHandler);
+			printf("Setting error handler to %s\n", $errorHandler);
+
+			self::$oldExceptionHandler = set_exception_handler($exceptionHandler);
+			self::$oldErrorHandler = set_error_handler($errorHandler);
+		}
+
+		public static function restoreHandlers()
+		{
+			restore_error_handler();
+			restore_exception_handler();
 		}
 	}
 }

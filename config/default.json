@@ -8,7 +8,16 @@
 		},
 		"core":
 		{
-			"hiphop":	false
+			"hiphop":	false,
+			"exception":
+			{
+				"handlers":
+				{
+					"exception":	"nutshell\\core\\exception\\NutshellException::treatException",
+					"error":		"nutshell\\core\\exception\\NutshellException::treatError"
+				}
+			}
+
 		},
 		"application":
 		{

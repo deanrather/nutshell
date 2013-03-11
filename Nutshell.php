@@ -135,13 +135,17 @@ namespace nutshell
 			//Load the core components.
 			$this->loadCoreComponents();
 			
-			NutshellException::setHandlers();
+			// define temporary handlers
+			NutshellException::setDefaultHandlers();
 			
 			//Init the request object.
 			$this->request=new Request;
 			
 			//Load the core config.
 			$this->loadCoreConfig();
+
+			// define real handlers as defined in the config
+			NutshellException::setHandlers();
 			
 			//Parse php.ini config settings.
 			HookManager::execute('core','onBeforeSetPHPIni');
