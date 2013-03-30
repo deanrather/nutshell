@@ -378,9 +378,6 @@ namespace nutshell\core\exception
 				$errorHandler = $nutshell->config->core->exception->handlers->error;
 			}
 
-			printf("Setting exception handler to %s\n", $exceptionHandler);
-			printf("Setting error handler to %s\n", $errorHandler);
-
 			self::$oldExceptionHandler = set_exception_handler($exceptionHandler);
 			self::$oldErrorHandler = set_error_handler($errorHandler);
 		}
