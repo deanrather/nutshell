@@ -638,5 +638,10 @@ namespace nutshell\plugin\db\impl\base
 		{
 			return $this->connection->quote($str);
 		}
+
+		public function debug()
+		{
+			return $this->lastQuery;
+		}
 	}
 }
