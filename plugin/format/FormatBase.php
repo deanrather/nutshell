@@ -431,15 +431,20 @@ namespace nutshell\plugin\format
 		 */
 		protected function writef() {
 			$args = func_get_args();
-			$content = call_user_func_array('sprintf', $args);
-			
+			if (count($args)>1)
+			{
+				$content = call_user_func_array('sprintf', $args);
+			}
+			else
+			{
+				$content=$args[0];
+			}
 			$content = $this->updateLineBreaks($this->getFormat_config_line_break(), $content);
 			
 			if ($this->encoding != 'UTF-8')
 			{
 				$content = mb_convert_encoding ( $content ,  $this->encoding, 'UTF-8' );
 			}
-			
 			fwrite($this->file_handle, $content);
 		}
 		
