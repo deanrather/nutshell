@@ -643,5 +643,10 @@ namespace nutshell\plugin\db\impl\base
 		{
 			return $this->connection;
 		}
+		
+		public function debug()
+		{
+			return $this->lastQuery;
+		}
 	}
 }
