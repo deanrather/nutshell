@@ -41,6 +41,16 @@ namespace nutshell\plugin\mvc
 			$this->viewFile=$this->buildViewPath($viewName);
 		}
 		
+		public function getTemplate()
+		{
+			return $this->viewFile;
+		}
+			
+		public function getTemplateSource($viewName)
+		{
+			return $this->_render($this->buildViewPath($viewName));
+		}	
+		
 		public function setMimeType($type = null)
 		{
 			if(empty($type))
@@ -94,12 +104,9 @@ namespace nutshell\plugin\mvc
 			return APP_HOME.$this->MVC->config->dir->views.$viewName.'.php';
 		}
 		
-		public function render()
+		private function _render($viewFile)
 		{
-			header(sprintf('Content-Type: %s', $this->mimeType));
-			header(sprintf('%s %s', $this->getProtocol(), $this->status));
-			
-			$this->template->setTemplate($this->viewFile);
+			$this->template->setTemplate($viewFile);
 			$this->template->setKeyVal
 			(
 				array_keys($this->templateVars),
@@ -118,7 +125,15 @@ namespace nutshell\plugin\mvc
 					print $template->compile();
 				}
 			);
-			print $this->template->compile();
+			return $this->template->compile();
+		}
+		
+		public function render()
+		{
+			header(sprintf('Content-Type: %s', $this->mimeType));
+			header(sprintf('%s %s', $this->getProtocol(), $this->status));
+			
+			print $this->_render($this->viewFile);
 		}
 		
 		public function setVar($key,$value)
