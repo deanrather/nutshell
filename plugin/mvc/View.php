@@ -34,6 +34,27 @@ namespace nutshell\plugin\mvc
 			//Register some fucntions that can be used in the template.
 			$this->template=$this->plugin->Template();
 			$this->templateContext=$this->template->getContext();
+			
+			
+			$scope=$this;
+			$this->templateContext->registerCallback
+			(
+				'loadView',
+				function($viewName,$viewKeyVals=array(),$print=true) use ($scope)
+				{
+					$template=$scope->plugin->Template($scope->buildViewPath($viewName));
+					$scope->templateContext->setKeyValArray($viewKeyVals);
+					$template->setContext($scope->templateContext);
+					if ($print)
+					{
+						print $template->compile();
+					}
+					else
+					{
+						return $template->compile();
+					}
+				}
+			);
 		}
 		
 		public function setTemplate($viewName)
@@ -111,19 +132,6 @@ namespace nutshell\plugin\mvc
 			(
 				array_keys($this->templateVars),
 				array_values($this->templateVars)
-			);
-			
-			$scope=$this;
-			$this->templateContext->registerCallback
-			(
-				'loadView',
-				function($viewName,$viewKeyVals=array()) use ($scope)
-				{
-					$template=$scope->plugin->Template($scope->buildViewPath($viewName));
-					$scope->templateContext->setKeyValArray($viewKeyVals);
-					$template->setContext($scope->templateContext);
-					print $template->compile();
-				}
 			);
 			return $this->template->compile();
 		}
