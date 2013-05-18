@@ -16,6 +16,14 @@ namespace nutshell\plugin\router\handler\base
 	 */
 	abstract class Http extends PluginExtension
 	{
+		protected $modeConfig=null;
+		
+		public function __construct($modeConfig)
+		{
+			$this->modeConfig=$modeConfig;
+			parent::__construct();
+		}
+		
 		protected function getControlNamespace($controller)
 		{
 			$pointer	=-1;

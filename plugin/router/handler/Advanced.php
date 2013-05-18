@@ -14,6 +14,12 @@ namespace nutshell\plugin\router\handler
 	 */
 	class Advanced extends PluginExtension
 	{
+		public function __construct($modeConfig)
+		{
+			parent::__construct($modeConfig);
+			$this->calculateRoute();
+		}
+		
 		public function init()
 		{
 			

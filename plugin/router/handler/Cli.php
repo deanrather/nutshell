@@ -28,8 +28,9 @@ namespace nutshell\plugin\router\handler
 		
 		const DEFAULT_ACTION = 'index';
 		
-		public function __construct()
+		public function __construct($modeConfig)
 		{
+			parent::__construct($modeConfig);
 			$this->calculateRoute();
 		}
 		

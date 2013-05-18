@@ -38,6 +38,11 @@ namespace nutshell\plugin\mvc
 			//Get the route from the rotuer.
 			$this->route	=$this->plugin->Router->getRoute();
 			
+			$this->initController();
+		}
+		
+		public function initController()
+		{
 			//Load the controller.
 			$this->loadController();
 			

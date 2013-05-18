@@ -24,6 +24,7 @@ namespace nutshell\plugin\router
 		const MODE_SIMPLE		='simple';
 		const MODE_SIMPLE_REST	='simpleRest';
 		const MODE_ADVANCED		='advanced';
+		const MODE_REGEX		='regex';
 		
 		private $handler=null;
 		
@@ -88,21 +89,21 @@ namespace nutshell\plugin\router
 				$mode = $globalMode;
 			}
 			
-			$className='nutshell\plugin\router\handler\\'.$mode;
+			$className='nutshell\plugin\router\handler\\'.$mode->mode;
 			if (class_exists($className,true))
 			{
-				$this->handler=new $className();
+				$this->handler=new $className($mode);
 				return;
 			}
 			else
 			{
 				if (isset(self::$appHandlers[$globalMode]))
 				{
-					$this->handler=new $appHandlers[$mode]();
+					$this->handler=new $appHandlers[$mode->mode]();
 					return;
 				}
 			}
-			throw new RouterException(RouterException::HANDLER_MISSING, sprintf('No implementation could be found for Router handler class: %s', $mode));
+			throw new RouterException(RouterException::HANDLER_MISSING, sprintf('No implementation could be found for Router handler class: %s', $mode->mode));
 		}
 		
 		protected function satisfiesOption($option) 
@@ -123,7 +124,7 @@ namespace nutshell\plugin\router
 				}
 			}
 			
-			return $valid ? $option->mode : null;
+			return $valid ? $option : false;
 		}
 		
 		public function getMode()

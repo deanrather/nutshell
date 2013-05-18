@@ -19,8 +19,9 @@ namespace nutshell\plugin\router\handler
 		private $route		=null;
 		private $pointer	=0;
 		
-		public function __construct()
+		public function __construct($modeConfig)
 		{
+			parent::__construct($modeConfig);
 			$this->calculateRoute();
 		}
 		
