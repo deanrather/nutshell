@@ -35,6 +35,7 @@ namespace nutshell\core\exception
 		
 		public $codeDescription	= '';
 		public $code			= '';
+		public $codeNumber		= 0;
 		public $debug			= '';
 		
 		/**
@@ -66,6 +67,7 @@ namespace nutshell\core\exception
 			$this->codeDescription = array_search($code, $constants);
 			
 			// Alter the code to be prefixed with the class name
+			$this->codeNumber = $code;
 			$this->code = $this->getCodePrefix().'-'.$code;
 			
 			// store the debug info
@@ -101,6 +103,11 @@ namespace nutshell\core\exception
 		/*
 		 * Member Functions
 		 */
+		
+		public function getCodeNumber()
+		{
+			return $this->codeNumber;
+		}
 		
 		/**
 		 * Gets the prefix to be used on error codes.
@@ -152,10 +159,10 @@ namespace nutshell\core\exception
 				'LINE'				=> $this->line,
 				'DEBUG'				=> $debug,
 				'STACK'				=> "\n".$this->getTraceAsString(),
-                                'SERVER'                        => $_SERVER,
-                                'POST'                          => $_POST,
-                                'GET'                           => $_GET,
-                                'RAW'                           => Nutshell::getInstance()->request->getRaw()
+				'SERVER'			=> $_SERVER,
+				'POST'				=> $_POST,
+				'GET'				=> $_GET,
+				'RAW'				=> Nutshell::getInstance()->request->getRaw()
 			);
 			
 			if($format=='array')
