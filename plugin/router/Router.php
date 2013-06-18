@@ -89,6 +89,15 @@ namespace nutshell\plugin\router
 				$mode = $globalMode;
 			}
 			
+			//*** For BC Break
+			if (is_string($mode))
+			{
+				$xmode=$mode;
+				$mode=new \stdClass();
+				$mode->mode=$xmode;
+			}
+			//***
+			
 			$className='nutshell\plugin\router\handler\\'.$mode->mode;
 			if (class_exists($className,true))
 			{

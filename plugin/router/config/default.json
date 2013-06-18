@@ -1,6 +1,9 @@
 {
 	"config":
 	{
-		"mode":		"Simple"
+		"mode":
+		{
+			"mode":"Simple"
+		}
 	}
 }
