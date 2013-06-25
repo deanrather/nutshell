@@ -120,6 +120,12 @@ namespace nutshell\plugin\mvc
 				{
 					break;
 				}
+				//Retarded cross-platform hack.
+				$file=$dir.$controller.'.php';
+				if (is_file($file))
+				{
+					break;
+				}
 				else if (is_dir($dir))
 				{
 					// Now check for a directory by this node's name. Directories are all lowerCamelCase
