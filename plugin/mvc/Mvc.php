@@ -47,8 +47,7 @@ namespace nutshell\plugin\mvc
 			$this->loadController();
 			
 			//Construct the namespaced class name.
-			$className='application\controller\\'.$this->route->getControlNamespace().ucwords($this->route->getControl());
-			
+			$className='application\controller\\'.$this->route->getControlNamespace().$this->route->getControl();
 			//Initiate the controller.
 			$this->controller=new $className($this);
 			
@@ -102,26 +101,29 @@ namespace nutshell\plugin\mvc
 		public function loadController()
 		{
 			// The first URI node
-			$controller	=$this->route->getControl();
+			$controller	=str_replace('\\','/',$this->route->getControl());
 			
 			// The Directory with controllers in it
 			$dir=APP_HOME.$this->config->dir->controllers;
 			
 			// Maybe we're at website.com/hello/. Check the directory for a Hello.php
-			$file=$dir.ucFirst($controller).'.php';
+			// $file=$dir.ucFirst($controller).'.php';
 			
 			$triedFiles=array();
 			
 			// This loop will be broken out from once we find the file. Otherwise it will throw an error.
 			while (true)
 			{
+				//Retarded cross-platform hack.
+				$file=$dir.$controller.'.php';
 				$triedFiles[] = $file;
+				// die($file);
 				if (is_file($file))
 				{
 					break;
 				}
-				//Retarded cross-platform hack.
-				$file=$dir.$controller.'.php';
+				$file=$dir.ucFirst($controller).'.php';
+				$triedFiles[] = $file;
 				if (is_file($file))
 				{
 					break;
@@ -155,7 +157,7 @@ namespace nutshell\plugin\mvc
 					throw new MvcException(MvcException::INVALID_FILE, "Unable to load controller. <br>None of the following files exist:<br>$files");
 				}
 			}
-			include($file);
+			include_once($file);
 		}
 		
 		public function getModelLoader()
