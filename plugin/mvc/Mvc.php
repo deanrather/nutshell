@@ -43,6 +43,7 @@ namespace nutshell\plugin\mvc
 			
 			//Construct the namespaced class name.
 			$className='application\controller\\'.$this->route->getControlNamespace().ucwords($this->route->getControl());
+			$className=str_replace('-', '_', $className);
 			
 			//Initiate the controller.
 			$this->controller=new $className($this);
@@ -104,6 +105,7 @@ namespace nutshell\plugin\mvc
 			
 			// Maybe we're at website.com/hello/. Check the directory for a Hello.php
 			$file=$dir.ucFirst($controller).'.php';
+			$file=str_replace('-', '_', $file);
 			
 			$triedFiles=array();
 			
