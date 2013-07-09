@@ -9,7 +9,7 @@ namespace nutshell\behaviour
 	 */
 	interface AbstractFactory
 	{
-		public static function runFactory($string);
+		// public static function runFactory($string);
 	}
 }
 ?>
