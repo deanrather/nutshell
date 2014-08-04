@@ -149,6 +149,18 @@ namespace nutshell\core\exception
 				$debug = print_r($debug, true); 
 			}
 			
+			// args passed into errant function
+			$args = null;
+			$trace = $this->getTrace();
+			if(
+				isset($trace[0])
+				&& isset($trace[0]['args'])
+				&& isset($trace[0]['args'][4])
+			)
+			{
+				$args = $trace[0]['args'][4];
+			}
+			
 			$description = array
 			(
 				'ERROR'				=> true,
@@ -162,6 +174,7 @@ namespace nutshell\core\exception
 				'SERVER'			=> $_SERVER,
 				'POST'				=> $_POST,
 				'GET'				=> $_GET,
+				'ARGS'				=> $args,
 				'RAW'				=> Nutshell::getInstance()->request->getRaw()
 			);
 			
