@@ -159,6 +159,7 @@ namespace nutshell\core\exception
 			)
 			{
 				$args = $trace[0]['args'][4];
+				$args = self::slice_array_depth($args, 3);
 			}
 			
 			$description = array
@@ -204,6 +205,27 @@ namespace nutshell\core\exception
 			return $description;
 		}
 		
+		
+		private static function slice_array_depth($array, $depth=0)
+		{
+			if(is_object($array)) $array = (array)$array;
+			foreach($array as $key => $value)
+			{
+				if(is_object($value)) $value = (array)$value;
+				if(is_array($value))
+				{
+					if($depth > 0)
+					{
+						$array[$key] = self::slice_array_depth($value, $depth--);
+					}
+					else
+					{
+						$array[$key] = 'Clipped';
+					}
+				}
+			}
+			return $array;
+		}
 		
 		/*
 		 * Static Methods
