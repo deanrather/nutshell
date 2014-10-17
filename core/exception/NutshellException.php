@@ -205,23 +205,41 @@ namespace nutshell\core\exception
 			return $description;
 		}
 		
-		
+		/**
+		 * Takes a multi-dimensional array and returns it with all nodes after a certain depth clipped.
+		 * Great for dumping recursive or huge arrays.
+		 * If passed an object, casts it to an array.
+		 * @param  array   $array the multidimensional array
+		 * @param  integer $depth how many nodes deep are allowed
+		 * @return array          the new multidimensional array
+		 */
 		private static function slice_array_depth($array, $depth=0)
 		{
+			// If it's an object, cast it to an array
 			if(is_object($array)) $array = (array)$array;
+			
 			foreach($array as $key => $value)
 			{
+				// If it's an object, cast it to an array
 				if(is_object($value)) $value = (array)$value;
+				
+				// If it's an array
 				if(is_array($value))
 				{
+					// This node is an array, and we're permitted to go deeper
 					if($depth > 0)
 					{
-						$array[$key] = self::slice_array_depth($value, $depth--);
+						// Replace this node with a sliced version of itself, which can only go one step deeper than this
+						$array[$key] = self::slice_array_depth($value, $depth - 1);
 					}
-					else
+					else // This node is an array, and we're at our depth
 					{
 						$array[$key] = 'Clipped';
 					}
+				}
+				else // This node is not an array, add it
+				{
+					$array[$key] = $value;
 				}
 			}
 			return $array;
