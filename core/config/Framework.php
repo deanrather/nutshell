@@ -18,7 +18,7 @@ namespace nutshell\core\config
 	{
 		const CONFIG_CACHE_FOLDER = 'cache';
 		
-		const CONFIG_CACHE_FILE = 'cache.json';
+		const CONFIG_CACHE_FILE = 'cache-%.json';
 		
 		/**
 		 * 15 mins
@@ -82,6 +82,9 @@ namespace nutshell\core\config
 			}
 			else if(!is_file($file)) 
 			{
+				# Hacky stuff 'cause virtualbox gets really confused here sometimes...
+				exec("sudo touch '$file'");
+				exec("sudo rm -f '$file'");
 				throw new ConfigException(ConfigException::CONFIG_FILE_NOT_FOUND, sprintf("%s does not resolve to a regular file.", $file));
 			}
 			else if(!is_readable($file) || !is_writeable($file)) 
@@ -120,6 +123,9 @@ namespace nutshell\core\config
 			{
 				throw new ConfigException(ConfigException::CANNOT_WRITE_FILE, sprintf("Failed to write to file %s.", self::getCachedConfigFile()));
 			}
+			
+			// fix the permissions, in case this were written as sudo
+			chmod(self::getCachedConfigFile(), 0664);
 			
 			return $config;
 		}
@@ -170,7 +176,7 @@ namespace nutshell\core\config
 		
 		protected static function getCachedConfigFile() 
 		{
-			return self::getCachedConfigFolder() . _DS_ . self::CONFIG_CACHE_FILE;
+			return self::getCachedConfigFolder() . _DS_ . str_replace('%', gethostname(), self::CONFIG_CACHE_FILE);
 		}
 	}
 }
