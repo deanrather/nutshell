@@ -171,12 +171,12 @@ namespace nutshell\core\config
 		
 		protected static function getCachedConfigFolder() 
 		{
-			return APP_HOME . Config::CONFIG_FOLDER . _DS_ . self::CONFIG_CACHE_FOLDER;
+			return "/tmp";
 		}
 		
 		protected static function getCachedConfigFile() 
 		{
-			return self::getCachedConfigFolder() . _DS_ . str_replace('%', gethostname(), self::CONFIG_CACHE_FILE);
+			return self::getCachedConfigFolder() . _DS_ . str_replace('%', md5(APP_HOME), self::CONFIG_CACHE_FILE);
 		}
 	}
 }
