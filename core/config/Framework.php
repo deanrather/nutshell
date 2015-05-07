@@ -16,8 +16,6 @@ namespace nutshell\core\config
 	 */
 	class Framework
 	{
-		const CONFIG_CACHE_FOLDER = 'cache';
-		
 		const CONFIG_CACHE_FILE = 'cache-%.json';
 		
 		/**
