@@ -165,7 +165,7 @@ namespace nutshell\core\exception
 			$description = array
 			(
 				'ERROR'				=> true,
-				'CLASS'				=> get_class($this),
+				'CLASS'				=> $this->getClassHierarchy($this),
 				'CODE'				=> $this->code,
 				'CODE_DESCRIPTION'	=> $this->codeDescription,
 				'FILE'				=> $this->file,
@@ -203,6 +203,22 @@ namespace nutshell\core\exception
 			}
 			
 			return $description;
+		}
+		
+		/**
+		 * Thanks http://stackoverflow.com/a/4209217/14966
+		 * @param  [type] $object [description]
+		 * @return [type]         [description]
+		 */
+		function getClassHierarchy($object)
+		{
+			if (!is_object($object)) return false;
+			$hierarchy = array();
+			$class = get_class($object);
+			do {
+				$hierarchy[] = $class;
+			} while (($class = get_parent_class($class)) !== false);
+			return $hierarchy;
 		}
 		
 		/**

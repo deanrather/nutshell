@@ -86,8 +86,8 @@ namespace nutshell
 					define('NS_INTERFACE', self::INTERFACE_HTTP);
 					define('NS_WEB_HOME', dirname($_SERVER['SCRIPT_FILENAME']));
 					define('NS_APP_WEB_HOME', dirname($_SERVER['SCRIPT_NAME']));
-					header('X-Powered-By: PHP/'.phpversion().' & Nutshell/'.self::VERSION);
-					header('X-Nutshell-Version:'.self::VERSION);
+					// header('X-Powered-By: PHP/'.phpversion().' & Nutshell/'.self::VERSION);
+					// header('X-Nutshell-Version:'.self::VERSION);
 				}
 				else if (strstr($_SERVER['PHP_SELF'],'phpunit'))
 				{
@@ -108,16 +108,16 @@ namespace nutshell
 					$scriptName=str_replace('/.php','/',$scriptName);
 				}
 				define('NS_APP_WEB_HOME', dirname($scriptName));
-				header('X-Powered-By: PHP/'.phpversion().' & Nutshell/'.self::VERSION);
-				header('X-Nutshell-Version:'.self::VERSION);
+				// header('X-Powered-By: PHP/'.phpversion().' & Nutshell/'.self::VERSION);
+				// header('X-Nutshell-Version:'.self::VERSION);
 			}
 			else
 			{
 				define('NS_INTERFACE', self::INTERFACE_HTTP);
 				define('NS_WEB_HOME', dirname($_SERVER['SCRIPT_FILENAME']));
 				define('NS_APP_WEB_HOME', dirname($_SERVER['SCRIPT_NAME']));
-				header('X-Powered-By: PHP/'.phpversion().' & Nutshell/'.self::VERSION);
-				header('X-Nutshell-Version:'.self::VERSION);
+				// header('X-Powered-By: PHP/'.phpversion().' & Nutshell/'.self::VERSION);
+				// header('X-Nutshell-Version:'.self::VERSION);
 			}
 			
 			//Get the system environment before doing anything.
@@ -286,7 +286,7 @@ namespace nutshell
 			}
 			if (NS_INTERFACE==self::INTERFACE_HTTP)
 			{
-				header('X-Nutshell-Environment:'.NS_ENV);
+				// header('X-Nutshell-Environment:'.NS_ENV);
 			}
 			return $this;
 		}
@@ -441,4 +441,3 @@ namespace
 		nutshell\bootstrap();
 	}
 }
-?>
