@@ -174,6 +174,8 @@ namespace nutshell\core\loader
 			{
 				foreach($this->containers as $containerKey => &$container)
 				{
+					if(!isset($container['path'])) continue;
+					
 					//No, so we need to load all of it's dependancies and initiate it.
 					$dirBase=$container['path'];
 					$namespaceBase=$container['namespace'];
