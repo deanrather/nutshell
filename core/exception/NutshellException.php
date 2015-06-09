@@ -40,6 +40,7 @@ namespace nutshell\core\exception
 		
 		public $codeDescription	= '';
 		public $code			= '';
+		public $codeNumber		= 0;
 		public $debug			= '';
 		
 		/**
@@ -71,6 +72,7 @@ namespace nutshell\core\exception
 			$this->codeDescription = array_search($code, $constants);
 			
 			// Alter the code to be prefixed with the class name
+			$this->codeNumber = $code;
 			$this->code = $this->getCodePrefix().'-'.$code;
 			
 			// store the debug info
@@ -106,6 +108,11 @@ namespace nutshell\core\exception
 		/*
 		 * Member Functions
 		 */
+		
+		public function getCodeNumber()
+		{
+			return $this->codeNumber;
+		}
 		
 		/**
 		 * Gets the prefix to be used on error codes.
@@ -160,6 +167,19 @@ namespace nutshell\core\exception
 				$options = $optionsConfig;
 			}
 			
+			// args passed into errant function
+			$args = null;
+			$trace = $this->getTrace();
+			if(
+				isset($trace[0])
+				&& isset($trace[0]['args'])
+				&& isset($trace[0]['args'][4])
+			)
+			{
+				$args = $trace[0]['args'][4];
+				$args = self::slice_array_depth($args, 3);
+			}
+			
 			$description = array
 			(
 				'ERROR'				=> true,
@@ -170,6 +190,11 @@ namespace nutshell\core\exception
 				'LINE'				=> $this->line,
 				'DEBUG'				=> $debug,
 				'STACK'				=> "\n".$this->getTraceAsString(),
+				'SERVER'			=> $_SERVER,
+				'POST'				=> $_POST,
+				'GET'				=> $_GET,
+				'ARGS'				=> $args,
+				'RAW'				=> Nutshell::getInstance()->request->getRaw()
 			);
 
 			if(in_array('SERVER', $options))
@@ -218,6 +243,45 @@ namespace nutshell\core\exception
 			return $description;
 		}
 		
+		/**
+		 * Takes a multi-dimensional array and returns it with all nodes after a certain depth clipped.
+		 * Great for dumping recursive or huge arrays.
+		 * If passed an object, casts it to an array.
+		 * @param  array   $array the multidimensional array
+		 * @param  integer $depth how many nodes deep are allowed
+		 * @return array          the new multidimensional array
+		 */
+		private static function slice_array_depth($array, $depth=0)
+		{
+			// If it's an object, cast it to an array
+			if(is_object($array)) $array = (array)$array;
+			
+			foreach($array as $key => $value)
+			{
+				// If it's an object, cast it to an array
+				if(is_object($value)) $value = (array)$value;
+				
+				// If it's an array
+				if(is_array($value))
+				{
+					// This node is an array, and we're permitted to go deeper
+					if($depth > 0)
+					{
+						// Replace this node with a sliced version of itself, which can only go one step deeper than this
+						$array[$key] = self::slice_array_depth($value, $depth - 1);
+					}
+					else // This node is an array, and we're at our depth
+					{
+						$array[$key] = 'Clipped';
+					}
+				}
+				else // This node is not an array, add it
+				{
+					$array[$key] = $value;
+				}
+			}
+			return $array;
+		}
 		
 		/*
 		 * Static Methods
