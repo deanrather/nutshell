@@ -172,6 +172,9 @@ namespace nutshell\core\loader
 			//Is the object not loaded?
 			if (!isset($this->loaded[$key]))
 			{
+				$dirBaseFolderFile=null;
+				$dirBaseFile=null;
+				$dir=null;
 				foreach($this->containers as $containerKey => &$container)
 				{
 					if(!isset($container['path'])) continue;
@@ -217,6 +220,7 @@ namespace nutshell\core\loader
 					(
 						LoaderException::CANNOT_LOAD_KEY, 
 						"Loader can't load key {$key}.",
+						$args,
 						$this->classNames,
 						$this->containers,
 						$dirBaseFolderFile,
