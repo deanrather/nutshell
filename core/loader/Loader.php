@@ -121,7 +121,12 @@ namespace nutshell\core\loader
 				}
 				else
 				{
-					throw new LoaderException(LoaderException::CANNOT_AUTOLOAD_CLASS, 'Unable to autoload class "'.$namespace.'\\'.$className.'".');
+					throw new LoaderException
+					(
+						LoaderException::CANNOT_AUTOLOAD_CLASS,
+						'Unable to autoload class "'.$namespace.'\\'.$className.'"',
+						'"'.$filePath.'" does not exist'
+					);
 				}
 			}
 		}
